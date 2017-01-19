@@ -23,6 +23,17 @@ Rachel's summary notes
 * Software/hardware interrupt
 * System call/monitor call
 * Interrupt vector
+* RAM
+* DRAM
+* von Neumann architecture
+* Instruction register
+* Direct memory access (DMA)
+* Fault tolerant
+* Asymmetric, symmetric multiprocessing
+* Asymmetric, symmetric clustering
+* Parallelization
+* Distributed lock manager (DLM)
+* Storage-area networks (SANs)
 
 ## User's Point of View
 
@@ -35,3 +46,6 @@ Rachel's summary notes
 * For a system, the OS is a resource manager.
 * Computer sysems have multiple resources: CPU time, memory space, file-storage space, I/O devices.
 
+## Storage Structure
+
+* Each byte has its own address.
