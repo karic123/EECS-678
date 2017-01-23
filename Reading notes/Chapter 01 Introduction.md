@@ -35,17 +35,8 @@ Rachel's summary notes
 * Distributed lock manager (DLM)
 * Storage-area networks (SANs)
 
-## User's Point of View
+## Classes
 
-* User cares about *ease of use*, not so much *resource utilization*.
-* Several users may be connected to a single computer via a terminal, but not have to think about resource management of the *mainframe*.
-* Users using *workstations* have to share resources lik enetworking, servers (file/compute/print servers).
-
-## System's Point of View
-
-* For a system, the OS is a resource manager.
-* Computer sysems have multiple resources: CPU time, memory space, file-storage space, I/O devices.
-
-## Storage Structure
-
-* Each byte has its own address.
+* Class 1: QNX operating system, real time operating system, multiplexing
+* Class 2: Processor architecture, flash
+* Class 3: NUMA architecture, memory hierarchy, caching, user/kernel mode, memory protection, virtual memory
