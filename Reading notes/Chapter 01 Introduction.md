@@ -35,6 +35,10 @@ Rachel's summary notes
 * Distributed lock manager (DLM)
 * Storage-area networks (SANs)
 
+---
+
+# Notes
+
 ## User's Point of View
 
 * User cares about *ease of use*, not so much *resource utilization*.
