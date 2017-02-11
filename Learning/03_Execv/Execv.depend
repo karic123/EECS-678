@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1486852108 source:/home/rayechell/STUDY/EECS-678/Learning/02_Execv/HowDoesExecvWork.cpp
+	<iostream>
+	<unistd.h>
+	<cstring>
+
+1486855050 source:/home/rayechell/STUDY/EECS-678/Learning/03_Execv/HowDoesExecvWork.cpp
+	<iostream>
+	<fstream>
+	<unistd.h>
+	<cstring>
+	<sys/wait.h>
+	"RachUtils.h"
+
+1486855109 /home/rayechell/STUDY/EECS-678/Learning/03_Execv/RachUtils.h
+
