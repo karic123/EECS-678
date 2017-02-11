@@ -11,7 +11,7 @@ using namespace std;
 #include <cstring>
 #include <sys/wait.h>
 
-#define FIND_EXEC  "/bin/find"
+#define FIND_EXEC  "/usr/bin/find"
 #define PWD_EXEC  "/bin/pwd"
 
 #include "RachUtils.h"
@@ -29,8 +29,8 @@ void ChildProgram( int childToParent_fd[2] )
     dup2( childToParent_fd[ WRITE_PIPE ], STDOUT_FILENO );
 
     // Execute the "pwd" command
-    char* programName = PWD_EXEC;
-    char* arguments[] = { programName, NULL };
+    char* programName = FIND_EXEC;
+    char* arguments[] = { programName, ".", NULL };
 
     cout << "\t Child: Call exec" << endl;
 
@@ -52,7 +52,9 @@ void ParentProgram( int childToParent_fd[2] )
     char readBuffer[256];
 
     int bytes = read( childToParent_fd[ INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
-    cout << "\t Parent: Received data: " << readBuffer << endl;
+    cout << "\t Parent: Received data: " << endl;
+
+    cout << endl << endl << readBuffer << endl;
 }
 
 int main()
