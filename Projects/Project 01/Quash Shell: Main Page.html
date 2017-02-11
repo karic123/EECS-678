@@ -1,0 +1,3081 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<meta name="generator" content="Doxygen 1.8.11">
+<title>Quash Shell: Main Page</title>
+<style type="text/css" style="display:none">.tabs, .tabs2, .tabs3 {
+    background-image: url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_b.png');
+    width: 100%;
+    z-index: 101;
+    font-size: 13px;
+    font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+}
+
+.tabs2 {
+    font-size: 10px;
+}
+.tabs3 {
+    font-size: 9px;
+}
+
+.tablist {
+    margin: 0;
+    padding: 0;
+    display: table;
+}
+
+.tablist li {
+    float: left;
+    display: table-cell;
+    background-image: url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_b.png');
+    line-height: 36px;
+    list-style: none;
+}
+
+.tablist a {
+    display: block;
+    padding: 0 20px;
+    font-weight: bold;
+    background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_s.png');
+    background-repeat:no-repeat;
+    background-position:right;
+    color: #283A5D;
+    text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    outline: none;
+}
+
+.tabs3 .tablist a {
+    padding: 0 10px;
+}
+
+.tablist a:hover {
+    background-image: url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_h.png');
+    background-repeat:repeat-x;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+    text-decoration: none;
+}
+
+.tablist li.current a {
+    background-image: url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_a.png');
+    background-repeat:repeat-x;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+}
+
+</style>
+
+<script type="text/javascript" src="Quash%20Shell:%20Main%20Page_files/jquery.js"></script>
+<script type="text/javascript" style="display:none">function toggleVisibility(linkObj)
+{
+ var base = $(linkObj).attr('id');
+ var summary = $('#'+base+'-summary');
+ var content = $('#'+base+'-content');
+ var trigger = $('#'+base+'-trigger');
+ var src=$(trigger).attr('src');
+ if (content.is(':visible')===true) {
+   content.hide();
+   summary.show();
+   $(linkObj).addClass('closed').removeClass('opened');
+   $(trigger).attr('src',src.substring(0,src.length-8)+'closed.png');
+ } else {
+   content.show();
+   summary.hide();
+   $(linkObj).removeClass('closed').addClass('opened');
+   $(trigger).attr('src',src.substring(0,src.length-10)+'open.png');
+ } 
+ return false;
+}
+
+function updateStripes()
+{
+  $('table.directory tr').
+       removeClass('even').filter(':visible:even').addClass('even');
+}
+function toggleLevel(level)
+{
+  $('table.directory tr').each(function(){ 
+    var l = this.id.split('_').length-1;
+    var i = $('#img'+this.id.substring(3));
+    var a = $('#arr'+this.id.substring(3));
+    if (l<level+1) {
+      i.attr('src','ftv2folderopen.png');
+      a.attr('src','ftv2mnode.png');
+      $(this).show();
+    } else if (l==level+1) {
+      i.attr('src','ftv2folderclosed.png');
+      a.attr('src','ftv2pnode.png');
+      $(this).show();
+    } else {
+      $(this).hide();
+    }
+  });
+  updateStripes();
+}
+
+function toggleFolder(id)
+{
+  //The clicked row
+  var currentRow = $('#row_'+id);
+  var currentRowImages = currentRow.find("img");
+
+  //All rows after the clicked row
+  var rows = currentRow.nextAll("tr");
+
+  //Only match elements AFTER this one (can't hide elements before)
+  var childRows = rows.filter(function() {
+    var re = new RegExp('^row_'+id+'\\d+_$', "i"); //only one sub
+    return this.id.match(re);
+  });
+
+  //First row is visible we are HIDING
+  if (childRows.filter(':first').is(':visible')===true) {
+    currentRowImages.filter("[id^=arr]").attr('src', 'ftv2pnode.png');
+    currentRowImages.filter("[id^=img]").attr('src', 'ftv2folderclosed.png');
+    rows.filter("[id^=row_"+id+"]").hide();
+  } else { //We are SHOWING
+    //All sub images
+    var childImages = childRows.find("img");
+    var childImg = childImages.filter("[id^=img]");
+    var childArr = childImages.filter("[id^=arr]");
+
+    currentRow.find("[id^=arr]").attr('src', 'ftv2mnode.png'); //open row
+    currentRow.find("[id^=img]").attr('src', 'ftv2folderopen.png'); //open row
+    childImg.attr('src','ftv2folderclosed.png'); //children closed
+    childArr.attr('src','ftv2pnode.png'); //children closed
+    childRows.show(); //show all children
+  }
+  updateStripes();
+}
+
+
+function toggleInherit(id)
+{
+  var rows = $('tr.inherit.'+id);
+  var img = $('tr.inherit_header.'+id+' img');
+  var src = $(img).attr('src');
+  if (rows.filter(':first').is(':visible')===true) {
+    rows.css('display','none');
+    $(img).attr('src',src.substring(0,src.length-8)+'closed.png');
+  } else {
+    rows.css('display','table-row'); // using show() causes jump in firefox
+    $(img).attr('src',src.substring(0,src.length-10)+'open.png');
+  }
+}
+
+</script>
+<style type="text/css" style="display:none">/*---------------- Search Box */
+
+#FSearchBox {
+    float: left;
+}
+
+#MSearchBox {
+    white-space : nowrap;
+    position: absolute;
+    float: none;
+    display: inline;
+    margin-top: 8px;
+    right: 0px;
+    width: 170px;
+    z-index: 102;
+    background-color: white;
+}
+
+#MSearchBox .left
+{
+    display:block;
+    position:absolute;
+    left:10px;
+    width:20px;
+    height:19px;
+    background:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/search/search_l.png') no-repeat;
+    background-position:right;
+}
+
+#MSearchSelect {
+    display:block;
+    position:absolute;
+    width:20px;
+    height:19px;
+}
+
+.left #MSearchSelect {
+    left:4px;
+}
+
+.right #MSearchSelect {
+    right:5px;
+}
+
+#MSearchField {
+    display:block;
+    position:absolute;
+    height:19px;
+    background:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/search/search_m.png') repeat-x;
+    border:none;
+    width:111px;
+    margin-left:20px;
+    padding-left:4px;
+    color: #909090;
+    outline: none;
+    font: 9pt Arial, Verdana, sans-serif;
+}
+
+#FSearchBox #MSearchField {
+    margin-left:15px;
+}
+
+#MSearchBox .right {
+    display:block;
+    position:absolute;
+    right:10px;
+    top:0px;
+    width:20px;
+    height:19px;
+    background:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/search/search_r.png') no-repeat;
+    background-position:left;
+}
+
+#MSearchClose {
+    display: none;
+    position: absolute;
+    top: 4px;
+    background : none;
+    border: none;
+    margin: 0px 4px 0px 0px;
+    padding: 0px 0px;
+    outline: none;
+}
+
+.left #MSearchClose {
+    left: 6px;
+}
+
+.right #MSearchClose {
+    right: 2px;
+}
+
+.MSearchBoxActive #MSearchField {
+    color: #000000;
+}
+
+/*---------------- Search filter selection */
+
+#MSearchSelectWindow {
+    display: none;
+    position: absolute;
+    left: 0; top: 0;
+    border: 1px solid #90A5CE;
+    background-color: #F9FAFC;
+    z-index: 1;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+}
+
+.SelectItem {
+    font: 8pt Arial, Verdana, sans-serif;
+    padding-left:  2px;
+    padding-right: 12px;
+    border: 0px;
+}
+
+span.SelectionMark {
+    margin-right: 4px;
+    font-family: monospace;
+    outline-style: none;
+    text-decoration: none;
+}
+
+a.SelectItem {
+    display: block;
+    outline-style: none;
+    color: #000000; 
+    text-decoration: none;
+    padding-left:   6px;
+    padding-right: 12px;
+}
+
+a.SelectItem:focus,
+a.SelectItem:active {
+    color: #000000; 
+    outline-style: none;
+    text-decoration: none;
+}
+
+a.SelectItem:hover {
+    color: #FFFFFF;
+    background-color: #3D578C;
+    outline-style: none;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+}
+
+/*---------------- Search results window */
+
+iframe#MSearchResults {
+    width: 60ex;
+    height: 15em;
+}
+
+#MSearchResultsWindow {
+    display: none;
+    position: absolute;
+    left: 0; top: 0;
+    border: 1px solid #000;
+    background-color: #EEF1F7;
+}
+
+/* ----------------------------------- */
+
+
+#SRIndex {
+    clear:both; 
+    padding-bottom: 15px;
+}
+
+.SREntry {
+    font-size: 10pt;
+    padding-left: 1ex;
+}
+
+.SRPage .SREntry {
+    font-size: 8pt;
+    padding: 1px 5px;
+}
+
+body.SRPage {
+    margin: 5px 2px;
+}
+
+.SRChildren {
+    padding-left: 3ex; padding-bottom: .5em 
+}
+
+.SRPage .SRChildren {
+    display: none;
+}
+
+.SRSymbol {
+    font-weight: bold; 
+    color: #425E97;
+    font-family: Arial, Verdana, sans-serif;
+    text-decoration: none;
+    outline: none;
+}
+
+a.SRScope {
+    display: block;
+    color: #425E97; 
+    font-family: Arial, Verdana, sans-serif;
+    text-decoration: none;
+    outline: none;
+}
+
+a.SRSymbol:focus, a.SRSymbol:active,
+a.SRScope:focus, a.SRScope:active {
+    text-decoration: underline;
+}
+
+span.SRScope {
+    padding-left: 4px;
+}
+
+.SRPage .SRStatus {
+    padding: 2px 5px;
+    font-size: 8pt;
+    font-style: italic;
+}
+
+.SRResult {
+    display: none;
+}
+
+DIV.searchresults {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/*---------------- External search page results */
+
+.searchresult {
+    background-color: #F0F3F8;
+}
+
+.pages b {
+   color: white;
+   padding: 5px 5px 3px 5px;
+   background-image: url("http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/search/../tab_a.png");
+   background-repeat: repeat-x;
+   text-shadow: 0 1px 1px #000000;
+}
+
+.pages {
+    line-height: 17px;
+    margin-left: 4px;
+    text-decoration: none;
+}
+
+.hl {
+    font-weight: bold;
+}
+
+#searchresults {
+    margin-bottom: 20px;
+}
+
+.searchpages {
+    margin-top: 10px;
+}
+
+
+</style>
+
+<script type="text/javascript" style="display:none">var indexSectionsWithContent =
+{
+  0: "abcdefgijklmnopqrstuvw",
+  1: "cegkmqrs",
+  2: "cdempq",
+  3: "acdegilmnpruw",
+  4: "abcdefgijknoprstv",
+  5: "cegjkpqrst",
+  6: "c",
+  7: "bipr"
+};
+
+var indexSectionNames =
+{
+  0: "all",
+  1: "classes",
+  2: "files",
+  3: "functions",
+  4: "variables",
+  5: "typedefs",
+  6: "enums",
+  7: "defines"
+};
+
+var indexSectionLabels =
+{
+  0: "All",
+  1: "Classes",
+  2: "Files",
+  3: "Functions",
+  4: "Variables",
+  5: "Typedefs",
+  6: "Enumerations",
+  7: "Macros"
+};
+
+</script>
+<script type="text/javascript" style="display:none">// Search script generated by doxygen
+// Copyright (C) 2009 by Dimitri van Heesch.
+
+// The code in this file is loosly based on main.js, part of Natural Docs,
+// which is Copyright (C) 2003-2008 Greg Valure
+// Natural Docs is licensed under the GPL.
+
+var indexSectionsWithContent =
+{
+  0: "abcdefgijklmnopqrstuvw",
+  1: "cegkmqrs",
+  2: "cdempq",
+  3: "acdegilmnpruw",
+  4: "abcdefgijknoprstv",
+  5: "cegjkpqrst",
+  6: "c",
+  7: "bipr"
+};
+
+var indexSectionNames =
+{
+  0: "all",
+  1: "classes",
+  2: "files",
+  3: "functions",
+  4: "variables",
+  5: "typedefs",
+  6: "enums",
+  7: "defines"
+};
+
+function convertToId(search)
+{
+  var result = '';
+  for (i=0;i<search.length;i++)
+  {
+    var c = search.charAt(i);
+    var cn = c.charCodeAt(0);
+    if (c.match(/[a-z0-9\u0080-\uFFFF]/))
+    {
+      result+=c;
+    }
+    else if (cn<16) 
+    {
+      result+="_0"+cn.toString(16);
+    }
+    else 
+    {
+      result+="_"+cn.toString(16);
+    }
+  }
+  return result;
+}
+
+function getXPos(item)
+{
+  var x = 0;
+  if (item.offsetWidth)
+  {
+    while (item && item!=document.body)
+    {
+      x   += item.offsetLeft;
+      item = item.offsetParent;
+    }
+  }
+  return x;
+}
+
+function getYPos(item)
+{
+  var y = 0;
+  if (item.offsetWidth)
+  {
+     while (item && item!=document.body)
+     {
+       y   += item.offsetTop;
+       item = item.offsetParent;
+     }
+  }
+  return y;
+}
+
+/* A class handling everything associated with the search panel.
+
+   Parameters:
+   name - The name of the global variable that will be 
+          storing this instance.  Is needed to be able to set timeouts.
+   resultPath - path to use for external files
+*/
+function SearchBox(name, resultsPath, inFrame, label)
+{
+  if (!name || !resultsPath) {  alert("Missing parameters to SearchBox."); }
+   
+  // ---------- Instance variables
+  this.name                  = name;
+  this.resultsPath           = resultsPath;
+  this.keyTimeout            = 0;
+  this.keyTimeoutLength      = 500;
+  this.closeSelectionTimeout = 300;
+  this.lastSearchValue       = "";
+  this.lastResultsPage       = "";
+  this.hideTimeout           = 0;
+  this.searchIndex           = 0;
+  this.searchActive          = false;
+  this.insideFrame           = inFrame;
+  this.searchLabel           = label;
+
+  // ----------- DOM Elements
+
+  this.DOMSearchField = function()
+  {  return document.getElementById("MSearchField");  }
+
+  this.DOMSearchSelect = function()
+  {  return document.getElementById("MSearchSelect");  }
+
+  this.DOMSearchSelectWindow = function()
+  {  return document.getElementById("MSearchSelectWindow");  }
+
+  this.DOMPopupSearchResults = function()
+  {  return document.getElementById("MSearchResults");  }
+
+  this.DOMPopupSearchResultsWindow = function()
+  {  return document.getElementById("MSearchResultsWindow");  }
+
+  this.DOMSearchClose = function()
+  {  return document.getElementById("MSearchClose"); }
+
+  this.DOMSearchBox = function()
+  {  return document.getElementById("MSearchBox");  }
+
+  // ------------ Event Handlers
+
+  // Called when focus is added or removed from the search field.
+  this.OnSearchFieldFocus = function(isActive)
+  {
+    this.Activate(isActive);
+  }
+
+  this.OnSearchSelectShow = function()
+  {
+    var searchSelectWindow = this.DOMSearchSelectWindow();
+    var searchField        = this.DOMSearchSelect();
+
+    if (this.insideFrame)
+    {
+      var left = getXPos(searchField);
+      var top  = getYPos(searchField);
+      left += searchField.offsetWidth + 6;
+      top += searchField.offsetHeight;
+
+      // show search selection popup
+      searchSelectWindow.style.display='block';
+      left -= searchSelectWindow.offsetWidth;
+      searchSelectWindow.style.left =  left + 'px';
+      searchSelectWindow.style.top  =  top  + 'px';
+    }
+    else
+    {
+      var left = getXPos(searchField);
+      var top  = getYPos(searchField);
+      top += searchField.offsetHeight;
+
+      // show search selection popup
+      searchSelectWindow.style.display='block';
+      searchSelectWindow.style.left =  left + 'px';
+      searchSelectWindow.style.top  =  top  + 'px';
+    }
+
+    // stop selection hide timer
+    if (this.hideTimeout) 
+    {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout=0;
+    }
+    return false; // to avoid "image drag" default event
+  }
+
+  this.OnSearchSelectHide = function()
+  {
+    this.hideTimeout = setTimeout(this.name +".CloseSelectionWindow()",
+                                  this.closeSelectionTimeout);
+  }
+
+  // Called when the content of the search field is changed.
+  this.OnSearchFieldChange = function(evt)
+  {
+    if (this.keyTimeout) // kill running timer
+    {
+      clearTimeout(this.keyTimeout);
+      this.keyTimeout = 0;
+    }
+
+    var e  = (evt) ? evt : window.event; // for IE
+    if (e.keyCode==40 || e.keyCode==13)
+    {
+      if (e.shiftKey==1)
+      {
+        this.OnSearchSelectShow();
+        var win=this.DOMSearchSelectWindow(); 
+        for (i=0;i<win.childNodes.length;i++)
+        {
+          var child = win.childNodes[i]; // get span within a
+          if (child.className=='SelectItem')
+          {
+            child.focus();
+            return;
+          }
+        }
+        return;
+      }
+      else if (window.frames.MSearchResults.searchResults)
+      {
+        var elem = window.frames.MSearchResults.searchResults.NavNext(0);
+        if (elem) elem.focus();
+      }
+    }
+    else if (e.keyCode==27) // Escape out of the search field
+    {
+      this.DOMSearchField().blur();
+      this.DOMPopupSearchResultsWindow().style.display = 'none';
+      this.DOMSearchClose().style.display = 'none';
+      this.lastSearchValue = '';
+      this.Activate(false);
+      return;
+    }
+
+    // strip whitespaces
+    var searchValue = this.DOMSearchField().value.replace(/ +/g, "");
+
+    if (searchValue != this.lastSearchValue) // search value has changed
+    {
+      if (searchValue != "") // non-empty search
+      {
+        // set timer for search update
+        this.keyTimeout = setTimeout(this.name + '.Search()',
+                                     this.keyTimeoutLength);
+      }
+      else // empty search field
+      {
+        this.DOMPopupSearchResultsWindow().style.display = 'none';
+        this.DOMSearchClose().style.display = 'none';
+        this.lastSearchValue = '';
+      }
+    }
+  }
+
+  this.SelectItemCount = function(id)
+  {
+    var count=0;
+    var win=this.DOMSearchSelectWindow(); 
+    for (i=0;i<win.childNodes.length;i++)
+    {
+      var child = win.childNodes[i]; // get span within a
+      if (child.className=='SelectItem')
+      {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  this.SelectItemSet = function(id)
+  {
+    var i,j=0;
+    var win=this.DOMSearchSelectWindow(); 
+    for (i=0;i<win.childNodes.length;i++)
+    {
+      var child = win.childNodes[i]; // get span within a
+      if (child.className=='SelectItem')
+      {
+        var node = child.firstChild;
+        if (j==id)
+        {
+          node.innerHTML='&#8226;';
+        }
+        else
+        {
+          node.innerHTML='&#160;';
+        }
+        j++;
+      }
+    }
+  }
+
+  // Called when an search filter selection is made.
+  // set item with index id as the active item
+  this.OnSelectItem = function(id)
+  {
+    this.searchIndex = id;
+    this.SelectItemSet(id);
+    var searchValue = this.DOMSearchField().value.replace(/ +/g, "");
+    if (searchValue!="" && this.searchActive) // something was found -> do a search
+    {
+      this.Search();
+    }
+  }
+
+  this.OnSearchSelectKey = function(evt)
+  {
+    var e = (evt) ? evt : window.event; // for IE
+    if (e.keyCode==40 && this.searchIndex<this.SelectItemCount()) // Down
+    {
+      this.searchIndex++;
+      this.OnSelectItem(this.searchIndex);
+    }
+    else if (e.keyCode==38 && this.searchIndex>0) // Up
+    {
+      this.searchIndex--;
+      this.OnSelectItem(this.searchIndex);
+    }
+    else if (e.keyCode==13 || e.keyCode==27)
+    {
+      this.OnSelectItem(this.searchIndex);
+      this.CloseSelectionWindow();
+      this.DOMSearchField().focus();
+    }
+    return false;
+  }
+
+  // --------- Actions
+
+  // Closes the results window.
+  this.CloseResultsWindow = function()
+  {
+    this.DOMPopupSearchResultsWindow().style.display = 'none';
+    this.DOMSearchClose().style.display = 'none';
+    this.Activate(false);
+  }
+
+  this.CloseSelectionWindow = function()
+  {
+    this.DOMSearchSelectWindow().style.display = 'none';
+  }
+
+  // Performs a search.
+  this.Search = function()
+  {
+    this.keyTimeout = 0;
+
+    // strip leading whitespace
+    var searchValue = this.DOMSearchField().value.replace(/^ +/, "");
+
+    var code = searchValue.toLowerCase().charCodeAt(0);
+    var idxChar = searchValue.substr(0, 1).toLowerCase();
+    if ( 0xD800 <= code && code <= 0xDBFF && searchValue > 1) // surrogate pair
+    {
+      idxChar = searchValue.substr(0, 2);
+    }
+
+    var resultsPage;
+    var resultsPageWithSearch;
+    var hasResultsPage;
+
+    var idx = indexSectionsWithContent[this.searchIndex].indexOf(idxChar);
+    if (idx!=-1)
+    {
+       var hexCode=idx.toString(16);
+       resultsPage = this.resultsPath + '/' + indexSectionNames[this.searchIndex] + '_' + hexCode + '.html';
+       resultsPageWithSearch = resultsPage+'?'+escape(searchValue);
+       hasResultsPage = true;
+    }
+    else // nothing available for this search term
+    {
+       resultsPage = this.resultsPath + '/nomatches.html';
+       resultsPageWithSearch = resultsPage;
+       hasResultsPage = false;
+    }
+
+    window.frames.MSearchResults.location = resultsPageWithSearch;  
+    var domPopupSearchResultsWindow = this.DOMPopupSearchResultsWindow();
+
+    if (domPopupSearchResultsWindow.style.display!='block')
+    {
+       var domSearchBox = this.DOMSearchBox();
+       this.DOMSearchClose().style.display = 'inline';
+       if (this.insideFrame)
+       {
+         var domPopupSearchResults = this.DOMPopupSearchResults();
+         domPopupSearchResultsWindow.style.position = 'relative';
+         domPopupSearchResultsWindow.style.display  = 'block';
+         var width = document.body.clientWidth - 8; // the -8 is for IE :-(
+         domPopupSearchResultsWindow.style.width    = width + 'px';
+         domPopupSearchResults.style.width          = width + 'px';
+       }
+       else
+       {
+         var domPopupSearchResults = this.DOMPopupSearchResults();
+         var left = getXPos(domSearchBox) + 150; // domSearchBox.offsetWidth;
+         var top  = getYPos(domSearchBox) + 20;  // domSearchBox.offsetHeight + 1;
+         domPopupSearchResultsWindow.style.display = 'block';
+         left -= domPopupSearchResults.offsetWidth;
+         domPopupSearchResultsWindow.style.top     = top  + 'px';
+         domPopupSearchResultsWindow.style.left    = left + 'px';
+       }
+    }
+
+    this.lastSearchValue = searchValue;
+    this.lastResultsPage = resultsPage;
+  }
+
+  // -------- Activation Functions
+
+  // Activates or deactivates the search panel, resetting things to 
+  // their default values if necessary. 
+  this.Activate = function(isActive)
+  {
+    if (isActive || // open it
+        this.DOMPopupSearchResultsWindow().style.display == 'block' 
+       )
+    {
+      this.DOMSearchBox().className = 'MSearchBoxActive';
+
+      var searchField = this.DOMSearchField();
+
+      if (searchField.value == this.searchLabel) // clear "Search" term upon entry
+      {  
+        searchField.value = '';  
+        this.searchActive = true;
+      }
+    }
+    else if (!isActive) // directly remove the panel
+    {
+      this.DOMSearchBox().className = 'MSearchBoxInactive';
+      this.DOMSearchField().value   = this.searchLabel;
+      this.searchActive             = false;
+      this.lastSearchValue          = ''
+      this.lastResultsPage          = '';
+    }
+  }
+}
+
+// -----------------------------------------------------------------------
+
+// The class that handles everything on the search results page.
+function SearchResults(name)
+{
+    // The number of matches from the last run of <Search()>.
+    this.lastMatchCount = 0;
+    this.lastKey = 0;
+    this.repeatOn = false;
+
+    // Toggles the visibility of the passed element ID.
+    this.FindChildElement = function(id)
+    {
+      var parentElement = document.getElementById(id);
+      var element = parentElement.firstChild;
+
+      while (element && element!=parentElement)
+      {
+        if (element.nodeName == 'DIV' && element.className == 'SRChildren')
+        {
+          return element;
+        }
+
+        if (element.nodeName == 'DIV' && element.hasChildNodes())
+        {  
+           element = element.firstChild;  
+        }
+        else if (element.nextSibling)
+        {  
+           element = element.nextSibling;  
+        }
+        else
+        {
+          do
+          {
+            element = element.parentNode;
+          }
+          while (element && element!=parentElement && !element.nextSibling);
+
+          if (element && element!=parentElement)
+          {  
+            element = element.nextSibling;  
+          }
+        }
+      }
+    }
+
+    this.Toggle = function(id)
+    {
+      var element = this.FindChildElement(id);
+      if (element)
+      {
+        if (element.style.display == 'block')
+        {
+          element.style.display = 'none';
+        }
+        else
+        {
+          element.style.display = 'block';
+        }
+      }
+    }
+
+    // Searches for the passed string.  If there is no parameter,
+    // it takes it from the URL query.
+    //
+    // Always returns true, since other documents may try to call it
+    // and that may or may not be possible.
+    this.Search = function(search)
+    {
+      if (!search) // get search word from URL
+      {
+        search = window.location.search;
+        search = search.substring(1);  // Remove the leading '?'
+        search = unescape(search);
+      }
+
+      search = search.replace(/^ +/, ""); // strip leading spaces
+      search = search.replace(/ +$/, ""); // strip trailing spaces
+      search = search.toLowerCase();
+      search = convertToId(search);
+
+      var resultRows = document.getElementsByTagName("div");
+      var matches = 0;
+
+      var i = 0;
+      while (i < resultRows.length)
+      {
+        var row = resultRows.item(i);
+        if (row.className == "SRResult")
+        {
+          var rowMatchName = row.id.toLowerCase();
+          rowMatchName = rowMatchName.replace(/^sr\d*_/, ''); // strip 'sr123_'
+
+          if (search.length<=rowMatchName.length && 
+             rowMatchName.substr(0, search.length)==search)
+          {
+            row.style.display = 'block';
+            matches++;
+          }
+          else
+          {
+            row.style.display = 'none';
+          }
+        }
+        i++;
+      }
+      document.getElementById("Searching").style.display='none';
+      if (matches == 0) // no results
+      {
+        document.getElementById("NoMatches").style.display='block';
+      }
+      else // at least one result
+      {
+        document.getElementById("NoMatches").style.display='none';
+      }
+      this.lastMatchCount = matches;
+      return true;
+    }
+
+    // return the first item with index index or higher that is visible
+    this.NavNext = function(index)
+    {
+      var focusItem;
+      while (1)
+      {
+        var focusName = 'Item'+index;
+        focusItem = document.getElementById(focusName);
+        if (focusItem && focusItem.parentNode.parentNode.style.display=='block')
+        {
+          break;
+        }
+        else if (!focusItem) // last element
+        {
+          break;
+        }
+        focusItem=null;
+        index++;
+      }
+      return focusItem;
+    }
+
+    this.NavPrev = function(index)
+    {
+      var focusItem;
+      while (1)
+      {
+        var focusName = 'Item'+index;
+        focusItem = document.getElementById(focusName);
+        if (focusItem && focusItem.parentNode.parentNode.style.display=='block')
+        {
+          break;
+        }
+        else if (!focusItem) // last element
+        {
+          break;
+        }
+        focusItem=null;
+        index--;
+      }
+      return focusItem;
+    }
+
+    this.ProcessKeys = function(e)
+    {
+      if (e.type == "keydown") 
+      {
+        this.repeatOn = false;
+        this.lastKey = e.keyCode;
+      }
+      else if (e.type == "keypress")
+      {
+        if (!this.repeatOn)
+        {
+          if (this.lastKey) this.repeatOn = true;
+          return false; // ignore first keypress after keydown
+        }
+      }
+      else if (e.type == "keyup")
+      {
+        this.lastKey = 0;
+        this.repeatOn = false;
+      }
+      return this.lastKey!=0;
+    }
+
+    this.Nav = function(evt,itemIndex) 
+    {
+      var e  = (evt) ? evt : window.event; // for IE
+      if (e.keyCode==13) return true;
+      if (!this.ProcessKeys(e)) return false;
+
+      if (this.lastKey==38) // Up
+      {
+        var newIndex = itemIndex-1;
+        var focusItem = this.NavPrev(newIndex);
+        if (focusItem)
+        {
+          var child = this.FindChildElement(focusItem.parentNode.parentNode.id);
+          if (child && child.style.display == 'block') // children visible
+          { 
+            var n=0;
+            var tmpElem;
+            while (1) // search for last child
+            {
+              tmpElem = document.getElementById('Item'+newIndex+'_c'+n);
+              if (tmpElem)
+              {
+                focusItem = tmpElem;
+              }
+              else // found it!
+              {
+                break;
+              }
+              n++;
+            }
+          }
+        }
+        if (focusItem)
+        {
+          focusItem.focus();
+        }
+        else // return focus to search field
+        {
+           parent.document.getElementById("MSearchField").focus();
+        }
+      }
+      else if (this.lastKey==40) // Down
+      {
+        var newIndex = itemIndex+1;
+        var focusItem;
+        var item = document.getElementById('Item'+itemIndex);
+        var elem = this.FindChildElement(item.parentNode.parentNode.id);
+        if (elem && elem.style.display == 'block') // children visible
+        {
+          focusItem = document.getElementById('Item'+itemIndex+'_c0');
+        }
+        if (!focusItem) focusItem = this.NavNext(newIndex);
+        if (focusItem)  focusItem.focus();
+      }
+      else if (this.lastKey==39) // Right
+      {
+        var item = document.getElementById('Item'+itemIndex);
+        var elem = this.FindChildElement(item.parentNode.parentNode.id);
+        if (elem) elem.style.display = 'block';
+      }
+      else if (this.lastKey==37) // Left
+      {
+        var item = document.getElementById('Item'+itemIndex);
+        var elem = this.FindChildElement(item.parentNode.parentNode.id);
+        if (elem) elem.style.display = 'none';
+      }
+      else if (this.lastKey==27) // Escape
+      {
+        parent.searchBox.CloseResultsWindow();
+        parent.document.getElementById("MSearchField").focus();
+      }
+      else if (this.lastKey==13) // Enter
+      {
+        return true;
+      }
+      return false;
+    }
+
+    this.NavChild = function(evt,itemIndex,childIndex)
+    {
+      var e  = (evt) ? evt : window.event; // for IE
+      if (e.keyCode==13) return true;
+      if (!this.ProcessKeys(e)) return false;
+
+      if (this.lastKey==38) // Up
+      {
+        if (childIndex>0)
+        {
+          var newIndex = childIndex-1;
+          document.getElementById('Item'+itemIndex+'_c'+newIndex).focus();
+        }
+        else // already at first child, jump to parent
+        {
+          document.getElementById('Item'+itemIndex).focus();
+        }
+      }
+      else if (this.lastKey==40) // Down
+      {
+        var newIndex = childIndex+1;
+        var elem = document.getElementById('Item'+itemIndex+'_c'+newIndex);
+        if (!elem) // last child, jump to parent next parent
+        {
+          elem = this.NavNext(itemIndex+1);
+        }
+        if (elem)
+        {
+          elem.focus();
+        } 
+      }
+      else if (this.lastKey==27) // Escape
+      {
+        parent.searchBox.CloseResultsWindow();
+        parent.document.getElementById("MSearchField").focus();
+      }
+      else if (this.lastKey==13) // Enter
+      {
+        return true;
+      }
+      return false;
+    }
+}
+
+function setKeyActions(elem,action)
+{
+  elem.setAttribute('onkeydown',action);
+  elem.setAttribute('onkeypress',action);
+  elem.setAttribute('onkeyup',action);
+}
+
+function setClassAttr(elem,attr)
+{
+  elem.setAttribute('class',attr);
+  elem.setAttribute('className',attr);
+}
+
+function createResults()
+{
+  var results = document.getElementById("SRResults");
+  for (var e=0; e<searchData.length; e++)
+  {
+    var id = searchData[e][0];
+    var srResult = document.createElement('div');
+    srResult.setAttribute('id','SR_'+id);
+    setClassAttr(srResult,'SRResult');
+    var srEntry = document.createElement('div');
+    setClassAttr(srEntry,'SREntry');
+    var srLink = document.createElement('a');
+    srLink.setAttribute('id','Item'+e);
+    setKeyActions(srLink,'return searchResults.Nav(event,'+e+')');
+    setClassAttr(srLink,'SRSymbol');
+    srLink.innerHTML = searchData[e][1][0];
+    srEntry.appendChild(srLink);
+    if (searchData[e][1].length==2) // single result
+    {
+      srLink.setAttribute('href',searchData[e][1][1][0]);
+      if (searchData[e][1][1][1])
+      {
+       srLink.setAttribute('target','_parent');
+      }
+      var srScope = document.createElement('span');
+      setClassAttr(srScope,'SRScope');
+      srScope.innerHTML = searchData[e][1][1][2];
+      srEntry.appendChild(srScope);
+    }
+    else // multiple results
+    {
+      srLink.setAttribute('href','javascript:searchResults.Toggle("SR_'+id+'")');
+      var srChildren = document.createElement('div');
+      setClassAttr(srChildren,'SRChildren');
+      for (var c=0; c<searchData[e][1].length-1; c++)
+      {
+        var srChild = document.createElement('a');
+        srChild.setAttribute('id','Item'+e+'_c'+c);
+        setKeyActions(srChild,'return searchResults.NavChild(event,'+e+','+c+')');
+        setClassAttr(srChild,'SRScope');
+        srChild.setAttribute('href',searchData[e][1][c+1][0]);
+        if (searchData[e][1][c+1][1])
+        {
+         srChild.setAttribute('target','_parent');
+        }
+        srChild.innerHTML = searchData[e][1][c+1][2];
+        srChildren.appendChild(srChild);
+      }
+      srEntry.appendChild(srChildren);
+    }
+    srResult.appendChild(srEntry);
+    results.appendChild(srResult);
+  }
+}
+
+</script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<style type="text/css" style="display:none">/* The standard CSS for doxygen 1.8.6 */
+
+body, table, div, p, dl {
+	font: 400 14px/22px Roboto,sans-serif;
+}
+
+/* @group Heading Levels */
+
+h1.groupheader {
+	font-size: 150%;
+}
+
+.title {
+	font: 400 14px/28px Roboto,sans-serif;
+	font-size: 150%;
+	font-weight: bold;
+	margin: 10px 2px;
+}
+
+h2.groupheader {
+	border-bottom: 1px solid #879ECB;
+	color: #354C7B;
+	font-size: 150%;
+	font-weight: normal;
+	margin-top: 1.75em;
+	padding-top: 8px;
+	padding-bottom: 4px;
+	width: 100%;
+}
+
+h3.groupheader {
+	font-size: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	-webkit-transition: text-shadow 0.5s linear;
+	-moz-transition: text-shadow 0.5s linear;
+	-ms-transition: text-shadow 0.5s linear;
+	-o-transition: text-shadow 0.5s linear;
+	transition: text-shadow 0.5s linear;
+	margin-right: 15px;
+}
+
+h1.glow, h2.glow, h3.glow, h4.glow, h5.glow, h6.glow {
+	text-shadow: 0 0 15px cyan;
+}
+
+dt {
+	font-weight: bold;
+}
+
+div.multicol {
+	-moz-column-gap: 1em;
+	-webkit-column-gap: 1em;
+	-moz-column-count: 3;
+	-webkit-column-count: 3;
+}
+
+p.startli, p.startdd {
+	margin-top: 2px;
+}
+
+p.starttd {
+	margin-top: 0px;
+}
+
+p.endli {
+	margin-bottom: 0px;
+}
+
+p.enddd {
+	margin-bottom: 4px;
+}
+
+p.endtd {
+	margin-bottom: 2px;
+}
+
+/* @end */
+
+caption {
+	font-weight: bold;
+}
+
+span.legend {
+        font-size: 70%;
+        text-align: center;
+}
+
+h3.version {
+        font-size: 90%;
+        text-align: center;
+}
+
+div.qindex, div.navtab{
+	background-color: #EBEFF6;
+	border: 1px solid #A3B4D7;
+	text-align: center;
+}
+
+div.qindex, div.navpath {
+	width: 100%;
+	line-height: 140%;
+}
+
+div.navtab {
+	margin-right: 15px;
+}
+
+/* @group Link Styling */
+
+a {
+	color: #3D578C;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.contents a:visited {
+	color: #4665A2;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a.qindex {
+	font-weight: bold;
+}
+
+a.qindexHL {
+	font-weight: bold;
+	background-color: #9CAFD4;
+	color: #ffffff;
+	border: 1px double #869DCA;
+}
+
+.contents a.qindexHL:visited {
+        color: #ffffff;
+}
+
+a.el {
+	font-weight: bold;
+}
+
+a.elRef {
+}
+
+a.code, a.code:visited, a.line, a.line:visited {
+	color: #4665A2; 
+}
+
+a.codeRef, a.codeRef:visited, a.lineRef, a.lineRef:visited {
+	color: #4665A2; 
+}
+
+/* @end */
+
+dl.el {
+	margin-left: -1cm;
+}
+
+pre.fragment {
+        border: 1px solid #C4CFE5;
+        background-color: #FBFCFD;
+        padding: 4px 6px;
+        margin: 4px 8px 4px 2px;
+        overflow: auto;
+        word-wrap: break-word;
+        font-size:  9pt;
+        line-height: 125%;
+        font-family: monospace, fixed;
+        font-size: 105%;
+}
+
+div.fragment {
+        padding: 4px 6px;
+        margin: 4px 8px 4px 2px;
+	background-color: #FBFCFD;
+	border: 1px solid #C4CFE5;
+}
+
+div.line {
+	font-family: monospace, fixed;
+        font-size: 13px;
+	min-height: 13px;
+	line-height: 1.0;
+	text-wrap: unrestricted;
+	white-space: -moz-pre-wrap; /* Moz */
+	white-space: -pre-wrap;     /* Opera 4-6 */
+	white-space: -o-pre-wrap;   /* Opera 7 */
+	white-space: pre-wrap;      /* CSS3  */
+	word-wrap: break-word;      /* IE 5.5+ */
+	text-indent: -53px;
+	padding-left: 53px;
+	padding-bottom: 0px;
+	margin: 0px;
+	-webkit-transition-property: background-color, box-shadow;
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-property: background-color, box-shadow;
+	-moz-transition-duration: 0.5s;
+	-ms-transition-property: background-color, box-shadow;
+	-ms-transition-duration: 0.5s;
+	-o-transition-property: background-color, box-shadow;
+	-o-transition-duration: 0.5s;
+	transition-property: background-color, box-shadow;
+	transition-duration: 0.5s;
+}
+
+div.line.glow {
+	background-color: cyan;
+	box-shadow: 0 0 10px cyan;
+}
+
+
+span.lineno {
+	padding-right: 4px;
+	text-align: right;
+	border-right: 2px solid #0F0;
+	background-color: #E8E8E8;
+        white-space: pre;
+}
+span.lineno a {
+	background-color: #D8D8D8;
+}
+
+span.lineno a:hover {
+	background-color: #C8C8C8;
+}
+
+div.ah {
+	background-color: black;
+	font-weight: bold;
+	color: #ffffff;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	padding: 0.2em;
+	border: solid thin #333;
+	border-radius: 0.5em;
+	-webkit-border-radius: .5em;
+	-moz-border-radius: .5em;
+	box-shadow: 2px 2px 3px #999;
+	-webkit-box-shadow: 2px 2px 3px #999;
+	-moz-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 2px;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#000),color-stop(0.3, #444));
+	background-image: -moz-linear-gradient(center top, #eee 0%, #444 40%, #000);
+}
+
+div.groupHeader {
+	margin-left: 16px;
+	margin-top: 12px;
+	font-weight: bold;
+}
+
+div.groupText {
+	margin-left: 16px;
+	font-style: italic;
+}
+
+body {
+	background-color: white;
+	color: black;
+        margin: 0;
+}
+
+div.contents {
+	margin-top: 10px;
+	margin-left: 12px;
+	margin-right: 8px;
+}
+
+td.indexkey {
+	background-color: #EBEFF6;
+	font-weight: bold;
+	border: 1px solid #C4CFE5;
+	margin: 2px 0px 2px 0;
+	padding: 2px 10px;
+        white-space: nowrap;
+        vertical-align: top;
+}
+
+td.indexvalue {
+	background-color: #EBEFF6;
+	border: 1px solid #C4CFE5;
+	padding: 2px 10px;
+	margin: 2px 0px;
+}
+
+tr.memlist {
+	background-color: #EEF1F7;
+}
+
+p.formulaDsp {
+	text-align: center;
+}
+
+img.formulaDsp {
+	
+}
+
+img.formulaInl {
+	vertical-align: middle;
+}
+
+div.center {
+	text-align: center;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 0px;
+}
+
+div.center img {
+	border: 0px;
+}
+
+address.footer {
+	text-align: right;
+	padding-right: 12px;
+}
+
+img.footer {
+	border: 0px;
+	vertical-align: middle;
+}
+
+/* @group Code Colorization */
+
+span.keyword {
+	color: #008000
+}
+
+span.keywordtype {
+	color: #604020
+}
+
+span.keywordflow {
+	color: #e08000
+}
+
+span.comment {
+	color: #800000
+}
+
+span.preprocessor {
+	color: #806020
+}
+
+span.stringliteral {
+	color: #002080
+}
+
+span.charliteral {
+	color: #008080
+}
+
+span.vhdldigit { 
+	color: #ff00ff 
+}
+
+span.vhdlchar { 
+	color: #000000 
+}
+
+span.vhdlkeyword { 
+	color: #700070 
+}
+
+span.vhdllogic { 
+	color: #ff0000 
+}
+
+blockquote {
+        background-color: #F7F8FB;
+        border-left: 2px solid #9CAFD4;
+        margin: 0 24px 0 4px;
+        padding: 0 12px 0 16px;
+}
+
+/* @end */
+
+/*
+.search {
+	color: #003399;
+	font-weight: bold;
+}
+
+form.search {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
+input.search {
+	font-size: 75%;
+	color: #000080;
+	font-weight: normal;
+	background-color: #e8eef2;
+}
+*/
+
+td.tiny {
+	font-size: 75%;
+}
+
+.dirtab {
+	padding: 4px;
+	border-collapse: collapse;
+	border: 1px solid #A3B4D7;
+}
+
+th.dirtab {
+	background: #EBEFF6;
+	font-weight: bold;
+}
+
+hr {
+	height: 0px;
+	border: none;
+	border-top: 1px solid #4A6AAA;
+}
+
+hr.footer {
+	height: 1px;
+}
+
+/* @group Member Descriptions */
+
+table.memberdecls {
+	border-spacing: 0px;
+	padding: 0px;
+}
+
+.memberdecls td, .fieldtable tr {
+	-webkit-transition-property: background-color, box-shadow;
+	-webkit-transition-duration: 0.5s;
+	-moz-transition-property: background-color, box-shadow;
+	-moz-transition-duration: 0.5s;
+	-ms-transition-property: background-color, box-shadow;
+	-ms-transition-duration: 0.5s;
+	-o-transition-property: background-color, box-shadow;
+	-o-transition-duration: 0.5s;
+	transition-property: background-color, box-shadow;
+	transition-duration: 0.5s;
+}
+
+.memberdecls td.glow, .fieldtable tr.glow {
+	background-color: cyan;
+	box-shadow: 0 0 15px cyan;
+}
+
+.mdescLeft, .mdescRight,
+.memItemLeft, .memItemRight,
+.memTemplItemLeft, .memTemplItemRight, .memTemplParams {
+	background-color: #F9FAFC;
+	border: none;
+	margin: 4px;
+	padding: 1px 0 0 8px;
+}
+
+.mdescLeft, .mdescRight {
+	padding: 0px 8px 4px 8px;
+	color: #555;
+}
+
+.memSeparator {
+        border-bottom: 1px solid #DEE4F0;
+        line-height: 1px;
+        margin: 0px;
+        padding: 0px;
+}
+
+.memItemLeft, .memTemplItemLeft {
+        white-space: nowrap;
+}
+
+.memItemRight {
+	width: 100%;
+}
+
+.memTemplParams {
+	color: #4665A2;
+        white-space: nowrap;
+	font-size: 80%;
+}
+
+/* @end */
+
+/* @group Member Details */
+
+/* Styles for detailed member documentation */
+
+.memtemplate {
+	font-size: 80%;
+	color: #4665A2;
+	font-weight: normal;
+	margin-left: 9px;
+}
+
+.memnav {
+	background-color: #EBEFF6;
+	border: 1px solid #A3B4D7;
+	text-align: center;
+	margin: 2px;
+	margin-right: 15px;
+	padding: 2px;
+}
+
+.mempage {
+	width: 100%;
+}
+
+.memitem {
+	padding: 0;
+	margin-bottom: 10px;
+	margin-right: 5px;
+        -webkit-transition: box-shadow 0.5s linear;
+        -moz-transition: box-shadow 0.5s linear;
+        -ms-transition: box-shadow 0.5s linear;
+        -o-transition: box-shadow 0.5s linear;
+        transition: box-shadow 0.5s linear;
+        display: table !important;
+        width: 100%;
+}
+
+.memitem.glow {
+         box-shadow: 0 0 15px cyan;
+}
+
+.memname {
+        font-weight: bold;
+        margin-left: 6px;
+}
+
+.memname td {
+	vertical-align: bottom;
+}
+
+.memproto, dl.reflist dt {
+        border-top: 1px solid #A8B8D9;
+        border-left: 1px solid #A8B8D9;
+        border-right: 1px solid #A8B8D9;
+        padding: 6px 0px 6px 0px;
+        color: #253555;
+        font-weight: bold;
+        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+        background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/nav_f.png');
+        background-repeat:repeat-x;
+        background-color: #E2E8F2;
+        /* opera specific markup */
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        /* firefox specific markup */
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        -moz-border-radius-topright: 4px;
+        -moz-border-radius-topleft: 4px;
+        /* webkit specific markup */
+        -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+        -webkit-border-top-right-radius: 4px;
+        -webkit-border-top-left-radius: 4px;
+
+}
+
+.memdoc, dl.reflist dd {
+        border-bottom: 1px solid #A8B8D9;      
+        border-left: 1px solid #A8B8D9;      
+        border-right: 1px solid #A8B8D9; 
+        padding: 6px 10px 2px 10px;
+        background-color: #FBFCFD;
+        border-top-width: 0;
+        background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/nav_g.png');
+        background-repeat:repeat-x;
+        background-color: #FFFFFF;
+        /* opera specific markup */
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+        /* firefox specific markup */
+        -moz-border-radius-bottomleft: 4px;
+        -moz-border-radius-bottomright: 4px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+        /* webkit specific markup */
+        -webkit-border-bottom-left-radius: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+}
+
+dl.reflist dt {
+        padding: 5px;
+}
+
+dl.reflist dd {
+        margin: 0px 0px 10px 0px;
+        padding: 5px;
+}
+
+.paramkey {
+	text-align: right;
+}
+
+.paramtype {
+	white-space: nowrap;
+}
+
+.paramname {
+	color: #602020;
+	white-space: nowrap;
+}
+.paramname em {
+	font-style: normal;
+}
+.paramname code {
+        line-height: 14px;
+}
+
+.params, .retval, .exception, .tparams {
+        margin-left: 0px;
+        padding-left: 0px;
+}       
+
+.params .paramname, .retval .paramname {
+        font-weight: bold;
+        vertical-align: top;
+}
+        
+.params .paramtype {
+        font-style: italic;
+        vertical-align: top;
+}       
+        
+.params .paramdir {
+        font-family: "courier new",courier,monospace;
+        vertical-align: top;
+}
+
+table.mlabels {
+	border-spacing: 0px;
+}
+
+td.mlabels-left {
+	width: 100%;
+	padding: 0px;
+}
+
+td.mlabels-right {
+	vertical-align: bottom;
+	padding: 0px;
+	white-space: nowrap;
+}
+
+span.mlabels {
+        margin-left: 8px;
+}
+
+span.mlabel {
+        background-color: #728DC1;
+        border-top:1px solid #5373B4;
+        border-left:1px solid #5373B4;
+        border-right:1px solid #C4CFE5;
+        border-bottom:1px solid #C4CFE5;
+	text-shadow: none;
+	color: white;
+	margin-right: 4px;
+	padding: 2px 3px;
+	border-radius: 3px;
+	font-size: 7pt;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+
+
+/* @end */
+
+/* these are for tree view when not used as main index */
+
+div.directory {
+        margin: 10px 0px;
+        border-top: 1px solid #A8B8D9;
+        border-bottom: 1px solid #A8B8D9;
+        width: 100%;
+}
+
+.directory table {
+        border-collapse:collapse;
+}
+
+.directory td {
+        margin: 0px;
+        padding: 0px;
+	vertical-align: top;
+}
+
+.directory td.entry {
+        white-space: nowrap;
+        padding-right: 6px;
+	padding-top: 3px;
+}
+
+.directory td.entry a {
+        outline:none;
+}
+
+.directory td.entry a img {
+        border: none;
+}
+
+.directory td.desc {
+        width: 100%;
+        padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 3px;
+	border-left: 1px solid rgba(0,0,0,0.05);
+}
+
+.directory tr.even {
+	padding-left: 6px;
+	background-color: #F7F8FB;
+}
+
+.directory img {
+	vertical-align: -30%;
+}
+
+.directory .levels {
+        white-space: nowrap;
+        width: 100%;
+        text-align: right;
+        font-size: 9pt;
+}
+
+.directory .levels span {
+        cursor: pointer;
+        padding-left: 2px;
+        padding-right: 2px;
+	color: #3D578C;
+}
+
+div.dynheader {
+        margin-top: 8px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+address {
+	font-style: normal;
+	color: #2A3D61;
+}
+
+table.doxtable {
+	border-collapse:collapse;
+        margin-top: 4px;
+        margin-bottom: 4px;
+}
+
+table.doxtable td, table.doxtable th {
+	border: 1px solid #2D4068;
+	padding: 3px 7px 2px;
+}
+
+table.doxtable th {
+	background-color: #374F7F;
+	color: #FFFFFF;
+	font-size: 110%;
+	padding-bottom: 4px;
+	padding-top: 5px;
+}
+
+table.fieldtable {
+        /*width: 100%;*/
+        margin-bottom: 10px;
+        border: 1px solid #A8B8D9;
+        border-spacing: 0px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 2px;
+        -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+}
+
+.fieldtable td, .fieldtable th {
+        padding: 3px 7px 2px;
+}
+
+.fieldtable td.fieldtype, .fieldtable td.fieldname {
+        white-space: nowrap;
+        border-right: 1px solid #A8B8D9;
+        border-bottom: 1px solid #A8B8D9;
+        vertical-align: top;
+}
+
+.fieldtable td.fieldname {
+        padding-top: 3px;
+}
+
+.fieldtable td.fielddoc {
+        border-bottom: 1px solid #A8B8D9;
+        /*width: 100%;*/
+}
+
+.fieldtable td.fielddoc p:first-child {
+        margin-top: 0px;
+}       
+        
+.fieldtable td.fielddoc p:last-child {
+        margin-bottom: 2px;
+}
+
+.fieldtable tr:last-child td {
+        border-bottom: none;
+}
+
+.fieldtable th {
+        background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/nav_f.png');
+        background-repeat:repeat-x;
+        background-color: #E2E8F2;
+        font-size: 90%;
+        color: #253555;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align:left;
+        -moz-border-radius-topleft: 4px;
+        -moz-border-radius-topright: 4px;
+        -webkit-border-top-left-radius: 4px;
+        -webkit-border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom: 1px solid #A8B8D9;
+}
+
+
+.tabsearch {
+	top: 0px;
+	left: 10px;
+	height: 36px;
+	background-image: url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_b.png');
+	z-index: 101;
+	overflow: hidden;
+	font-size: 13px;
+}
+
+.navpath ul
+{
+	font-size: 11px;
+	background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/tab_b.png');
+	background-repeat:repeat-x;
+	background-position: 0 -5px;
+	height:30px;
+	line-height:30px;
+	color:#8AA0CC;
+	border:solid 1px #C2CDE4;
+	overflow:hidden;
+	margin:0px;
+	padding:0px;
+}
+
+.navpath li
+{
+	list-style-type:none;
+	float:left;
+	padding-left:10px;
+	padding-right:15px;
+	background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/bc_s.png');
+	background-repeat:no-repeat;
+	background-position:right;
+	color:#364D7C;
+}
+
+.navpath li.navelem a
+{
+	height:32px;
+	display:block;
+	text-decoration: none;
+	outline: none;
+	color: #283A5D;
+	font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);
+	text-decoration: none;        
+}
+
+.navpath li.navelem a:hover
+{
+	color:#6884BD;
+}
+
+.navpath li.footer
+{
+        list-style-type:none;
+        float:right;
+        padding-left:10px;
+        padding-right:15px;
+        background-image:none;
+        background-repeat:no-repeat;
+        background-position:right;
+        color:#364D7C;
+        font-size: 8pt;
+}
+
+
+div.summary
+{
+	float: right;
+	font-size: 8pt;
+	padding-right: 5px;
+	width: 50%;
+	text-align: right;
+}       
+
+div.summary a
+{
+	white-space: nowrap;
+}
+
+div.ingroups
+{
+	font-size: 8pt;
+	width: 50%;
+	text-align: left;
+}
+
+div.ingroups a
+{
+	white-space: nowrap;
+}
+
+div.header
+{
+        background-image:url('http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/nav_h.png');
+        background-repeat:repeat-x;
+	background-color: #F9FAFC;
+	margin:  0px;
+	border-bottom: 1px solid #C4CFE5;
+}
+
+div.headertitle
+{
+	padding: 5px 5px 5px 10px;
+}
+
+dl
+{
+        padding: 0 0 0 10px;
+}
+
+/* dl.note, dl.warning, dl.attention, dl.pre, dl.post, dl.invariant, dl.deprecated, dl.todo, dl.test, dl.bug */
+dl.section
+{
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+dl.note
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #D0C000;
+}
+
+dl.warning, dl.attention
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #FF0000;
+}
+
+dl.pre, dl.post, dl.invariant
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #00D000;
+}
+
+dl.deprecated
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #505050;
+}
+
+dl.todo
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #00C0E0;
+}
+
+dl.test
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #3030E0;
+}
+
+dl.bug
+{
+        margin-left:-7px;
+        padding-left: 3px;
+        border-left:4px solid;
+        border-color: #C08050;
+}
+
+dl.section dd {
+	margin-bottom: 6px;
+}
+
+
+#projectlogo
+{
+	text-align: center;
+	vertical-align: bottom;
+	border-collapse: separate;
+}
+ 
+#projectlogo img
+{ 
+	border: 0px none;
+}
+ 
+#projectname
+{
+	font: 300% Tahoma, Arial,sans-serif;
+	margin: 0px;
+	padding: 2px 0px;
+}
+    
+#projectbrief
+{
+	font: 120% Tahoma, Arial,sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+
+#projectnumber
+{
+	font: 50% Tahoma, Arial,sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+
+#titlearea
+{
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	border-bottom: 1px solid #5373B4;
+}
+
+.image
+{
+        text-align: center;
+}
+
+.dotgraph
+{
+        text-align: center;
+}
+
+.mscgraph
+{
+        text-align: center;
+}
+
+.diagraph
+{
+        text-align: center;
+}
+
+.caption
+{
+	font-weight: bold;
+}
+
+div.zoom
+{
+	border: 1px solid #90A5CE;
+}
+
+dl.citelist {
+        margin-bottom:50px;
+}
+
+dl.citelist dt {
+        color:#334975;
+        float:left;
+        font-weight:bold;
+        margin-right:10px;
+        padding:5px;
+}
+
+dl.citelist dd {
+        margin:2px 0;
+        padding:5px 0;
+}
+
+div.toc {
+        padding: 14px 25px;
+        background-color: #F4F6FA;
+        border: 1px solid #D8DFEE;
+        border-radius: 7px 7px 7px 7px;
+        float: right;
+        height: auto;
+        margin: 0 20px 10px 10px;
+        width: 200px;
+}
+
+div.toc li {
+        background: url("http://www.ittc.ku.edu/~heechul/courses/eecs678/S17/projects/quash/doc/html/bdwn.png") no-repeat scroll 0 5px transparent;
+        font: 10px/1.2 Verdana,DejaVu Sans,Geneva,sans-serif;
+        margin-top: 5px;
+        padding-left: 10px;
+        padding-top: 2px;
+}
+
+div.toc h3 {
+        font: bold 12px/1.2 Arial,FreeSans,sans-serif;
+	color: #4665A2;
+        border-bottom: 0 none;
+        margin: 0;
+}
+
+div.toc ul {
+        list-style: none outside none;
+        border: medium none;
+        padding: 0px;
+}       
+
+div.toc li.level1 {
+        margin-left: 0px;
+}
+
+div.toc li.level2 {
+        margin-left: 15px;
+}
+
+div.toc li.level3 {
+        margin-left: 30px;
+}
+
+div.toc li.level4 {
+        margin-left: 45px;
+}
+
+.inherit_header {
+        font-weight: bold;
+        color: gray;
+        cursor: pointer;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.inherit_header td {
+        padding: 6px 0px 2px 5px;
+}
+
+.inherit {
+        display: none;
+}
+
+tr.heading h2 {
+        margin-top: 12px;
+        margin-bottom: 4px;
+}
+
+/* tooltip related style info */
+
+.ttc {
+        position: absolute;
+        display: none;
+}
+
+#powerTip {
+	cursor: default;
+	white-space: nowrap;
+	background-color: white;
+	border: 1px solid gray;
+	border-radius: 4px 4px 4px 4px;
+	box-shadow: 1px 1px 7px gray;
+	display: none;
+	font-size: smaller;
+	max-width: 80%;
+	opacity: 0.9;
+	padding: 1ex 1em 1em;
+	position: absolute;
+	z-index: 2147483647;
+}
+
+#powerTip div.ttdoc {
+        color: grey;
+	font-style: italic;
+}
+
+#powerTip div.ttname a {
+        font-weight: bold;
+}
+
+#powerTip div.ttname {
+        font-weight: bold;
+}
+
+#powerTip div.ttdeci {
+        color: #006318;
+}
+
+#powerTip div {
+        margin: 0px;
+        padding: 0px;
+        font: 12px/16px Roboto,sans-serif;
+}
+
+#powerTip:before, #powerTip:after {
+	content: "";
+	position: absolute;
+	margin: 0px;
+}
+
+#powerTip.n:after,  #powerTip.n:before,
+#powerTip.s:after,  #powerTip.s:before,
+#powerTip.w:after,  #powerTip.w:before,
+#powerTip.e:after,  #powerTip.e:before,
+#powerTip.ne:after, #powerTip.ne:before,
+#powerTip.se:after, #powerTip.se:before,
+#powerTip.nw:after, #powerTip.nw:before,
+#powerTip.sw:after, #powerTip.sw:before {
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+}
+
+#powerTip.n:after,  #powerTip.s:after,
+#powerTip.w:after,  #powerTip.e:after,
+#powerTip.nw:after, #powerTip.ne:after,
+#powerTip.sw:after, #powerTip.se:after {
+	border-color: rgba(255, 255, 255, 0);
+}
+
+#powerTip.n:before,  #powerTip.s:before,
+#powerTip.w:before,  #powerTip.e:before,
+#powerTip.nw:before, #powerTip.ne:before,
+#powerTip.sw:before, #powerTip.se:before {
+	border-color: rgba(128, 128, 128, 0);
+}
+
+#powerTip.n:after,  #powerTip.n:before,
+#powerTip.ne:after, #powerTip.ne:before,
+#powerTip.nw:after, #powerTip.nw:before {
+	top: 100%;
+}
+
+#powerTip.n:after, #powerTip.ne:after, #powerTip.nw:after {
+	border-top-color: #ffffff;
+	border-width: 10px;
+	margin: 0px -10px;
+}
+#powerTip.n:before {
+	border-top-color: #808080;
+	border-width: 11px;
+	margin: 0px -11px;
+}
+#powerTip.n:after, #powerTip.n:before {
+	left: 50%;
+}
+
+#powerTip.nw:after, #powerTip.nw:before {
+	right: 14px;
+}
+
+#powerTip.ne:after, #powerTip.ne:before {
+	left: 14px;
+}
+
+#powerTip.s:after,  #powerTip.s:before,
+#powerTip.se:after, #powerTip.se:before,
+#powerTip.sw:after, #powerTip.sw:before {
+	bottom: 100%;
+}
+
+#powerTip.s:after, #powerTip.se:after, #powerTip.sw:after {
+	border-bottom-color: #ffffff;
+	border-width: 10px;
+	margin: 0px -10px;
+}
+
+#powerTip.s:before, #powerTip.se:before, #powerTip.sw:before {
+	border-bottom-color: #808080;
+	border-width: 11px;
+	margin: 0px -11px;
+}
+
+#powerTip.s:after, #powerTip.s:before {
+	left: 50%;
+}
+
+#powerTip.sw:after, #powerTip.sw:before {
+	right: 14px;
+}
+
+#powerTip.se:after, #powerTip.se:before {
+	left: 14px;
+}
+
+#powerTip.e:after, #powerTip.e:before {
+	left: 100%;
+}
+#powerTip.e:after {
+	border-left-color: #ffffff;
+	border-width: 10px;
+	top: 50%;
+	margin-top: -10px;
+}
+#powerTip.e:before {
+	border-left-color: #808080;
+	border-width: 11px;
+	top: 50%;
+	margin-top: -11px;
+}
+
+#powerTip.w:after, #powerTip.w:before {
+	right: 100%;
+}
+#powerTip.w:after {
+	border-right-color: #ffffff;
+	border-width: 10px;
+	top: 50%;
+	margin-top: -10px;
+}
+#powerTip.w:before {
+	border-right-color: #808080;
+	border-width: 11px;
+	top: 50%;
+	margin-top: -11px;
+}
+
+@media print
+{
+  #top { display: none; }
+  #side-nav { display: none; }
+  #nav-path { display: none; }
+  body { overflow:visible; }
+  h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+  .summary { display: none; }
+  .memitem { page-break-inside: avoid; }
+  #doc-content
+  {
+    margin-left:0 !important;
+    height:auto !important;
+    width:auto !important;
+    overflow:inherit;
+    display:inline;
+  }
+}
+
+
+</style>
+
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Quash Shell
+   &nbsp;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">A simple yet powerfull shell program</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Search');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li class="current"><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/annotated.html"><span>Classes</span></a></li>
+      <li><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/files.html"><span>Files</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="Quash%20Shell:%20Main%20Page_files/mag_sel.png" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()" alt="">
+          <input id="MSearchField" value="Search" accesskey="S" onfocus="searchBox.OnSearchFieldFocus(true)" onblur="searchBox.OnSearchFieldFocus(false)" onkeyup="searchBox.OnSearchFieldChange(event)" type="text">
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" src="Quash%20Shell:%20Main%20Page_files/close.png" alt="" border="0"></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()" onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" name="MSearchResults" id="MSearchResults" frameborder="0">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">Quash Shell Documentation</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><blockquote class="doxtable">
+<h1>EECS 678 - Project 1 - Quash Shell</h1>
+<p></p>
+</blockquote>
+<h2>Introduction</h2>
+<p>In this project, you will complete the Quite a Shell (quash) program 
+using the UNIX system calls. You may work in groups of 2. The purpose of
+ this project is as follows:</p>
+<ul>
+<li>Getting familiar with the Operating System (UNIX) interface.</li>
+<li>Exercising UNIX system calls.</li>
+<li>Understanding the concept of a process from the user point of view.</li>
+</ul>
+<p>A skeleton has been provided, but it lacks most of the core 
+functionality one would expect from a shell program. Quash should behave
+ similar to csh, bash or other popular shell programs.</p>
+<h2>Installation</h2>
+<p>To build Quash use: </p><blockquote class="doxtable">
+<p><code>make</code> </p>
+</blockquote>
+<p>To generate this documentation in HTML and LaTeX use: </p><blockquote class="doxtable">
+<p><code>make doc</code> </p>
+</blockquote>
+<p>To clean quash use: </p><blockquote class="doxtable">
+<p><code>make clean</code> </p>
+</blockquote>
+<h2>Usage</h2>
+<p>To run Quash use: </p><blockquote class="doxtable">
+<p><code>./quash</code> </p>
+</blockquote>
+<p>or </p><blockquote class="doxtable">
+<p><code>make test</code> </p>
+</blockquote>
+<h2>Features</h2>
+<p><em><b>The main file you will modify is <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html" title="Implements interface functions between Quash and the environment and functions that interpret an exec...">src/execute.c</a>. You may not use or modify files in the src/parsing directory, with the notable exception of the <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/parsing__interface_8h.html#a659361d40550d9776b6ea7fa69a836ce" title="Cleanup memory dynamically allocated by the parser. ">destroy_parser()</a> function in src/parsing/parse_interface.c if necessary. Your output should match our example result files exactly.</b></em></p>
+<p>The following features should be implemented in Quash:</p>
+<ul>
+<li>Quash should be able to run executables (the basic function of a shell) with command line parameters</li>
+<li>If the executable is not specified in the absolute or relative path 
+format (starting with sequences of ‘/’, './', or '../'), quash should 
+search the directories in the environment variable PATH (see below). If 
+no executable file is found, quash should print an error message to 
+standard error. Quash should allow both foreground and background 
+executions. Character ‘&amp;’ is used to indicate background execution. 
+Commands without ‘&amp;’ are assumed to run in foreground.<ul>
+<li>When a command is run in the background, quash should print: "Background
+      job started: [JOBID]    PID    COMMAND"</li>
+<li>When a background command finishes, quash should print: "Completed:
+      [JOBID]    PID    COMMAND"</li>
+</ul>
+</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ program1 &amp;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;Background job started: [1]    2342    program1 &amp;</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ ls</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;Documents Downloads</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;Completed: [1]    2342    program1 &amp;</div></div><!-- fragment --><ul>
+<li>Quash should implement I/O redirection. The <code>&lt;</code> character is used to redirect the standard input from a file. The <code>&gt;</code> character is used to redirect the standard output to a file while truncating the file. The <code>&gt;&gt;</code> string is used to redirect the standard output to a file while appending the output to the end of the file.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ echo Hello Quash! &gt; a.txt  # Write "Hello Quash!\n" to a file</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;[QUASH]$ cat a.txt</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;Hello Quash!</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;[QUASH]$ echo Hey Quash! &gt; a.txt  # Truncate the previous contents of a.txt and write "Hey Quash!\n" to the file</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;[QUASH]$
+ cat a.txt          # Print file contents. If we didn't actually 
+truncate we would see "Hey Quash!h!\n" as the output of this command.</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;Hey Quash!</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;[QUASH]$ cat &lt; a.txt        # Make cat read from a.txt via standard in</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;Hey Quash!</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&nbsp;[QUASH]$ cat &lt; a.txt &gt; b.txt  # Multiple redirect. Read from a.txt and write to b.txt.</div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&nbsp;[QUASH]$ cat b.txt</div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&nbsp;Hey Quash!</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&nbsp;[QUASH]$ cat a.txt &gt;&gt; b.txt  # Append output of a.txt to b.txt</div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&nbsp;[QUASH]$ cat b.txt</div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&nbsp;Hey Quash!</div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&nbsp;Hey Quash!</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&nbsp;[QUASH]$</div></div><!-- fragment --><ul>
+<li>Quash should support pipes <code>|</code>.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ cat src/quash.c | grep running</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;// Check if loop is running</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;bool is_running() {</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;  return state.running;</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;  state.running = false;</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;  while (is_running()) {</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;[QUASH]$ cat src/quash.c | grep running | grep return</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;  return state.running;</div></div><!-- fragment --><h3>Built-in Functions</h3>
+<p>All built-in commands should be implemented in quash itself. They 
+cannot be external programs of any kind. Quash should support the 
+following built-in functions:</p>
+<ul>
+<li><code>echo</code> - Print a string given as an argument. The output format should be the same as bash (a string followed by new line '\n')</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ echo Hello world! 'How are you today?'</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;Hello world! How are you today?</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ echo $HOME/Development</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;/home/jrobinson/Development</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;[QUASH]$</div></div><!-- fragment --><ul>
+<li>export - Sets the value of an environment variable. Quash should support reading from and writing to environment variables.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ export PATH=/usr/bin:/bin  # Set the PATH environment variable</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;[QUASH]$ echo $PATH                 # Print the current value of PATH</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;/usr/bin:/bin</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;[QUASH]$ echo $HOME</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;[QUASH]$ export PATH=$HOME  # Set the PATH environment variable to the value of HOME</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;[QUASH]$ echo $PATH         # Print the current value of PATH</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&nbsp;[QUASH]$</div></div><!-- fragment --><ul>
+<li><code>cd</code> - Change current working directory. This updates both the actual working directory and the PWD environment variable.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ echo $PWD</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ cd ..              # Go up one directory</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;[QUASH]$ echo $PWD</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;/home</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;[QUASH]$ cd $HOME           # Go to path in the HOME environment variable</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;[QUASH]$</div></div><!-- fragment --><ul>
+<li><code>pwd</code> - Print the absolute path of the current working 
+directory. Make sure you are printing out the actual working directory 
+and not just the PWD environment variable.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ pwd                # Print the working directory</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ echo $PWD          # Print the PWD environment variable</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;[QUASH]$ export PWD=/usr    # Change the PWD environment variable</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;[QUASH]$ pwd</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;/home/jrobinson</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;[QUASH]$ echo $PWD</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&nbsp;/usr</div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&nbsp;[QUASH]$</div></div><!-- fragment --><ul>
+<li><code>quit</code> &amp; <code>exit</code> - Use these to terminate quash. These are already implemented for you.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[BASH]$ ./quash</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;Welcome...</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ exit</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;[BASH]$ ./quash</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;Welcome...</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;[QUASH]$ quit</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;[BASH]$</div></div><!-- fragment --><ul>
+<li><code>jobs</code> - Should print all of the currently running 
+background processes in the format: "[JOBID] PID COMMAND" where JOBID is
+ a unique positive integer quash assigns to the job to identify it, PID 
+is the PID of the child process used for the job, and COMMAND is the 
+command used to invoke the job.</li>
+</ul>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&nbsp;[QUASH]$ find -type f | grep '*.c' &gt; out.txt &amp;</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&nbsp;Background job started: [1]    2342    find / -type f | grep '*.c' &gt; out.txt &amp;</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&nbsp;[QUASH]$ sleep 15 &amp;</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&nbsp;Background job started: [2]    2343    sleep 15 &amp;</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&nbsp;[QUASH]$ jobs               # List currently running background jobs</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&nbsp;[1]    2342    find / -type f | grep '*.c' &gt; out.txt &amp;</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&nbsp;[2]    2343    sleep 15 &amp;</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&nbsp;[QUASH]$</div></div><!-- fragment --><h2>Useful Functions in the Quash Skeleton</h2>
+<p>The following are some funtions outside of <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html" title="Implements interface functions between Quash and the environment and functions that interpret an exec...">src/execute.c</a> that you may want to use in your implementation:</p>
+<ul>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/quash_8c.html#ab43880685b2507434e4a84f2cb9d54d4" title="Get a deep copy of the current command string. ">get_command_string()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/parsing__interface_8h.html#a659361d40550d9776b6ea7fa69a836ce" title="Cleanup memory dynamically allocated by the parser. ">destroy_parser()</a></em> </li>
+<li>Things in <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html" title="Double ended queue generators specialized to any given type. ">src/deque.h</a>.
+ Quash can make due with only implementations of this data structure 
+(i.e. background jobs list, process id list). These are preprocessor 
+macro definitions of the data structure and will expand and specialize 
+to a type when used (similar to templates in c++). See example usage at 
+the bottom of <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html" title="Double ended queue generators specialized to any given type. ">src/deque.h</a>. <b>You don't have to use this deque implementation if you would rather write your own list data structure.</b><ul>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ad1734634a88d702478c08e26e39dc7b8" title="Generates a structure for use with Double Ended Queues. ">IMPLEMENT_DEQUE_STRUCT()</a></em> - Generates the double ended queue structure specialized to a type</li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a20e8006e6767304fca356f057bc319f4" title="Generates prototypes for functions that manipulate Double Ended Queue structures. ...">PROTOTYPE_DEQUE()</a></em> - Generates the function prototypes for the functions that are generated by the <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a283e81072037376be2a17b25b1eb1601" title="Generates a malloc based set of functions for use with a structure generated by IMPLEMENT_DEQUE_STRUC...">IMPLEMENT_DEQUE()</a></em> macro</li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a283e81072037376be2a17b25b1eb1601" title="Generates a malloc based set of functions for use with a structure generated by IMPLEMENT_DEQUE_STRUC...">IMPLEMENT_DEQUE()</a></em> - Generates functions for use with the structure generated by <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ad1734634a88d702478c08e26e39dc7b8" title="Generates a structure for use with Double Ended Queues. ">IMPLEMENT_DEQUE_STRUCT()</a></em>.<ul>
+<li>NOTE: The following functions were generated with a call to <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a283e81072037376be2a17b25b1eb1601" title="Generates a malloc based set of functions for use with a structure generated by IMPLEMENT_DEQUE_STRUC...">IMPLEMENT_DEQUE(Example, Type)</a></em>. Each function is named after the contents passed into the first argment of this macro (in this case <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/structExample.html" title="A data structure generated by IMPLEMENT_DEQUE_STRUCT() to store the state of a deque. ">Example</a></em>).</li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ae0c6f52c89e2b087e19e3062186144da" title="Create a new, fully initialized deque structure. ">new_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a4a210705b6f22fe97b7033bb8854a4d6" title="Create a new, fully initialized deque structure with a destructor that is applied to every element wh...">new_destructable_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ad9998ed1cadaff66c209e8b666185f70" title="Destroy the deque structure freeing memory if necessary. ">destroy_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ab8ed3578aa5708a09831653caaa88b8a" title="Quickly empties the deque structure calling a destructor on each element in the deque if a destructor...">empty_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a43fb8662cb9960b573bc2368b27a915c" title="Checks if the deque is empty. ">is_empty_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ab751404fe5166cbc70dc8093b5167839" title="Query the number of elements in the deque. ">length_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a0214e3a819ca3e1ec44d2f60d7c28f7b" title="Extract an array based off the deque. ">as_array_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a582c40f070af171e4c98455d7d6fd305" title="Calls the function func on every element in the deque. ">apply_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a7ef7f1f62eb4aa5565c04013ac376433" title="Insert an element to the front of the deque. ">push_front_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a63a0566b60e881121b5ba029a25cb9ae" title="Insert an element to the back of the deque. ">push_back_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a9fe851644b8743ed3e189e2b7872641a" title="Remove an element from the front of the deque. ">pop_front_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#aa3a49a1ed1aac021037fe94820ed8c95" title="Remove an element from the back of the deque. ">pop_back_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#ab65f67206d60592e7a12d4ed1c833cc1" title="Get a copy of the element at the front of the deque. ">peek_front_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a17ee221f1873599af8849e47af1d490c" title="Remove an element from the back of the deque. ">peek_back_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a2f5457e6575eb38d59b7504770ca247e" title="Change the element at the front of the deque to be a copy of element If a destructor is presesnt...">update_front_Example()</a></em> </li>
+<li><em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/deque_8h.html#a0705ac52e0952213b9f1ce7f80bf977e" title="Change the element at the back of the deque to be a copy of element. If a destructor is presesnt...">update_back_Example()</a></em> </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Useful System Calls and Library Functions</h2>
+<p>The following is a list and brief description of some system calls 
+and library functions you may want to use and their respective man page 
+entries. Note that this list may not be exhaustive, but be sure what 
+ever library functions you use will run on the lab machines:</p>
+<ul>
+<li>atexit(3) - Enroll functions that should be called when exit(3) is called</li>
+<li>chdir(2) - Changes the current working directory</li>
+<li>close(2) - Closes a file descriptor</li>
+<li>dup2(2) - Copies a file descriptor into a specified entry in the file descriptor table</li>
+<li>execvp(3) - Replaces the current process with a new process</li>
+<li>exit(3) - Imediately terminate the current process with an exit status</li>
+<li>fork(2) - Creates a new process by duplicating the calling process</li>
+<li>getenv(3) - Reads an environment variable from the current process environment</li>
+<li>getwd(3) - Gets the current working directory as a string (get_current_dir_name(3) may be easier to use)</li>
+<li>get_current_dir_name(3) - Gets the current working directory and stores it in a newly allocated string</li>
+<li>kill(2) - Sends a signal to a process with a given pid</li>
+<li>open(2) - Opens a file descriptor with an entry at the specified path in the file system</li>
+<li>pipe(2) - Creates a unidirectional communication pathway between two processes</li>
+<li>printf(3) - Prints to the standard out (see also fprintf)</li>
+<li>setenv(3) - Sets an environment variable in the current process environment</li>
+<li>waitpid(2) - Waits or polls for a process with a given pid to finish</li>
+</ul>
+<p>You may NOT use the system(3) function anywhere in your project</p>
+<h2>Project Hints and Comments</h2>
+<p>In Quash, a job is defined as a single command or a list of commands 
+separated by pipes. For example the following are each one job:</p>
+<p>cat file.txt # A job with a single process running under it</p>
+<p>find | grep *.qsh # A job with two processes running under it</p>
+<p>A job may contain more than one process and should have a unique id 
+for the current list of jobs in Quash, a knowledge of all of the pids 
+for processes that run under it, and an expanded string depicting what 
+was typed in on the command line to create that job. When passing the 
+pid to the various print job functions you just need to give one pid 
+associated with the job. The job id should also be assigned in a similar
+ manner as bash assigns them. That is the job id of a new background job
+ is one greater than the maximum job id in the background job list. 
+Experiment with background jobs in Bash for more details on the id 
+assignment.</p>
+<p>The structure of the functions in <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html" title="Implements interface functions between Quash and the environment and functions that interpret an exec...">src/execute.c</a> will be explained in the following paragraphs.</p>
+<p>The entry level function for execution in quash is <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#a4dab67459028f3b5a60d1a3695933f4b" title="Common entry point for all commands. ">run_script()</a></em>. This function is responsible for calling <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#acffe0d67f5dfe68ccf3765cf8ae29dab" title="Creates one new process centered around the Command in the CommandHolder setting up redirects and pip...">create_process()</a></em> on an array of <em>CommandHolders</em>. After all of the processes have been created for a job, <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#a4dab67459028f3b5a60d1a3695933f4b" title="Common entry point for all commands. ">run_script()</a>
+ should either wait on all processes inside a foreground job to complete
+ or add it to the background job list without waiting if it is a 
+background job.</p>
+<p>The <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#acffe0d67f5dfe68ccf3765cf8ae29dab" title="Creates one new process centered around the Command in the CommandHolder setting up redirects and pip...">create_process()</a></em>
+ function is intended to be the place where you fork processes, handle 
+pipe creation, and file redirection. You should not call execvp(3) from 
+this function. Instead you should call derivatives of the <em>example_run_command()</em>
+ function. Also you can determine whether you should use the boolean 
+variables at the top of this function to determine if pipes and 
+redirects should be setup. It may be necessary to keep a global 
+execution state structure so that different calls to create process can 
+view important information created in previous invocations of <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#acffe0d67f5dfe68ccf3765cf8ae29dab" title="Creates one new process centered around the Command in the CommandHolder setting up redirects and pip...">create_process()</a> (i.e. the file descriptors for open pipes of previous processes).</p>
+<p>When implementing the run_&lt;command type&gt; functions in <a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html" title="Implements interface functions between Quash and the environment and functions that interpret an exec...">src/execute.c</a>, the command structures usually hold everything needed to pass to the corresponding function calls. For example, the <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/structGenericCommand.html" title="Commands that take any number of arguments and are not built into Quash. ">GenericCommand</a></em> structure contains an args field fully formatted and ready to pass into the argv argument of the <em>execvp(3)</em> library function. The one exception to this rule is <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#a8e9aed155e5ccf7e207a8f3ce4789d83" title="Run the builtin cd (change directory) command. ">run_cd()</a></em>. In the <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/structCDCommand.html" title="Command to change directories. ">CDCommand</a></em> structure, the field dir is the path that the user typed. This needs to be expanded to an absolute path with <em>realpath(3)</em> before you use it.</p>
+<p>You should not have to search for environment variables ($) in your functions. The parser uses your implementation of <em><a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/execute_8c.html#afeab372587374ba444aa9bdfb6cfa0d8" title="Function to get environment variable values. ">lookup_env()</a></em> function to expand the environment variables for you.</p>
+<h2>Testing</h2>
+<p>There is an automated testing script written for this project in 
+run_tests.bash. Using the "make test" target in the make file will run 
+the ./run-tests.bash command present in the Makefile. If you want more 
+control you may run this script directly from the command line with 
+"./run_tests.bash [-cdstuv]". The various options are listed below or 
+with "./run_tests.bash -h".</p>
+<ul>
+<li>-c Clean up all files created during testing.</li>
+<li>-d If there is a difference between what is seen and what is 
+expected this option will immediately print out the diff file rather 
+than telling you where you can find the diff file.</li>
+<li>-p Allow all tests to be run in parallel as background processes. 
+This will greatly speed up the testing process but output to the command
+ line will be scattered.</li>
+<li>-s Keep the sandbox directory around after testing (this is a debug 
+option for the tester and probably not of much use unless modifying 
+run-tests.bash).</li>
+<li>-t Keep the the temporary directory 
+"test-cases/&lt;test-name-dir&gt;/.tmp" around after tests are complete 
+(this is a debug option for the tester and probably not of much use 
+unless modifying run-tests.bash).</li>
+<li>-v Print out all output from the test case if diff picked up any differences between the test output and expected output.</li>
+</ul>
+<h2>Grading Policy</h2>
+<p>Partial credit will be given for incomplete programs. However, a 
+program that cannot compile will get 0 points. The feature tests are 
+placed into multiple tiers of completeness. The output to standard out 
+from your code must match our output exactly, except for whitespace, for
+ the next tier of grading to be accessible. This is due to reliance of 
+previous tiers in subsequent tier tests. If we cannot run your code in 
+one tier then it becomes far more difficult test later tiers. The point 
+breakdown for features is below:</p>
+<table class="doxtable">
+<tbody><tr>
+<th>Description  </th><th>Score   </th></tr>
+<tr>
+<td><ul>
+<li>
+Tier 0  <ul>
+<li>
+Quash compiles  </li>
+</ul>
+</li>
+</ul>
+</td><td>10%   </td></tr>
+<tr>
+<td><ul>
+<li>
+Tier 1  <ul>
+<li>
+Single commands without arguments (ls)  </li>
+<li>
+Simple built-in commands  <ul>
+<li>
+pwd  </li>
+<li>
+echo with a single argument  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</td><td>30%   </td></tr>
+<tr>
+<td><ul>
+<li>
+Tier 2  <ul>
+<li>
+Single commands with arguments (ls -a /)  </li>
+<li>
+Built-in commands  <ul>
+<li>
+echo with multiple arguments  </li>
+<li>
+cd  </li>
+<li>
+export  </li>
+</ul>
+</li>
+<li>
+Environment Variables  <ul>
+<li>
+echo with environment variables (echo $HOME)  </li>
+<li>
+Execution with environment variables (du -H $PWD/..) </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</td><td>30%   </td></tr>
+<tr>
+<td><ul>
+<li>
+Tier 3  <ul>
+<li>
+Built-in commands  <ul>
+<li>
+jobs  </li>
+<li>
+kill  </li>
+</ul>
+</li>
+<li>
+Piping output between one command and another (find -type f | grep '*.c')  </li>
+<li>
+<a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/structRedirect.html" title="Intermediate parsing structure used to determine the final configuration of the redirects in a comman...">Redirect</a> standard input to any command from file (cat &lt; a.txt)  </li>
+<li>
+<a class="el" href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/projects/quash/doc/html/structRedirect.html" title="Intermediate parsing structure used to determine the final configuration of the redirects in a comman...">Redirect</a> standard output from a command to a file (cat b.txt &gt; a.txt)  </li>
+<li>
+Background processes  <ul>
+<li>
+Job completion notification  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</td><td>30%   </td></tr>
+<tr>
+<td><ul>
+<li>
+Tier 4 (extra credit)  <ul>
+<li>
+Pipes and redirects can be mixed (cat &lt; a.txt | grep -o World | cat &gt; b.txt)  </li>
+<li>
+Pipes and redirects work with built-in commands  </li>
+<li>
+Append redirection (cat a.txt | grep -o World &gt;&gt; b.txt)  </li>
+</ul>
+</li>
+</ul>
+</td><td>10%   </td></tr>
+<tr>
+<td><ul>
+<li>
+Valgrind Memory Errors  <ul>
+<li>
+While not ideal, you will not lose any points for "still reachable" blocks  </li>
+<li>
+Unacceptable Memory Leaks  <ul>
+<li>
+Definately lost  </li>
+<li>
+Indirectly lost  </li>
+<li>
+Possibly lost  </li>
+</ul>
+</li>
+<li>
+Unacceptable Access Violations  <ul>
+<li>
+Invalid Read  </li>
+<li>
+Invalid Write  </li>
+<li>
+Invalid free  </li>
+<li>
+Use of uninitialized values  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</td><td>-5% from tier grade down to 0% for each tier with violations   </td></tr>
+</tbody></table>
+<h2>Submission</h2>
+<p>Each group should submit the project to your TA via Blackboard. 
+Create a zip file of your code using "make submit". You should also 
+check that the zipped project still builds and runs correctly after 
+building the submit target with "make unsubmit". Your TA will be using 
+this command to extract and build your project so make sure it works 
+correctly. If you modify either of these targets, please ensure all file
+ extensions are renamed to ".txt" in the submission and extract 
+correctly with the unsubmit target.</p>
+<h2>Miscellaneous</h2>
+<p>Start early! You need to use C language to implement this project. </p>
+</div></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"><address class="footer"><small>
+Generated by &nbsp;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="Quash%20Shell:%20Main%20Page_files/doxygen.png" alt="doxygen">
+</a> 1.8.11
+</small></address>
+
+
+</body></html>
