@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1486854365 source:/home/rayechell/STUDY/EECS-678/Learning/02_StdoutPipes/HowDoStdoutPipesWork.cpp
+	<iostream>
+	<unistd.h>
+	<cstring>
+	<sys/wait.h>
+	"RachUtils.h"
+
+1486854268 /home/rayechell/STUDY/EECS-678/Learning/02_StdoutPipes/RachUtils.h
+
