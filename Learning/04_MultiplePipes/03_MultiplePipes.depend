@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1486960618 source:/home/rayechell/STUDY/EECS-678/Learning/03_MultiplePipes/multiple_pipes.cpp
+	<stdio.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<sys/wait.h>
+
