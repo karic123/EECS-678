@@ -24,11 +24,11 @@ Rachel J Morris, 2017
 #include <iostream>
 using namespace std;
 
-void Child_Find( pid_t* pid, int pipe[2], char* directory );
-void Child_Grep( pid_t* pid, int pipe[2], char* findme );
-void Child_Sort( pid_t* pid, int pipe[2] );
-void Child_Head( pid_t* pid, int pipe[2], int fileCount );
-void DebugOut_Find( int pipe[2] );
+void Child_Find( pid_t* pid, int outputPipe[2], char* directory );
+void Child_Grep( pid_t* pid, int inputPipe[2], int outputPipe[2], char* findme );
+void Child_Sort( pid_t* pid, int inputPipe[2], int outputPipe[2] );
+void Child_Head( pid_t* pid, int inputPipe[2], int outputPipe[2], int fileCount );
+void DebugOut( int pipe[2] );
 
 //int main( int argumentCount, char *arguments[] )
 int main()
@@ -61,23 +61,44 @@ int main()
     // Status
 	int status;
 
+    // FIND
+
 	findPid = fork();
 	if ( IsChild( findPid ) )
 	{
 		Child_Find( &findPid, findGrepPipe, arguments[1] );
-		exit( 0 );
+		exit( 0 ); // shouldn't be called because of execv
 	}
 
-    // Testing code
     wait( &status );
-    printf( "Status: %i \n", status );
+    if ( status != NULL )
+    {
+        PrintStatus( status );
+    }
 
-    DebugOut_Find( findGrepPipe );
+    // XARGS - GREP
+
+    grepPid = fork();
+    if ( IsChild( grepPid ) )
+    {
+        Child_Grep( &grepPid, findGrepPipe, grepSortPipe, arguments[2] );
+        exit( 0 ); // shouldn't be called because of execv
+    }
+
+    wait( &status );
+    if ( status != NULL )
+    {
+        PrintStatus( status );
+    }
+
+    DebugOut( grepSortPipe );
+
+    printf( "Program end \n" );
 
 	return 0;
 }
 
-void DebugOut_Find( int pipe[2] )
+void DebugOut( int pipe[2] )
 {
     int bytes;
     char readBuffer[256];
@@ -88,15 +109,18 @@ void DebugOut_Find( int pipe[2] )
     } while ( bytes );
 }
 
-void Child_Find( pid_t* pid, int pipe[2], char* directory )
+void Child_Find( pid_t* pid, int outputPipe[2], char* directory )
 {
+    // TODO: find $1 -name '*'.[ch] have it search only .c and .h files
+
     printf( "CHILD: Find() at directory \"%s\" \n", directory );
 
-	close( pipe[ READ_INPUT_PIPE ] );
-    dup2( pipe[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
+    // Clone the output from STD OUT as the input for this pipe
+	close( outputPipe[ READ_INPUT_PIPE ] );
+    dup2( outputPipe[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
     char* programName = FIND_EXEC;
-    char* arguments[] = { programName, directory, NULL };
+    char* arguments[] = { programName, directory, "-c", NULL };
 
     if ( execv( programName, arguments ) == -1 )
     {
@@ -104,17 +128,29 @@ void Child_Find( pid_t* pid, int pipe[2], char* directory )
     }
 }
 
-void Child_Grep( pid_t* pid, int pipe[2], char* findme )
+void Child_Grep( pid_t* pid, int inputPipe[2], int outputPipe[2], char* findme )
 {
-    printf( "CHILD: Grep() \n" );
+    printf( "CHILD: Grep() find text \"%s\" \n", findme );
+
+    // Clone the output from input pipe as the input for this pipe
+    close( outputPipe[ READ_INPUT_PIPE ] );
+    dup2( outputPipe[ WRITE_OUTPUT_PIPE ], inputPipe[ WRITE_OUTPUT_PIPE ] );
+
+    char* programName = XARGS_EXEC;
+    char* arguments[] = { programName, GREP_EXEC, findme, NULL };
+
+    if ( execv( programName, arguments ) == -1 )
+    {
+        PrintError();
+    }
 }
 
-void Child_Sort( pid_t* pid, int pipe[2] )
+void Child_Sort( pid_t* pid, int inputPipe[2], int outputPipe[2] )
 {
     printf( "CHILD: Sort() \n" );
 }
 
-void Child_Head( pid_t* pid, int findPipe[2], int fileCount )
+void Child_Head( pid_t* pid, int inputPipe[2], int outputPipe[2], int fileCount )
 {
     printf( "CHILD: Head() \n" );
 }
