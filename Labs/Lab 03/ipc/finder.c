@@ -1,5 +1,8 @@
 /*  Rachel J Morris, EECS 678, Lab 3, 2017   */
 
+// todo: check that grep isn't halting
+// todo: make sure head and find and grep parameters are being pulled from args
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
