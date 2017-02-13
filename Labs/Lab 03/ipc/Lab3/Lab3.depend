@@ -27,3 +27,13 @@
 	<stdio.h>
 	<string.h>
 
+1486965987 source:/home/rayechell/STUDY/EECS-678/Labs/Lab 03/ipc/finder.c
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<strings.h>
+	<errno.h>
+	<sys/wait.h>
+	<stdio.h>
+	<string.h>
+

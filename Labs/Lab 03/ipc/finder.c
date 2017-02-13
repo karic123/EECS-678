@@ -23,7 +23,7 @@ void ClosePipes( int pipes[6], int except1, int except2 );
 void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 );
 int IsChild( pid_t* pid );
 int PrintError();
-void PrintStatus( pid_t* pid, int status );
+void PrintStatus( pid_t* pid, char* name, int status );
 
 const int FIND_GREP_READ = 0;
 const int FIND_GREP_WRITE = 1;
@@ -153,7 +153,7 @@ void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
     }
     else
     {
-        PrintStatus( pid1, status );
+        PrintStatus( pid1, "find", status );
     }
 
     if ( waitpid( *pid2, &status, 0 ) == -1 )
@@ -162,7 +162,7 @@ void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
     }
     else
     {
-        PrintStatus( pid2, status );
+        PrintStatus( pid2, "grep", status );
     }
 
     if ( waitpid( *pid3, &status, 0 ) == -1 )
@@ -171,7 +171,7 @@ void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
     }
     else
     {
-        PrintStatus( pid3, status );
+        PrintStatus( pid3, "sort", status );
     }
 
     if ( waitpid( *pid4, &status, 0 ) == -1 )
@@ -180,7 +180,7 @@ void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
     }
     else
     {
-        PrintStatus( pid4, status );
+        PrintStatus( pid4, "head", status );
     }
 }
 
@@ -195,27 +195,39 @@ int PrintError()
     return errno;
 }
 
-void PrintStatus( pid_t* pid, int status )
+void PrintStatus( pid_t* pid, char* name, int status )
 {
     // http://man7.org/linux/man-pages/man2/waitpid.2.html
 
     if ( WIFEXITED( status ) )
     {
-        printf( "child %i returned status %i - terminated normally with status %d \n", *pid, status, WEXITSTATUS( status ) );
+        printf( "child %i '%s' returned status %i - terminated normally with status %d \n",
+            *pid,
+            name,
+            status, WEXITSTATUS( status ) );
     }
 
     else if ( WIFSIGNALED( status ) )
     {
-       printf( "child %i returned status %i - killed by signal %d \n", *pid, status, WTERMSIG( status ) );
+       printf( "child %i '%s' returned status %i - killed by signal %d \n",
+        *pid,
+        name,
+        status, WTERMSIG( status ) );
     }
 
     else if ( WIFSTOPPED( status ) )
     {
-       printf( "child %i returned status %i - stopped by signal %d\n", *pid, status, WSTOPSIG( status ) );
+       printf( "child %i '%s' returned status %i - stopped by signal %d\n",
+        *pid,
+        name,
+        status, WSTOPSIG( status ) );
     }
 
     else if ( WIFCONTINUED( status ) )
     {
-       printf( "child %i returned status %i - continued\n", *pid, status );
+       printf( "child %i '%s' returned status %i - continued\n",
+        *pid,
+        name,
+        status );
     }
 }
