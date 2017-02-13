@@ -10,7 +10,7 @@
 #define BSIZE 256
 
 #define BASH_EXEC  "/bin/bash"
-/* #define FIND_EXEC  "/bin/find" */ #define FIND_EXEC  "/usr/bin/find"
+#define FIND_EXEC  "/bin/find"
 #define XARGS_EXEC "/usr/bin/xargs"
 #define GREP_EXEC  "/bin/grep"
 #define SORT_EXEC  "/bin/sort"
@@ -53,7 +53,7 @@ int main()
     if ( IsChild( findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
-        dup2( findToGrep[ 1 ], STDOUT_FILENO );
+        dup2( findToGrep[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
         // Can close all the pipes now
         ClosePipes( findToGrep, grepToSort, sortToHead );
@@ -69,10 +69,10 @@ int main()
     if ( IsChild( grepPid ) )
     {
         // Replace process's STDIN with read end of findToGrep pipe
-        dup2( findToGrep[ 0 ], STDIN_FILENO );
+        dup2( findToGrep[ READ_INPUT_PIPE ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of grepToSort pipe
-        dup2( grepToSort[ 1 ], STDOUT_FILENO );
+        dup2( grepToSort[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
         // Can close all the pipes now
         ClosePipes( findToGrep, grepToSort, sortToHead );
@@ -87,10 +87,10 @@ int main()
     if ( IsChild( sortPid ) )
     {
         // Replace process's STDIN with read end of grepToSort pipe
-        dup2( grepToSort[ 0 ], STDIN_FILENO );
+        dup2( grepToSort[ READ_INPUT_PIPE ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of sortToHead pipe
-        dup2( sortToHead[ 1 ], STDOUT_FILENO );
+        dup2( sortToHead[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
         // Can close all the pipes now
         ClosePipes( findToGrep, grepToSort, sortToHead );
@@ -105,7 +105,7 @@ int main()
     if ( IsChild( headPid ) )
     {
         // Replace process's STDIN with the read end of grepToSort
-        dup2( sortToHead[ 0 ], STDIN_FILENO );
+        dup2( sortToHead[ READ_INPUT_PIPE ], STDIN_FILENO );
 
         // Can close all the pipes now
         ClosePipes( findToGrep, grepToSort, sortToHead );
