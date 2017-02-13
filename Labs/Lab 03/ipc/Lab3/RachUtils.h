@@ -12,14 +12,14 @@
 const int READ_INPUT_PIPE = 0;
 const int WRITE_OUTPUT_PIPE = 1;
 
-bool IsError( pid_t pid )
+bool IsError( pid_t* pid )
 {
-    return ( pid == -1 );
+    return ( *pid == -1 );
 }
 
-bool IsChild( pid_t pid )
+bool IsChild( pid_t* pid )
 {
-    return ( pid == 0 );
+    return ( *pid == 0 );
 }
 
 int PrintError()
