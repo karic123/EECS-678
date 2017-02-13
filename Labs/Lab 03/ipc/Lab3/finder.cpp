@@ -69,34 +69,31 @@ int main()
 		exit( 0 ); // shouldn't be called because of execv
 	}
 
-    wait( &status );
-    if ( status != NULL )
-    {
-        PrintStatus( status );
-    }
+    // TODO: wait doesn't return at this point if called... investigate
+//    wait( &status );
+//    if ( status != NULL )
+//    {
+//        PrintStatus( status );
+//    }
 
-    printf( "Debug out \n" );
-    DebugOut( findGrepPipe );
+    //DebugOut( findGrepPipe );
 
     // XARGS - GREP
 
-    if ( false )    // disabled for now
+    grepPid = fork();
+    if ( IsChild( grepPid ) )
     {
-        grepPid = fork();
-        if ( IsChild( grepPid ) )
-        {
-            Child_Grep( &grepPid, findGrepPipe, grepSortPipe, arguments[2] );
-            exit( 0 ); // shouldn't be called because of execv
-        }
-
-        wait( &status );
-        if ( status != NULL )
-        {
-            PrintStatus( status );
-        }
-
-        DebugOut( grepSortPipe );
+        Child_Grep( &grepPid, findGrepPipe, grepSortPipe, arguments[2] );
+        exit( 0 ); // shouldn't be called because of execv
     }
+
+//    wait( &status );
+//    if ( status != NULL )
+//    {
+//        PrintStatus( status );
+//    }
+
+    DebugOut( grepSortPipe );
 
     printf( "Program end \n" );
 
