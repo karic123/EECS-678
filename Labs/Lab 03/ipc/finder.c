@@ -82,14 +82,18 @@ int main( int argumentCount, char *arguments[] )
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
+        char* findArgs[BSIZE];
+        snprintf(findArgs, sizeof( findArgs ),
+          "%s %s -name \'*\'.[ch]",
+          FIND_EXEC,
+          arguments[ ARG_DIRECTORY ] );
+
         // Execute command
         execl( BASH_EXEC,
           BASH_EXEC,
           "-c",
           FIND_EXEC,
-          arguments[ ARG_DIRECTORY ],
-          "-name",
-          "\'*\'.[ch]",
+          findArgs,
           (char *)NULL );
 
         exit( 0 );
@@ -102,33 +106,27 @@ int main( int argumentCount, char *arguments[] )
         dup2( pipes[FIND_GREP_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of grepToSort pipe
-        //dup2( pipes[GREP_SORT_WRITE], STDOUT_FILENO );
+        dup2( pipes[GREP_SORT_WRITE], STDOUT_FILENO );
 
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
 
-        // Execute command
-        //char* grepArgs[] = { BASH_EXEC, "-c", XARGS_EXEC, GREP_EXEC, "-c", "execute" };
-        //char* grepArgs[] = { BASH_EXEC, "-c", "xargs grep -c execute", (char *)NULL };
-        //execv( BASH_EXEC, grepArgs );
-
-
         char* grepArgs[BSIZE];
-        snprintf(grepArgs, sizeof( grepArgs ), "%s %s -c %s",
-        XARGS_EXEC,
-        GREP_EXEC,
-        arguments[ ARG_SEARCH ] );
+        snprintf(grepArgs, sizeof( grepArgs ),
+          "%s %s -c %s",
+          XARGS_EXEC,
+          GREP_EXEC,
+          arguments[ ARG_SEARCH ] );
 
         execl( BASH_EXEC,
-        BASH_EXEC,
-        "-c",
-        grepArgs,
-        (char *)NULL );
-
+          BASH_EXEC,
+          "-c",
+          grepArgs,
+          (char *)NULL );
 
         exit( 0 );
     }
-/*
+
     sortPid = fork();
     if ( IsChild( &sortPid ) )
     {
@@ -136,11 +134,10 @@ int main( int argumentCount, char *arguments[] )
         dup2( pipes[GREP_SORT_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of sortToHead pipe
-        //dup2( pipes[SORT_HEAD_WRITE], STDOUT_FILENO );
+        dup2( pipes[SORT_HEAD_WRITE], STDOUT_FILENO );
 
         // Can close other now
-        //ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
-        ClosePipes( pipes, GREP_SORT_READ, -1 );
+        ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
 
         char buffer[256];
         int bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
@@ -150,17 +147,20 @@ int main( int argumentCount, char *arguments[] )
           bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
         }
 
+        char* sortArgs[BSIZE];
+        snprintf(sortArgs, sizeof( sortArgs ),
+          "%s -t : +1.0 -2.0 --numeric --reverse",
+          SORT_EXEC );
+
         execl( BASH_EXEC,
           BASH_EXEC,
           "-c",
-          SORT_EXEC,
-          "-t : +1.0 -2.0 --numeric --reverse",
+          sortArgs,
           (char *)NULL );
         exit( 0 );
     }
-    */
 
-    /*
+
     headPid = fork();
     if ( IsChild( &headPid ) )
     {
@@ -170,18 +170,22 @@ int main( int argumentCount, char *arguments[] )
         // Can close other now
         ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
+        char* headArgs[BSIZE];
+        snprintf(headArgs, sizeof( headArgs ),
+          "%s --lines=%s",
+          HEAD_EXEC,
+          arguments[ ARG_HEAD ] );
+
         char* arguments[] = { "/bin/bash", "-c", "head --lines=10", (char *)NULL };
         execl( BASH_EXEC,
           BASH_EXEC,
           "-c",
-          HEAD_EXEC,
-          "--lines=",
-          arguments[ ARG_HEAD ],
+          headArgs,
           (char *)NULL );
 
         exit( 0 );
     }
-    */
+
 
     close( pipes[ FIND_GREP_READ ] );
 
