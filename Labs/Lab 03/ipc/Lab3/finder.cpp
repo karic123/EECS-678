@@ -38,13 +38,16 @@ int main()
     // Process IDs
     pid_t findPid;
     pid_t grepPid;
+    pid_t sortPid;
 
     // Establish pipeline
     int findToGrep[2];
     pipe( findToGrep );
+    int sortToGrep[2];
+    pipe( sortToGrep );
 
-    // find >>>>>>>>>>>> grep
-    // write             read
+    // find >>>>>> | >>>>>> grep >>>>>> | >>>>>> sort
+    //        WR       RD          WR       RD
     findPid = fork();
     if ( IsChild( findPid ) )
     {
@@ -58,13 +61,33 @@ int main()
     grepPid = fork();
     if ( IsChild( grepPid ) )
     {
+        // This process WRITES to sortToGrep, and READS from findToGrep
         close( findToGrep[ WRITE_OUTPUT_PIPE ] );
+        close( sortToGrep[ READ_INPUT_PIPE ] );
+
+        // Redirect from findToGrep INPUT to sortToGrep OUTPUT
+        dup2( sortToGrep[ READ_INPUT_PIPE ], findToGrep[ WRITE_OUTPUT_PIPE ] );
 
         char readBuffer[256];
         int bytes = read( findToGrep[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
-        printf( "Read: %i, %s \n", bytes, readBuffer );
+        printf( "GREP CHILD Read: %i, %s \n", bytes, readBuffer );
         exit( 0 );
     }
+
+    sortPid = fork();
+    if ( IsChild( sortPid ) )
+    {
+        close( sortToGrep[ WRITE_OUTPUT_PIPE ] );
+
+        char readBuffer[256];
+        int bytes = read( sortToGrep[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
+        printf( "SORT CHILD Read: %i, %s \n", bytes, readBuffer );
+        exit( 0 );
+    }
+
+
+
+    // Wait for the children to die
 
     if ( waitpid( findPid, &status, NULL ) == -1 )
     {
@@ -82,6 +105,15 @@ int main()
     else
     {
         PrintStatus( grepPid, status );
+    }
+
+    if ( waitpid( sortPid, &status, NULL ) == -1 )
+    {
+        PrintError();
+    }
+    else
+    {
+        PrintStatus( sortPid, status );
     }
 
 	return 0;
