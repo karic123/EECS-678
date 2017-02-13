@@ -21,8 +21,15 @@
 #include <iostream>
 using namespace std;
 
-void ClosePipes( int set1[2], int set2[2], int set3[2] );
+void ClosePipes( int pipes[6], int except1, int except2 );
 void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 );
+
+const int FIND_GREP_READ = 0;
+const int FIND_GREP_WRITE = 1;
+const int GREP_SORT_READ = 2;
+const int GREP_SORT_WRITE = 3;
+const int SORT_HEAD_READ = 4;
+const int SORT_HEAD_WRITE = 5;
 
 //int main( int argumentCount, char *arguments[] )
 int main()
@@ -34,29 +41,27 @@ int main()
     pid_t headPid;
 
     // Create pipes
-    // findToGrep[0]    read end    find -> grep    read by grep
-    // findToGrep[1]    write end   find -> grep    written by find
-    // grepToSort[0]    read end    grep -> sort    read by sort
-    // grepToSort[1]    write end   grep -> sort    written by grep
-    // sortToHead[0]    read end    sort -> head    read by head
-    // sortToHead[1]    write end   sort -> head    written by sort
-    int findToGrep[2];
-    int grepToSort[2];
-    int sortToHead[2];
+    // pipes[0]     FIND_GREP_READ     read end    find -> grep    read by grep
+    // pipes[1]     FIND_GREP_WRITE    write end   find -> grep    written by find
+    // pipes[2]     GREP_SORT_READ     read end    grep -> sort    read by sort
+    // pipes[3]     GREP_SORT_WRITE    write end   grep -> sort    written by grep
+    // pipes[4]     SORT_HEAD_READ     read end    sort -> head    read by head
+    // pipes[5]     SORT_HEAD_WRITE    write end   sort -> head    written by sort
+    int pipes[6];
 
     // Establish pipeline
-    pipe( findToGrep );
-    pipe( grepToSort );
-    pipe( sortToHead );
+    pipe( pipes );
+    pipe( pipes + 2 );
+    pipe( pipes + 4 );
 
     findPid = fork();
     if ( IsChild( findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
-        dup2( findToGrep[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
+        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
         // Can close all the pipes now
-        ClosePipes( findToGrep, grepToSort, sortToHead );
+        ClosePipes( pipes, FIND_GREP_READ, -1 );
 
         // Execute command
         char* arguments[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", NULL };
@@ -69,13 +74,13 @@ int main()
     if ( IsChild( grepPid ) )
     {
         // Replace process's STDIN with read end of findToGrep pipe
-        dup2( findToGrep[ READ_INPUT_PIPE ], STDIN_FILENO );
+        dup2( pipes[FIND_GREP_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of grepToSort pipe
-        dup2( grepToSort[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
+        dup2( pipes[GREP_SORT_WRITE], STDOUT_FILENO );
 
         // Can close all the pipes now
-        ClosePipes( findToGrep, grepToSort, sortToHead );
+        ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
 
         char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c execute", NULL };
         execv( arguments[0], arguments );
@@ -87,13 +92,13 @@ int main()
     if ( IsChild( sortPid ) )
     {
         // Replace process's STDIN with read end of grepToSort pipe
-        dup2( grepToSort[ READ_INPUT_PIPE ], STDIN_FILENO );
+        dup2( pipes[GREP_SORT_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of sortToHead pipe
-        dup2( sortToHead[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
+        dup2( pipes[SORT_HEAD_WRITE], STDOUT_FILENO );
 
         // Can close all the pipes now
-        ClosePipes( findToGrep, grepToSort, sortToHead );
+        ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
 
         char* arguments[] = { "/bin/bash", "-c", "sort -t : +1.0 -2.0 --numeric --reverse" };
         execv( arguments[0], arguments );
@@ -105,10 +110,10 @@ int main()
     if ( IsChild( headPid ) )
     {
         // Replace process's STDIN with the read end of grepToSort
-        dup2( sortToHead[ READ_INPUT_PIPE ], STDIN_FILENO );
+        dup2( pipes[SORT_HEAD_READ], STDIN_FILENO );
 
         // Can close all the pipes now
-        ClosePipes( findToGrep, grepToSort, sortToHead );
+        ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
         char* arguments[] = { "/bin/bash", "-c", "head --lines=10" };
         execv( arguments[0], arguments );
@@ -117,9 +122,7 @@ int main()
     }
 
 
-
-    // Parent: Close all pipes
-    ClosePipes( findToGrep, grepToSort, sortToHead );
+    close( pipes[ FIND_GREP_READ ] );
 
     // Wait for the children to die
     WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
@@ -127,14 +130,15 @@ int main()
 	return 0;
 }
 
-void ClosePipes( int set1[2], int set2[2], int set3[2] )
+void ClosePipes( int pipes[6], int except1, int except2 )
 {
-    close( set1[0] );
-    close( set1[1] );
-    close( set2[0] );
-    close( set2[1] );
-    close( set3[0] );
-    close( set3[1] );
+    for ( int i = 0; i < 6; i++ )
+    {
+        if ( i != except1 && i != except2 )
+        {
+            close( pipes[i] );
+        }
+    }
 }
 
 void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
