@@ -24,22 +24,22 @@ Rachel J Morris, 2017
 #include <iostream>
 using namespace std;
 
-void Child_Find( pid_t* pid, int findPipe[2], char* directory );
-void Child_Grep( pid_t* pid, int findPipe[2], char* findme );
-void Child_Sort( pid_t* pid, int findPipe[2] );
-void Child_Head( pid_t* pid, int findPipe[2], int fileCount );
+void Child_Find( pid_t* pid, int pipe[2], char* directory );
+void Child_Grep( pid_t* pid, int pipe[2], char* findme );
+void Child_Sort( pid_t* pid, int pipe[2] );
+void Child_Head( pid_t* pid, int pipe[2], int fileCount );
 
-//int main( int argc, char *argv[] )
+//int main( int argumentCount, char *arguments[] )
 int main()
 {
-//	if ( argc != 4 )
+//	if ( argumentCount != 4 )
 //	{
 //		printf( "usage: finder DIR STR NUM_FILES\n" );
 //		exit( 0 );
 //	}
 
     // Test arguments
-	char* argv[] = { "x", "/home/rayechell/temp", "Question", "5" };
+	char* arguments[] = { "x", "/home/rayechell/temp", "Question", "5" };
 
     // Process IDs
 	pid_t findPid;
@@ -63,23 +63,30 @@ int main()
 	findPid = fork();
 	if ( IsChild( findPid ) )
 	{
-		Child_Find( &findPid, findGrepPipe, argv[1] );
+		Child_Find( &findPid, findGrepPipe, arguments[1] );
 		exit( 0 );
 	}
 
     wait( &status );
+    int bytes;
+    char readBuffer[256];
+    do
+    {
+        bytes = read( findGrepPipe[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
+        printf( "%i: %s \n", sizeof( readBuffer ), readBuffer );
+    } while ( bytes );
 
     cout << "Status: " << status << endl;
 
 	return 0;
 }
 
-void Child_Find( pid_t* pid, int findPipe[2], char* directory )
+void Child_Find( pid_t* pid, int pipe[2], char* directory )
 {
     printf( "CHILD: Find() at directory \"%s\" \n", directory );
 
-	close( findPipe[ READ_INPUT_PIPE ] );
-    dup2( findPipe[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
+	close( pipe[ READ_INPUT_PIPE ] );
+    dup2( pipe[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
     char* programName = FIND_EXEC;
     char* arguments[] = { programName, directory, NULL };
@@ -90,12 +97,12 @@ void Child_Find( pid_t* pid, int findPipe[2], char* directory )
     }
 }
 
-void Child_Grep( pid_t* pid, int findPipe[2], char* findme )
+void Child_Grep( pid_t* pid, int pipe[2], char* findme )
 {
     printf( "CHILD: Grep() \n" );
 }
 
-void Child_Sort( pid_t* pid, int findPipe[2] )
+void Child_Sort( pid_t* pid, int pipe[2] )
 {
     printf( "CHILD: Sort() \n" );
 }

@@ -13,3 +13,17 @@
 	<stdio.h>
 	<string.h>
 
+1486950698 source:/home/rayechell/STUDY/EECS-678/Labs/Lab 03/ipc/Lab3/finder.cpp
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<strings.h>
+	<errno.h>
+	<sys/wait.h>
+	"RachUtils.h"
+	<iostream>
+
+1486856172 /home/rayechell/STUDY/EECS-678/Labs/Lab 03/ipc/Lab3/RachUtils.h
+	<stdio.h>
+	<string.h>
+
