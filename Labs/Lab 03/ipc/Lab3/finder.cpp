@@ -61,7 +61,7 @@ int main()
         dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
         // Can close all the pipes now
-        ClosePipes( pipes, FIND_GREP_READ, -1 );
+        ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
         // Execute command
         char* arguments[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", NULL };
