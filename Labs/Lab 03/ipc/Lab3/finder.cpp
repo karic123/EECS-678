@@ -75,6 +75,7 @@ int main()
         PrintStatus( status );
     }
 
+    printf( "Debug out \n" );
     DebugOut( findGrepPipe );
 
     // XARGS - GREP
@@ -104,6 +105,7 @@ int main()
 
 void DebugOut( int pipe[2] )
 {
+    close( pipe[ WRITE_OUTPUT_PIPE ] );
     int bytes;
     char readBuffer[256];
     do
