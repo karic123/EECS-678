@@ -1,0 +1,10 @@
+bash-4.2/execute_cmd.c:187
+bash-4.2/shell.c:49
+bash-4.2/bashline.c:26
+bash-4.2/builtins/evalstring.c:20
+bash-4.2/trap.c:13
+bash-4.2/subst.c:12
+bash-4.2/eval.c:11
+bash-4.2/builtins/evalfile.c:9
+bash-4.2/flags.c:8
+bash-4.2/variables.c:7

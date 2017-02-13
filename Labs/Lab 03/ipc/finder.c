@@ -1,7 +1,31 @@
 /*  Rachel J Morris, EECS 678, Lab 3, 2017   */
 
-// todo: check that grep isn't halting
-// todo: make sure head and find and grep parameters are being pulled from args
+/*
+Desired output:
+/bin/bash finder.sh bash-4.2 execute 10
+bash-4.2/execute_cmd.c:187
+bash-4.2/shell.c:49
+bash-4.2/bashline.c:26
+bash-4.2/builtins/evalstring.c:20
+bash-4.2/trap.c:13
+bash-4.2/subst.c:12
+bash-4.2/eval.c:11
+bash-4.2/builtins/evalfile.c:9
+bash-4.2/flags.c:8
+bash-4.2/variables.c:7
+
+My output:
+bash-4.2/shell.c:49
+bash-4.2/bashline.c:26
+bash-4.2/builtins/evalstring.c:20
+bash-4.2/trap.c:13
+bash-4.2/subst.c:12
+bash-4.2/eval.c:11
+bash-4.2/builtins/evalfile.c:9
+bash-4.2/flags.c:8
+bash-4.2/variables.c:7
+
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,7 +35,6 @@
 #include <sys/wait.h>
 #include <stdio.h>
 #include <string.h>
-
 
 #define BSIZE 256
 
@@ -92,7 +115,6 @@ int main( int argumentCount, char *arguments[] )
         execl( BASH_EXEC,
           BASH_EXEC,
           "-c",
-          FIND_EXEC,
           findArgs,
           (char *)NULL );
 
