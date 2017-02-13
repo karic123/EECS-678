@@ -1,6 +1,4 @@
-/*
-Rachel J Morris, 2017
-*/
+/*  Rachel J Morris, EECS 678, Lab 3, 2017   */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,72 +21,94 @@ Rachel J Morris, 2017
 #include <iostream>
 using namespace std;
 
-void Child_Find( pid_t* pid, int outputPipe[2], char* directory );
-void Child_Grep( pid_t* pid, int inputPipe[2], int outputPipe[2], char* findme );
-void Child_Sort( pid_t* pid, int inputPipe[2], int outputPipe[2] );
-void Child_Head( pid_t* pid, int inputPipe[2], int outputPipe[2], int fileCount );
-void DebugOut( int inputPipe[2] );
-
 //int main( int argumentCount, char *arguments[] )
 int main()
 {
-    // Process status
+    // Create process status
     int status;
 
-    // Process IDs
+    // Create process IDs
     pid_t findPid;
     pid_t grepPid;
     pid_t sortPid;
 
-    // Establish pipeline
+    // Create pipes
+    // findToGrep[0]    read end    find -> grep    read by grep
+    // findToGrep[1]    write end   find -> grep    written by find
+    // sortToGrep[0]    read end    grep -> sort    read by sort
+    // sortToGrep[1]    write end   grep -> sort    written by grep
     int findToGrep[2];
-    pipe( findToGrep );
     int sortToGrep[2];
+
+    // Establish pipeline
+    pipe( findToGrep );
     pipe( sortToGrep );
 
-    // find >>>>>> | >>>>>> grep >>>>>> | >>>>>> sort
-    //        WR       RD          WR       RD
     findPid = fork();
     if ( IsChild( findPid ) )
     {
-        close( findToGrep[ READ_INPUT_PIPE ] );
+        // Replace process's STDOUT with the findToGrep pipe's WRITE
+        dup2( findToGrep[ 1 ], STDOUT_FILENO );
 
-        char* message = "findpid \n";
-        write( findToGrep[ WRITE_OUTPUT_PIPE ], message, sizeof( message ) );
+        // Can close all the pipes now
+        close( findToGrep[ 0 ] );
+        close( findToGrep[ 1 ] );
+        close( sortToGrep[ 0 ] );
+        close( sortToGrep[ 1 ] );
+
+        // Execute command
+        char* arguments[] = {"/bin/echo", "abcd", NULL};
+        execv( arguments[0], arguments );
+
         exit( 0 );
     }
 
     grepPid = fork();
     if ( IsChild( grepPid ) )
     {
-        // This process WRITES to sortToGrep, and READS from findToGrep
-        close( findToGrep[ WRITE_OUTPUT_PIPE ] );
-        close( sortToGrep[ READ_INPUT_PIPE ] );
+        // Replace process's STDIN with read end of findToGrep pipe
+        dup2( findToGrep[ 0 ], STDIN_FILENO );
 
-        // Redirect from findToGrep INPUT to sortToGrep OUTPUT
-        dup2( sortToGrep[ READ_INPUT_PIPE ], findToGrep[ WRITE_OUTPUT_PIPE ] );
+        // Replace process's STDOUT with write end of sortToGrep pipe
+        dup2( sortToGrep[ 1 ], STDOUT_FILENO );
 
-        char readBuffer[256];
-        int bytes = read( findToGrep[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
-        printf( "GREP CHILD Read: %i, %s \n", bytes, readBuffer );
+        // Can close all the pipes now
+        close( findToGrep[ 0 ] );
+        close( findToGrep[ 1 ] );
+        close( sortToGrep[ 0 ] );
+        close( sortToGrep[ 1 ] );
+
+        char* arguments[] = {"/bin/grep", "a", NULL};
+        execv( arguments[0], arguments );
+
         exit( 0 );
     }
 
     sortPid = fork();
     if ( IsChild( sortPid ) )
     {
-        close( sortToGrep[ WRITE_OUTPUT_PIPE ] );
+        // Replace process's STDIN with the read end of sortToGrep
+        dup2( sortToGrep[ 0 ], STDIN_FILENO );
 
-        char readBuffer[256];
-        int bytes = read( sortToGrep[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
-        printf( "SORT CHILD Read: %i, %s \n", bytes, readBuffer );
+        // Can close all the pipes now
+        close( findToGrep[ 0 ] );
+        close( findToGrep[ 1 ] );
+        close( sortToGrep[ 0 ] );
+        close( sortToGrep[ 1 ] );
+
+        char* arguments[] = {"/usr/bin/cut", "-b", "1-10", NULL};
+        execv( arguments[0], arguments );
+
         exit( 0 );
     }
 
-
+    // Parent: Close all pipes
+    close( findToGrep[ 0 ] );
+    close( findToGrep[ 1 ] );
+    close( sortToGrep[ 0 ] );
+    close( sortToGrep[ 1 ] );
 
     // Wait for the children to die
-
     if ( waitpid( findPid, &status, NULL ) == -1 )
     {
         PrintError();
@@ -117,28 +137,4 @@ int main()
     }
 
 	return 0;
-}
-
-void DebugOut( int inputPipe[2] )
-{
-}
-
-void Child_Find( pid_t* pid, int outputPipe[2], char* directory )
-{
-    printf( "CHILD: Find() at directory \"%s\" \n", directory );
-}
-
-void Child_Grep( pid_t* pid, int inputPipe[2], int outputPipe[2], char* findme )
-{
-    printf( "CHILD: Grep() find text \"%s\" \n", findme );
-}
-
-void Child_Sort( pid_t* pid, int inputPipe[2], int outputPipe[2] )
-{
-    printf( "CHILD: Sort() \n" );
-}
-
-void Child_Head( pid_t* pid, int inputPipe[2], int outputPipe[2], int fileCount )
-{
-    printf( "CHILD: Head() \n" );
 }
