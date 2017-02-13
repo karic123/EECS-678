@@ -70,7 +70,8 @@ int main()
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
         // Execute command
-        char* arguments[] = { "/bin/bash", "-c", "find", arguments[1], " -name \'*\'.[ch]", (char *)NULL };
+//        char* arguments[] = { "/bin/bash", "-c", "find", arguments[1], " -name \'*\'.[ch]", (char *)NULL };
+        char* arguments[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", (char *)NULL };
         execv( arguments[0], arguments );
 
         exit( 0 );
@@ -89,7 +90,8 @@ int main()
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
         ClosePipes( pipes, FIND_GREP_READ, -1 );
 
-        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c", arguments[2], (char *)NULL };
+//        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c", arguments[2], (char *)NULL };
+        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c execute", (char *)NULL };
         execv( arguments[0], arguments );
 
         exit( 0 );
