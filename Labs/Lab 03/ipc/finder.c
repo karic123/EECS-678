@@ -44,10 +44,9 @@ int main( int argumentCount, char *arguments[] )
     //char* arguments[] = { "...", "bash-4.2", "execute", "10" };
 
     printf( " PARENT: Hey, my arguments are...: " );
-    for ( int i = 0; i < argumentCount; i++ )
-    {
-      printf( "%s \t", arguments[i] );
-    }
+    printf( "DIRECTORY: %s \t SEARCH TERM: %s \t HEAD COUNT: %s",
+      arguments[ARG_DIRECTORY], arguments[ARG_SEARCH], arguments[ARG_HEAD]
+      );
     printf( "\n\n enter something to continue... " );
     char blah;
     scanf( "%s", &blah );
@@ -72,6 +71,7 @@ int main( int argumentCount, char *arguments[] )
     pipe( pipes + 2 );
     pipe( pipes + 4 );
 
+    // Done with setup...
 
     findPid = fork();
     if ( IsChild( &findPid ) )
@@ -109,18 +109,22 @@ int main( int argumentCount, char *arguments[] )
 
         // Execute command
         //char* grepArgs[] = { BASH_EXEC, "-c", XARGS_EXEC, GREP_EXEC, "-c", "execute" };
-        char* grepArgs[] = { BASH_EXEC, "-c", "xargs grep -c execute", (char *)NULL };
-        execv( BASH_EXEC, grepArgs );
-        /*
+        //char* grepArgs[] = { BASH_EXEC, "-c", "xargs grep -c execute", (char *)NULL };
+        //execv( BASH_EXEC, grepArgs );
+
+
+        char* grepArgs[BSIZE];
+        snprintf(grepArgs, sizeof( grepArgs ), "%s %s -c %s",
+        XARGS_EXEC,
+        GREP_EXEC,
+        arguments[ ARG_SEARCH ] );
+
         execl( BASH_EXEC,
-          BASH_EXEC,
-          "-c",
-          XARGS_EXEC,
-          GREP_EXEC,
-          "-c",
-          arguments[ ARG_SEARCH ],
-          (char *)NULL );
-          */
+        BASH_EXEC,
+        "-c",
+        grepArgs,
+        (char *)NULL );
+
 
         exit( 0 );
     }
