@@ -35,6 +35,10 @@ const int GREP_SORT_WRITE = 3;
 const int SORT_HEAD_READ = 4;
 const int SORT_HEAD_WRITE = 5;
 
+const int ARG_DIRECTORY = 1;
+const int ARG_SEARCH = 2;
+const int ARG_HEAD = 3;
+
 //int main( int argumentCount, char *arguments[] )
 int main()
 {
@@ -64,16 +68,20 @@ int main()
     if ( IsChild( &findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
-//        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
+        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
         // Can close all the pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
         // Execute command
-//        char* findArgs[] = { "/bin/bash", "-c", "find", arguments[1], " -name \'*\'.[ch]", (char *)NULL };
-        char* findArgs[] = { "/bin/bash", "-c", "find", "bash-4.2", "-name", "\'*\'.[ch]", (char *)NULL };
-//        char* findArgs[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", (char *)NULL };
-        execv( findArgs[0], findArgs );
+        execl( BASH_EXEC,
+          BASH_EXEC,
+          "-c",
+          FIND_EXEC,
+          arguments[ ARG_DIRECTORY ],
+          "-name",
+          "\'*\'.[ch]",
+          (char *)NULL );
 
         exit( 0 );
     }
@@ -91,9 +99,14 @@ int main()
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
         ClosePipes( pipes, FIND_GREP_READ, -1 );
 
-//        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c", arguments[2], (char *)NULL };
-        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c execute", (char *)NULL };
-        execv( arguments[0], arguments );
+        execl( BASH_EXEC,
+          BASH_EXEC,
+          "-c",
+          XARGS_EXEC,
+          GREP_EXEC,
+          "-c",
+          arguments[ ARG_SEARCH ],
+          (char *)NULL );
 
         exit( 0 );
     }
@@ -110,8 +123,12 @@ int main()
         // Can close all the pipes now
         ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
 
-        char* arguments[] = { "/bin/bash", "-c", "sort -t : +1.0 -2.0 --numeric --reverse", (char *)NULL };
-        execv( arguments[0], arguments );
+        execl( BASH_EXEC,
+          BASH_EXEC,
+          "-c",
+          SORT_EXEC,
+          "-t : +1.0 -2.0 --numeric --reverse",
+          (char *)NULL );
 
         exit( 0 );
     }
@@ -126,7 +143,13 @@ int main()
         ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
         char* arguments[] = { "/bin/bash", "-c", "head --lines=10", (char *)NULL };
-        execv( arguments[0], arguments );
+        execl( BASH_EXEC,
+          BASH_EXEC,
+          "-c",
+          HEAD_EXEC,
+          "--lines=",
+          arguments[ ARG_HEAD ],
+          (char *)NULL );
 
         exit( 0 );
     }
