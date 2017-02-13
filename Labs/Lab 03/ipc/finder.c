@@ -38,6 +38,8 @@ const int SORT_HEAD_WRITE = 5;
 //int main( int argumentCount, char *arguments[] )
 int main()
 {
+    char* arguments[] = { "...", "bash-4.2", "execute", "10" };
+
     // Create process IDs
     pid_t findPid;
     pid_t grepPid;
@@ -62,14 +64,16 @@ int main()
     if ( IsChild( &findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
-        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
+//        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
         // Can close all the pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
         // Execute command
-        char* arguments[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", (char *)NULL };
-        execv( arguments[0], arguments );
+//        char* findArgs[] = { "/bin/bash", "-c", "find", arguments[1], " -name \'*\'.[ch]", (char *)NULL };
+        char* findArgs[] = { "/bin/bash", "-c", "find", "bash-4.2", "-name", "\'*\'.[ch]", (char *)NULL };
+//        char* findArgs[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", (char *)NULL };
+        execv( findArgs[0], findArgs );
 
         exit( 0 );
     }
@@ -85,7 +89,9 @@ int main()
 
         // Can close all the pipes now
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
+        ClosePipes( pipes, FIND_GREP_READ, -1 );
 
+//        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c", arguments[2], (char *)NULL };
         char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c execute", (char *)NULL };
         execv( arguments[0], arguments );
 
@@ -129,7 +135,7 @@ int main()
     close( pipes[ FIND_GREP_READ ] );
 
     // Wait for the children to die
-    WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
+//    WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
 
 	return 0;
 }
