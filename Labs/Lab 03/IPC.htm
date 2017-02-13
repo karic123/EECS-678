@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta content="en-us" http-equiv="Content-Language">
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<link href="IPC_files/css.css" rel="stylesheet">
+<title>IPC</title>
+<style type="text/css">
+.heading1 {
+	font-family: 'Oswald', sans-serif;
+	font-size: xx-large;
+	text-align: Left;
+	color: black;
+	background-color: grey
+}
+.heading2 {
+	font-family: 'Roboto', sans-serif;
+	font-size: large;
+}
+.body1 {
+	font-family: 'Roboto', sans-serif;
+	font-size: medium;
+	margin-left: 2.5%;
+	margin-right: 2.5%;
+	margin-bottom: 5%;
+}
+.body2 {
+	font-family: 'Roboto', sans-serif;
+	font-size: large;
+}
+.coding1 {
+	font-family: 'Cutive Mono', monospace;
+	font-size: medium;
+	background-color: lightgrey
+}
+</style>
+</head>
+
+<body class="body1">
+
+<p class="heading1"><strong>Lab 3 - The Shell, System Calls and IPC</strong></p>
+<p>In this lab, you will write a small program to illustrate the use of multiple 
+processes and pipes in a shell utility. You will be required to submit the code 
+you have written along with a short report answering a few questions.</p>
+
+<p class="heading1"><strong>Lab Material</strong></p>
+<ol>
+	<li><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/labs/lab3/IPCLab.pdf">Slides</a></li>
+	<li><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/labs/lab3/eecs678-ipc-lab.tar.gz">Materials</a></li>
+</ol>
+
+<p class="heading1"><strong>Assignment</strong></p>
+<p>Write a program to simulate how the shell interprets the command:</p>
+<pre class="coding1">find $1 -name '*'.[ch] | xargs grep -c $2 | sort -t : +1.0 -2.0 --numeric --reverse | head --lines=$3
+</pre>
+
+<p>This command will search through the directory given by the first argument for 
+files ending in .c or .h and return the N files (where N is the third argument) 
+which contain the most occurrences of the string given by the second argument. 
+You can use the lab's Makefile to run a bash script with this command:</p>
+<pre class="coding1">make find
+</pre>
+
+<p>You can use the <strong>finder.c</strong> file in the lab's archive as starter
+code for your program. When you have finished the program, use the <strong>build</strong>
+target in the lab's Makefile to compile it. The output of the correct program will
+match with the output of the <strong>finder.sh</strong> script which is also
+present in the lab's archive. You can use the <strong>test</strong> target in the
+lab's Makefile to check it against the expected output.<br><br>
+</p><hr width="100%">
+<strong>Please note that you must use execv system call (and not other members
+of the exec family e.g. execl, execve, execp etc.) to run a new program inside
+a child process after a fork call for the purpose of this lab.</strong><p></p>
+
+<p class="heading1"><strong>Report</strong></p>
+<ol>
+	<li>Consider the following code segment:
+	<pre class="coding1">	...
+	pid = fork();
+	
+	if (pid == 0) {
+		/* Child Process */
+		char 	*cmd = (char *)malloc (128);
+		memset (cmd, 0, 128);
+		sprintf (cmd, “%s %s”, “ls”, “ll”);
+		execl (“/bin/bash”, “bash”, “-c”, cmd, (char *)NULL);
+	
+		/* Free the memory allocated for command buffer */
+		free (cmd);
+	}
+	...
+	</pre>
+	Is there a memory leak in the above program? Why or why not? (5-Points)<br>
+	If there is a memory leak, is the leak dangerous? (10-Points)<br></li>
+
+	<li>Consider the following two ways of executing an “ls” job in a process:
+	<pre class="coding1">	…
+	execl (“/bin/bash”, “bash”, “-c”, “ls -ll”, (char *)NULL);
+	execl (“/bin/ls”, "ls", "-ll", (char *)NULL);
+	…
+	</pre>
+
+	Do the above two commands produce the same output? Try running them in
+	a sample program to verify your answer. (5-Points)<br>
+	Are the two commands above equivalent in terms of the processes which get invoked after
+	executing each of them? (5-Points)<br></li>
+
+	<li>While performing the “exec” command to run a c-program, why is the
+	first argument always the same as the program name? (5-Points)<br></li>
+
+	<li>What would happen if a program tries to read from an empty pipe? (5-Points)<br></li>
+
+	<li>Consider a producer and a consumer program connected to each other
+	through a named pipe in Linux. Assume that the producer is pushing data into
+	the pipe at a much faster rate than the consumer’s rate of removing data from
+	the pipe. Is there a limit to how much data can be buffered in the pipe by the
+	producer without affecting the producer’s operation? (5-Points)<br></li> 
+</ol>
+
+<p class="heading1"><strong>Submission</strong></p>
+<p>The total grade for this lab will be awarded based on your submitted code [60%]
+and the lab report [40%]. You should submit two files on blackboard:</p>
+<pre class="coding1">&lt;STUDENT_ID&gt;-ipc-lab.zip
+Report.pdf
+</pre>
+<p>Please ensure that all the changes you have implemented in this lab are 
+limited to the <strong>finder.c</strong> file. You can use the archive target
+in the Lab's Makefile to create </p>
+
+<hr width="100%"><br><br><br>
+<p title="IPC"><a href="http://www.ittc.ku.edu/%7Eheechul/courses/eecs678/S17/labs/index.html">&lt; Back to the Lab Home Page</a></p>
+
+
+
+
+</body></html>

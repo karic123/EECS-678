@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1486857446 source:/home/rayechell/STUDY/ku-private-files/eecs 678/Lab 3/ipc/Lab3/finder.cpp
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<strings.h>
+	<errno.h>
+	<sys/wait.h>
+	"RachUtils.h"
+	<iostream>
+
+1486856172 /home/rayechell/STUDY/ku-private-files/eecs 678/Lab 3/ipc/Lab3/RachUtils.h
+	<stdio.h>
+	<string.h>
+
