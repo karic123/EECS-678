@@ -39,10 +39,18 @@ const int ARG_DIRECTORY = 1;
 const int ARG_SEARCH = 2;
 const int ARG_HEAD = 3;
 
-//int main( int argumentCount, char *arguments[] )
-int main()
+int main( int argumentCount, char *arguments[] )
 {
-    char* arguments[] = { "...", "bash-4.2", "execute", "10" };
+    //char* arguments[] = { "...", "bash-4.2", "execute", "10" };
+
+    printf( " PARENT: Hey, my arguments are...: " );
+    for ( int i = 0; i < argumentCount; i++ )
+    {
+      printf( "%s \t", arguments[i] );
+    }
+    printf( "\n\n enter something to continue... " );
+    char blah;
+    scanf( "%s", &blah );
 
     // Create process IDs
     pid_t findPid;
@@ -64,13 +72,14 @@ int main()
     pipe( pipes + 2 );
     pipe( pipes + 4 );
 
+
     findPid = fork();
     if ( IsChild( &findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
         dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
-        // Can close all the pipes now
+        // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
         // Execute command
@@ -93,12 +102,16 @@ int main()
         dup2( pipes[FIND_GREP_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of grepToSort pipe
-        dup2( pipes[GREP_SORT_WRITE], STDOUT_FILENO );
+        //dup2( pipes[GREP_SORT_WRITE], STDOUT_FILENO );
 
-        // Can close all the pipes now
+        // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
-        ClosePipes( pipes, FIND_GREP_READ, -1 );
 
+        // Execute command
+        //char* grepArgs[] = { BASH_EXEC, "-c", XARGS_EXEC, GREP_EXEC, "-c", "execute" };
+        char* grepArgs[] = { BASH_EXEC, "-c", "xargs grep -c execute", (char *)NULL };
+        execv( BASH_EXEC, grepArgs );
+        /*
         execl( BASH_EXEC,
           BASH_EXEC,
           "-c",
@@ -107,10 +120,11 @@ int main()
           "-c",
           arguments[ ARG_SEARCH ],
           (char *)NULL );
+          */
 
         exit( 0 );
     }
-
+/*
     sortPid = fork();
     if ( IsChild( &sortPid ) )
     {
@@ -118,10 +132,19 @@ int main()
         dup2( pipes[GREP_SORT_READ], STDIN_FILENO );
 
         // Replace process's STDOUT with write end of sortToHead pipe
-        dup2( pipes[SORT_HEAD_WRITE], STDOUT_FILENO );
+        //dup2( pipes[SORT_HEAD_WRITE], STDOUT_FILENO );
 
-        // Can close all the pipes now
-        ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
+        // Can close other now
+        //ClosePipes( pipes, GREP_SORT_READ, SORT_HEAD_WRITE );
+        ClosePipes( pipes, GREP_SORT_READ, -1 );
+
+        char buffer[256];
+        int bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
+        while ( bytes > 0 )
+        {
+          printf( buffer );
+          bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
+        }
 
         execl( BASH_EXEC,
           BASH_EXEC,
@@ -129,17 +152,18 @@ int main()
           SORT_EXEC,
           "-t : +1.0 -2.0 --numeric --reverse",
           (char *)NULL );
-
         exit( 0 );
     }
+    */
 
+    /*
     headPid = fork();
     if ( IsChild( &headPid ) )
     {
         // Replace process's STDIN with the read end of grepToSort
         dup2( pipes[SORT_HEAD_READ], STDIN_FILENO );
 
-        // Can close all the pipes now
+        // Can close other now
         ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
         char* arguments[] = { "/bin/bash", "-c", "head --lines=10", (char *)NULL };
@@ -153,12 +177,12 @@ int main()
 
         exit( 0 );
     }
-
+    */
 
     close( pipes[ FIND_GREP_READ ] );
 
     // Wait for the children to die
-//    WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
+    //WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
 
 	return 0;
 }
