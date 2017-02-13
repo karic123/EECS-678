@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1486956213 source:/home/rayechell/STUDY/EECS-678/Labs/Lab 03/ipc/PipeTest/pipe.cpp
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<fcntl.h>
+	<errno.h>
+	<sys/wait.h>
+
