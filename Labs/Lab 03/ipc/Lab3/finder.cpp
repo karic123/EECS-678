@@ -28,6 +28,7 @@ void Child_Find( pid_t* pid, int pipe[2], char* directory );
 void Child_Grep( pid_t* pid, int pipe[2], char* findme );
 void Child_Sort( pid_t* pid, int pipe[2] );
 void Child_Head( pid_t* pid, int pipe[2], int fileCount );
+void DebugOut_Find( int pipe[2] );
 
 //int main( int argumentCount, char *arguments[] )
 int main()
@@ -67,18 +68,24 @@ int main()
 		exit( 0 );
 	}
 
+    // Testing code
     wait( &status );
+    printf( "Status: %i \n", status );
+
+    DebugOut_Find( findGrepPipe );
+
+	return 0;
+}
+
+void DebugOut_Find( int pipe[2] )
+{
     int bytes;
     char readBuffer[256];
     do
     {
-        bytes = read( findGrepPipe[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
+        bytes = read( pipe[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
         printf( "%i: %s \n", sizeof( readBuffer ), readBuffer );
     } while ( bytes );
-
-    cout << "Status: " << status << endl;
-
-	return 0;
 }
 
 void Child_Find( pid_t* pid, int pipe[2], char* directory )
