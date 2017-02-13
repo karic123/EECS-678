@@ -12,8 +12,7 @@ Rachel J Morris, 2017
 #define BSIZE 256
 
 #define BASH_EXEC  "/bin/bash"
-//#define FIND_EXEC  "/bin/find"
-#define FIND_EXEC  "/usr/bin/find"
+/* #define FIND_EXEC  "/bin/find" */ #define FIND_EXEC  "/usr/bin/find"
 #define XARGS_EXEC "/usr/bin/xargs"
 #define GREP_EXEC  "/bin/grep"
 #define SORT_EXEC  "/bin/sort"
@@ -76,22 +75,27 @@ int main()
         PrintStatus( status );
     }
 
+    DebugOut( findGrepPipe );
+
     // XARGS - GREP
 
-    grepPid = fork();
-    if ( IsChild( grepPid ) )
+    if ( false )    // disabled for now
     {
-        Child_Grep( &grepPid, findGrepPipe, grepSortPipe, arguments[2] );
-        exit( 0 ); // shouldn't be called because of execv
-    }
+        grepPid = fork();
+        if ( IsChild( grepPid ) )
+        {
+            Child_Grep( &grepPid, findGrepPipe, grepSortPipe, arguments[2] );
+            exit( 0 ); // shouldn't be called because of execv
+        }
 
-    wait( &status );
-    if ( status != NULL )
-    {
-        PrintStatus( status );
-    }
+        wait( &status );
+        if ( status != NULL )
+        {
+            PrintStatus( status );
+        }
 
-    DebugOut( grepSortPipe );
+        DebugOut( grepSortPipe );
+    }
 
     printf( "Program end \n" );
 
@@ -120,7 +124,7 @@ void Child_Find( pid_t* pid, int outputPipe[2], char* directory )
     dup2( outputPipe[ WRITE_OUTPUT_PIPE ], STDOUT_FILENO );
 
     char* programName = FIND_EXEC;
-    char* arguments[] = { programName, directory, "-c", NULL };
+    char* arguments[] = { programName, directory, NULL };
 
     if ( execv( programName, arguments ) == -1 )
     {
