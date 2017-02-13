@@ -28,28 +28,28 @@ int PrintError()
     return errno;
 }
 
-void PrintStatus( int status )
+void PrintStatus( pid_t pid, int status )
 {
     // http://man7.org/linux/man-pages/man2/waitpid.2.html
 
     if ( WIFEXITED( status ) )
     {
-        printf( "child returned status %d - terminated normally with status %d \n", status, WEXITSTATUS( status ) );
+        printf( "child %i returned status %i - terminated normally with status %d \n", pid, status, WEXITSTATUS( status ) );
     }
 
     else if ( WIFSIGNALED( status ) )
     {
-       printf( "child returned status %d - killed by signal %d \n", status, WTERMSIG( status ) );
+       printf( "child %i returned status %i - killed by signal %d \n", pid, status, WTERMSIG( status ) );
     }
 
     else if ( WIFSTOPPED( status ) )
     {
-       printf( "child returned status %d - stopped by signal %d\n", status, WSTOPSIG( status ) );
+       printf( "child %i returned status %i - stopped by signal %d\n", pid, status, WSTOPSIG( status ) );
     }
 
     else if ( WIFCONTINUED( status ) )
     {
-       printf( "child returned status %d - continued\n", status );
+       printf( "child %i returned status %i - continued\n", pid, status );
     }
 }
 

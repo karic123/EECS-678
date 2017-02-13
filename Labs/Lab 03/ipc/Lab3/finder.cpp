@@ -32,7 +32,57 @@ void DebugOut( int inputPipe[2] );
 //int main( int argumentCount, char *arguments[] )
 int main()
 {
+    // Process status
+    int status;
 
+    // Process IDs
+    pid_t findPid;
+    pid_t grepPid;
+
+    // Establish pipeline
+    int findToGrep[2];
+    pipe( findToGrep );
+
+    // find >>>>>>>>>>>> grep
+    // write             read
+    findPid = fork();
+    if ( IsChild( findPid ) )
+    {
+        close( findToGrep[ READ_INPUT_PIPE ] );
+
+        char* message = "findpid \n";
+        write( findToGrep[ WRITE_OUTPUT_PIPE ], message, sizeof( message ) );
+        exit( 0 );
+    }
+
+    grepPid = fork();
+    if ( IsChild( grepPid ) )
+    {
+        close( findToGrep[ WRITE_OUTPUT_PIPE ] );
+
+        char readBuffer[256];
+        int bytes = read( findToGrep[ READ_INPUT_PIPE ], readBuffer, sizeof( readBuffer ) );
+        printf( "Read: %i, %s \n", bytes, readBuffer );
+        exit( 0 );
+    }
+
+    if ( waitpid( findPid, &status, NULL ) == -1 )
+    {
+        PrintError();
+    }
+    else
+    {
+        PrintStatus( findPid, status );
+    }
+
+    if ( waitpid( grepPid, &status, NULL ) == -1 )
+    {
+        PrintError();
+    }
+    else
+    {
+        PrintStatus( grepPid, status );
+    }
 
 	return 0;
 }
