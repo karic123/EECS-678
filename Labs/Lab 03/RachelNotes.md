@@ -18,6 +18,9 @@
 * I can send data between two processes via one pipe, but how do I
 use a second process as an intermediate between the first and the third,
 so that the *write* from the first ends up being a *read* for the third?
+* execv was ignoring my arguments list... because we're not SUPPOSED to use
+execv, but the instructions SOUNDED like you were supposed to use execv...
+but NNOOOOOO we use execl. Thanks for hours and hours of FRUSTRATION! ARG!
 
 
 ## Pipeline
@@ -80,4 +83,3 @@ In an exaple program with 3 processes and 2 pipes, there were these:
 	execvp( *cut_args, cut_args );
 
 	return 0;
-
