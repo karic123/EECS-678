@@ -39,10 +39,10 @@ bash-4.2/variables.c:7
 #define BSIZE 256
 
 #define BASH_EXEC  "/bin/bash"
-#define FIND_EXEC  "/bin/find"
+#define FIND_EXEC  "/usr/bin/find"
 #define XARGS_EXEC "/usr/bin/xargs"
 #define GREP_EXEC  "/bin/grep"
-#define SORT_EXEC  "/bin/sort"
+#define SORT_EXEC  "/usr/bin/sort"
 #define HEAD_EXEC  "/usr/bin/head"
 
 void ClosePipes( int pipes[6], int except1, int except2 );
@@ -64,7 +64,7 @@ const int ARG_HEAD = 3;
 
 int main( int argumentCount, char *arguments[] )
 {
-    char* arguments[] = { "...", "bash-4.2", "execute", "10" };
+    //char* arguments[] = { "...", "bash-4.2", "execute", "10" };
 
     // Create process IDs
     pid_t findPid;
@@ -92,30 +92,23 @@ int main( int argumentCount, char *arguments[] )
     if ( IsChild( &findPid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
-//        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
+        dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
 
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
-        char* findArgs[BSIZE];
-        snprintf(findArgs, sizeof( findArgs ),
+        char* findCommand[BSIZE];
+        snprintf( findCommand, sizeof( findCommand ),
           "%s %s -name \'*\'.[ch]",
           FIND_EXEC,
           arguments[ ARG_DIRECTORY ] );
 
+        printf( "Find args: " );
+        printf( findCommand );
+
         // Execute command
-
-//        char* findArgs[] = { "/bin/bash", "-c", "find", arguments[1], " -name \'*\'.[ch]", (char *)NULL };
-        char* findArgs[] = { "/bin/bash", "-c", "find", "bash-4.2", "-name", "\'*\'.[ch]", (char *)NULL };
-//        char* findArgs[] = { "/bin/bash", "-c", "find bash-4.2 -name \'*\'.[ch]", (char *)NULL };
+        char* findArgs[] = { BASH_EXEC, "-c", findCommand, (char *)NULL };
         execv( findArgs[0], findArgs );
-
-        execl( BASH_EXEC,
-          BASH_EXEC,
-          "-c",
-          findArgs,
-          (char *)NULL );
-
 
         exit( 0 );
     }
@@ -133,25 +126,15 @@ int main( int argumentCount, char *arguments[] )
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
         ClosePipes( pipes, FIND_GREP_READ, -1 );
 
-
-//        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c", arguments[2], (char *)NULL };
-        char* arguments[] =  { "/bin/bash", "-c", "xargs grep -c execute", (char *)NULL };
-        execv( arguments[0], arguments );
-
-
-        char* grepArgs[BSIZE];
-        snprintf(grepArgs, sizeof( grepArgs ),
+        char* grepCommand[BSIZE];
+        snprintf( grepCommand, sizeof( grepCommand ),
           "%s %s -c %s",
           XARGS_EXEC,
           GREP_EXEC,
           arguments[ ARG_SEARCH ] );
 
-        execl( BASH_EXEC,
-          BASH_EXEC,
-          "-c",
-          grepArgs,
-          (char *)NULL );
-
+        char* grepArgs[] =  { BASH_EXEC, "-c", grepCommand, (char *)NULL };
+        execv( grepArgs[0], grepArgs );
 
         exit( 0 );
     }
@@ -176,16 +159,14 @@ int main( int argumentCount, char *arguments[] )
           bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
         }
 
-        char* sortArgs[BSIZE];
-        snprintf(sortArgs, sizeof( sortArgs ),
+        char* sortCommand[BSIZE];
+        snprintf( sortCommand, sizeof( sortCommand ),
           "%s -t : +1.0 -2.0 --numeric --reverse",
           SORT_EXEC );
 
-        execl( BASH_EXEC,
-          BASH_EXEC,
-          "-c",
-          sortArgs,
-          (char *)NULL );
+        char* sortArgs[] = { BASH_EXEC, "-c", sortCommand, (char *)NULL };
+        execv( sortArgs[0], sortArgs );
+
         exit( 0 );
     }
 
@@ -199,18 +180,14 @@ int main( int argumentCount, char *arguments[] )
         // Can close other now
         ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
-        char* headArgs[BSIZE];
-        snprintf(headArgs, sizeof( headArgs ),
+        char* headCommand[BSIZE];
+        snprintf( headCommand, sizeof( headCommand ),
           "%s --lines=%s",
           HEAD_EXEC,
           arguments[ ARG_HEAD ] );
 
-        char* arguments[] = { "/bin/bash", "-c", "head --lines=10", (char *)NULL };
-        execl( BASH_EXEC,
-          BASH_EXEC,
-          "-c",
-          headArgs,
-          (char *)NULL );
+        char* headArgs[] = { BASH_EXEC, "-c", headCommand, (char *)NULL };
+        execv( headArgs[0], headArgs );
 
         exit( 0 );
     }
