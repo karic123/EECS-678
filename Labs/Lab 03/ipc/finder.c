@@ -24,7 +24,6 @@ bash-4.2/eval.c:11
 bash-4.2/builtins/evalfile.c:9
 bash-4.2/flags.c:8
 bash-4.2/variables.c:7
-
 */
 
 #include <stdlib.h>
@@ -45,8 +44,14 @@ bash-4.2/variables.c:7
 #define SORT_EXEC  "/usr/bin/sort"
 #define HEAD_EXEC  "/usr/bin/head"
 
+struct Process
+{
+    pid_t pid;
+    char* name;
+};
+
 void ClosePipes( int pipes[6], int except1, int except2 );
-void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 );
+void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Process* pid3, struct Process* pid4 );
 int IsChild( pid_t* pid );
 int PrintError();
 void PrintStatus( pid_t* pid, char* name, int status );
@@ -67,10 +72,12 @@ int main( int argumentCount, char *arguments[] )
     //char* arguments[] = { "...", "bash-4.2", "execute", "10" };
 
     // Create process IDs
-    pid_t findPid;
-    pid_t grepPid;
-    pid_t sortPid;
-    pid_t headPid;
+    struct Process find, grep, sort, head;
+
+    find.name = "find";
+    grep.name = "grep";
+    sort.name = "sort";
+    head.name = "head";
 
     // Create pipes
     // pipes[0]     FIND_GREP_READ     read end    find -> grep    read by grep
@@ -88,8 +95,8 @@ int main( int argumentCount, char *arguments[] )
 
     // Done with setup...
 
-    findPid = fork();
-    if ( IsChild( &findPid ) )
+    find.pid = fork();
+    if ( IsChild( &find.pid ) )
     {
         // Replace process's STDOUT with the findToGrep pipe's WRITE
         dup2( pipes[ FIND_GREP_WRITE ], STDOUT_FILENO );
@@ -113,8 +120,8 @@ int main( int argumentCount, char *arguments[] )
         exit( 0 );
     }
 
-    grepPid = fork();
-    if ( IsChild( &grepPid ) )
+    grep.pid = fork();
+    if ( IsChild( &grep.pid ) )
     {
         // Replace process's STDIN with read end of findToGrep pipe
         dup2( pipes[FIND_GREP_READ], STDIN_FILENO );
@@ -139,8 +146,8 @@ int main( int argumentCount, char *arguments[] )
         exit( 0 );
     }
 
-    sortPid = fork();
-    if ( IsChild( &sortPid ) )
+    sort.pid = fork();
+    if ( IsChild( &sort.pid ) )
     {
         // Replace process's STDIN with read end of grepToSort pipe
         dup2( pipes[GREP_SORT_READ], STDIN_FILENO );
@@ -171,8 +178,8 @@ int main( int argumentCount, char *arguments[] )
     }
 
 
-    headPid = fork();
-    if ( IsChild( &headPid ) )
+    head.pid = fork();
+    if ( IsChild( &head.pid ) )
     {
         // Replace process's STDIN with the read end of grepToSort
         dup2( pipes[SORT_HEAD_READ], STDIN_FILENO );
@@ -196,7 +203,8 @@ int main( int argumentCount, char *arguments[] )
     close( pipes[ FIND_GREP_READ ] );
 
     // Wait for the children to die
-//    WaitForProcesses( &findPid, &grepPid, &sortPid, &headPid );
+    int status;
+    WaitForProcesses( &find, &grep, &sort, &head );
 
 	return 0;
 }
@@ -212,45 +220,49 @@ void ClosePipes( int pipes[6], int except1, int except2 )
     }
 }
 
-void WaitForProcesses( pid_t* pid1, pid_t* pid2, pid_t* pid3, pid_t* pid4 )
+void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Process* pid3, struct Process* pid4 )
 {
     // Create process status
     int status;
 
-    if ( waitpid( *pid1, &status, 0 ) == -1 )
+    printf( "\n Waiting on process %s... \n", (*pid1).name );
+    if ( waitpid( (*pid1).pid, &status, 0 ) == -1 )
     {
         PrintError();
     }
     else
     {
-        PrintStatus( pid1, "find", status );
+        PrintStatus( &(*pid1).pid, (*pid1).name, status );
     }
 
-    if ( waitpid( *pid2, &status, 0 ) == -1 )
+    printf( "\n Waiting on process %s... \n", (*pid2).name );
+    if ( waitpid( (*pid2).pid, &status, 0 ) == -1 )
     {
         PrintError();
     }
     else
     {
-        PrintStatus( pid2, "grep", status );
+        PrintStatus( &(*pid2).pid, (*pid2).name, status );
     }
 
-    if ( waitpid( *pid3, &status, 0 ) == -1 )
+    printf( "\n Waiting on process %s... \n", (*pid3).name );
+    if ( waitpid( (*pid3).pid, &status, 0 ) == -1 )
     {
         PrintError();
     }
     else
     {
-        PrintStatus( pid3, "sort", status );
+        PrintStatus( &(*pid3).pid, (*pid3).name, status );
     }
 
-    if ( waitpid( *pid4, &status, 0 ) == -1 )
+    printf( "\n Waiting on process %s... \n", (*pid4).name );
+    if ( waitpid( (*pid4).pid, &status, 0 ) == -1 )
     {
         PrintError();
     }
     else
     {
-        PrintStatus( pid4, "head", status );
+        PrintStatus( &(*pid4).pid, (*pid4).name, status );
     }
 }
 
