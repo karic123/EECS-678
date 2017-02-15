@@ -65,6 +65,7 @@ void HandleTerminalStop( int signal )
 
 void HandleAlarm()
 {
+    // TODO: Add output
 }
 
 void SetupInterruptSignals()
