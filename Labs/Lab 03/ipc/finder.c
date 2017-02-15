@@ -131,7 +131,6 @@ int main( int argumentCount, char *arguments[] )
 
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
-        ClosePipes( pipes, FIND_GREP_READ, -1 );
 
         char* grepCommand[BSIZE];
         snprintf( grepCommand, sizeof( grepCommand ),
@@ -200,7 +199,7 @@ int main( int argumentCount, char *arguments[] )
     }
 
 
-    close( pipes[ FIND_GREP_READ ] );
+    ClosePipes( pipes, -1, -1 );
 
     // Wait for the children to die
     int status;
