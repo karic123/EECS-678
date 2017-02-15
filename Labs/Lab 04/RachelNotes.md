@@ -8,4 +8,9 @@
 * [C signal handling (Wikipedia)](https://en.wikipedia.org/wiki/C_signal_handling)
 * [IPC:Interrupts and Signals](https://users.cs.cf.ac.uk/Dave.Marshall/C/node24.html)
 
-## Difficulties
+---
+
+# Lab Notes
+
+You can mask signals so that the default action is not executed.
+It cannot mask SIGKILL and SIGSTOP.
