@@ -15,10 +15,9 @@ void HandleSignalAlarm();
 void How_SimpleSignals();
 void How_Pause();
 void How_Sigaction();
-void How_SimpleAlarm();
 void How_Alarm();
 
-#define QUIT 6
+#define QUIT 4
 
 int main()
 {
@@ -26,23 +25,22 @@ int main()
 
     while ( choice != QUIT )
     {
+        printf( "\n\n" );
         printf( "What do you want a demonstration of? \n" );
         printf( "1. Simple signals \n" );
         printf( "2. Pause \n" );
-        printf( "3. Sigaction \n" );
-        printf( "4. Simple alarm \n" );
-        printf( "5. Alarm \n" );
-        printf( "6. Exit \n" );
+        printf( "3. Alarm \n" );
+        printf( "4. Exit \n" );
 
         scanf( "%d", &choice );
+
+        printf( "\n\n" );
 
         switch( choice )
         {
             case 1: How_SimpleSignals();    break;
             case 2: How_Pause();            break;
-            case 3: How_Sigaction();        break;
-            case 4: How_SimpleAlarm();      break;
-            case 5: How_Alarm();            break;
+            case 3: How_Alarm();            break;
 
             case QUIT: printf( "Bye \n" );  break;
             default: printf( "Invalid choice \n" );
@@ -85,20 +83,6 @@ void How_Pause()
 }
 
 /****************************************** Example 3 */
-
-void How_Sigaction()
-{
-}
-
-/****************************************** Example 4 */
-
-void How_SimpleAlarm()
-{
-    printf( "Sleep for a second... \n" );
-    alarm( 1 );
-}
-
-/****************************************** Example 5 */
 
 void How_Alarm()
 {

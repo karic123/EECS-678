@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1487118723 source:/home/rayechell/STUDY/EECS-678/Learning/05_Signals/HowDoSignalsWork.c
+	<errno.h>
+	<string.h>
+	<time.h>
+	<signal.h>
+	<stdlib.h>
+	<sys/time.h>
+	<stdio.h>
+
