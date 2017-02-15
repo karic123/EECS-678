@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <ctype.h>
 
 int terminalStopCounter = 0;
 const int QUIT_INTERRUPT_THRESHOLD = 5;
@@ -19,11 +20,6 @@ int main()
 {
     SetupInterruptSignals();
 
-    printf( "Welcome to program. \n " );
-    printf( "Press CTRL+C 5 times to prompt for quit, " );
-    printf( "or CTRL+Z to view tstp counter. \n\n" );
-    fflush( stdout );
-
     while ( 1 );
 
     return 0;
@@ -34,29 +30,26 @@ void HandleInterrupt( int signal )
     terminalStopCounter++;
     if ( terminalStopCounter >= QUIT_INTERRUPT_THRESHOLD )
     {
-        printf( "\n\n QUIT interrupt threshold hit! \n" );
-        printf( "Wait %i seconds to quit, or enter 'y' to exit. \n\n", QUIT_TIMER_THRESHOLD );
-
         // Set up timer that will "log out" after 10 seconds
         SetupAlarmSignal();
 
         // Prompt user whether they want to quit
         char answer[30];
-        printf( "\n Really exit? (y/n): " );
-        fflush( stdout );
-        fgets( answer, sizeof( answer ), stdin );
+       printf("\nReally exit? [Y/n]: ");
+       fflush(stdout);
+       fgets(answer, sizeof(answer), stdin);
 
         if ( tolower( answer[0] ) == 'n' )
         {
-            printf( "\n Continuing... \n" );
-            fflush( stdout );
             // Reset counter
+            printf("\nContinuing\n");
+            fflush(stdout);
             terminalStopCounter = 0;
         }
         else
         {
-            printf( "\n Exiting... \n" );
-            fflush( stdout );
+            printf("\nExiting...\n");
+            fflush(stdout);
             exit( 0 );
         }
     }
@@ -66,13 +59,12 @@ void HandleInterrupt( int signal )
 
 void HandleTerminalStop( int signal )
 {
-    printf( "\n\n So far, '%d' Ctrl-C presses were counted. \n\n", terminalStopCounter );
+    printf( "\n\nSo far, '%d' Ctrl-C presses were counted\n\n", terminalStopCounter );
     fflush( stdout );
 }
 
 void HandleAlarm()
 {
-    printf( " TIMEOUT! Exiting. \n\n" );
 }
 
 void SetupInterruptSignals()
