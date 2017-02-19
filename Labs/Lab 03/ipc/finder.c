@@ -1,31 +1,5 @@
 /*  Rachel J Morris, EECS 678, Lab 3, 2017   */
 
-/*
-Desired output:
-/bin/bash finder.sh bash-4.2 execute 10
-bash-4.2/execute_cmd.c:187
-bash-4.2/shell.c:49
-bash-4.2/bashline.c:26
-bash-4.2/builtins/evalstring.c:20
-bash-4.2/trap.c:13
-bash-4.2/subst.c:12
-bash-4.2/eval.c:11
-bash-4.2/builtins/evalfile.c:9
-bash-4.2/flags.c:8
-bash-4.2/variables.c:7
-
-My output:
-bash-4.2/shell.c:49
-bash-4.2/bashline.c:26
-bash-4.2/builtins/evalstring.c:20
-bash-4.2/trap.c:13
-bash-4.2/subst.c:12
-bash-4.2/eval.c:11
-bash-4.2/builtins/evalfile.c:9
-bash-4.2/flags.c:8
-bash-4.2/variables.c:7
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -56,6 +30,8 @@ int IsChild( pid_t* pid );
 int PrintError();
 void PrintStatus( pid_t* pid, char* name, int status );
 
+const int DEBUG_MODE = 0;
+
 const int FIND_GREP_READ = 0;
 const int FIND_GREP_WRITE = 1;
 const int GREP_SORT_READ = 2;
@@ -69,15 +45,8 @@ const int ARG_HEAD = 3;
 
 int main( int argumentCount, char *arguments[] )
 {
-    //char* arguments[] = { "...", "bash-4.2", "execute", "10" };
-
     // Create process IDs
     struct Process find, grep, sort, head;
-
-    find.name = "find";
-    grep.name = "grep";
-    sort.name = "sort";
-    head.name = "head";
 
     // Create pipes
     // pipes[0]     FIND_GREP_READ     read end    find -> grep    read by grep
@@ -104,7 +73,7 @@ int main( int argumentCount, char *arguments[] )
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_WRITE, -1 );
 
-        char* findCommand[BSIZE];
+        char findCommand[BSIZE];
         snprintf( findCommand, sizeof( findCommand ),
           "%s %s -name \'*\'.[ch]",
           FIND_EXEC,
@@ -132,7 +101,7 @@ int main( int argumentCount, char *arguments[] )
         // Can close other pipes now
         ClosePipes( pipes, FIND_GREP_READ, GREP_SORT_WRITE );
 
-        char* grepCommand[BSIZE];
+        char grepCommand[BSIZE];
         snprintf( grepCommand, sizeof( grepCommand ),
           "%s %s -c %s",
           XARGS_EXEC,
@@ -165,7 +134,7 @@ int main( int argumentCount, char *arguments[] )
           bytes = read( pipes[ FIND_GREP_READ], buffer, sizeof( buffer ) );
         }
 
-        char* sortCommand[BSIZE];
+        char sortCommand[BSIZE];
         snprintf( sortCommand, sizeof( sortCommand ),
           "%s -t : +1.0 -2.0 --numeric --reverse",
           SORT_EXEC );
@@ -186,7 +155,7 @@ int main( int argumentCount, char *arguments[] )
         // Can close other now
         ClosePipes( pipes, SORT_HEAD_READ, -1 );
 
-        char* headCommand[BSIZE];
+        char headCommand[BSIZE];
         snprintf( headCommand, sizeof( headCommand ),
           "%s --lines=%s",
           HEAD_EXEC,
@@ -202,7 +171,6 @@ int main( int argumentCount, char *arguments[] )
     ClosePipes( pipes, -1, -1 );
 
     // Wait for the children to die
-    int status;
     WaitForProcesses( &find, &grep, &sort, &head );
 
 	return 0;
@@ -224,7 +192,9 @@ void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Proces
     // Create process status
     int status;
 
-    printf( "\n Waiting on process %s... \n", (*pid1).name );
+    if ( DEBUG_MODE )
+        printf( "\n Waiting on process %s... \n", (*pid1).name );
+
     if ( waitpid( (*pid1).pid, &status, 0 ) == -1 )
     {
         PrintError();
@@ -234,7 +204,9 @@ void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Proces
         PrintStatus( &(*pid1).pid, (*pid1).name, status );
     }
 
-    printf( "\n Waiting on process %s... \n", (*pid2).name );
+    if ( DEBUG_MODE )
+        printf( "\n Waiting on process %s... \n", (*pid2).name );
+
     if ( waitpid( (*pid2).pid, &status, 0 ) == -1 )
     {
         PrintError();
@@ -244,7 +216,9 @@ void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Proces
         PrintStatus( &(*pid2).pid, (*pid2).name, status );
     }
 
-    printf( "\n Waiting on process %s... \n", (*pid3).name );
+    if ( DEBUG_MODE )
+        printf( "\n Waiting on process %s... \n", (*pid3).name );
+
     if ( waitpid( (*pid3).pid, &status, 0 ) == -1 )
     {
         PrintError();
@@ -254,7 +228,9 @@ void WaitForProcesses( struct Process* pid1, struct Process* pid2, struct Proces
         PrintStatus( &(*pid3).pid, (*pid3).name, status );
     }
 
-    printf( "\n Waiting on process %s... \n", (*pid4).name );
+    if ( DEBUG_MODE )
+        printf( "\n Waiting on process %s... \n", (*pid4).name );
+
     if ( waitpid( (*pid4).pid, &status, 0 ) == -1 )
     {
         PrintError();
@@ -280,35 +256,40 @@ void PrintStatus( pid_t* pid, char* name, int status )
 {
     // http://man7.org/linux/man-pages/man2/waitpid.2.html
 
-    if ( WIFEXITED( status ) )
+    if ( DEBUG_MODE )
     {
-        printf( "child %i '%s' returned status %i - terminated normally with status %d \n",
+
+        if ( WIFEXITED( status ) )
+        {
+            printf( "child %i '%s' returned status %i - terminated normally with status %d \n",
+                *pid,
+                name,
+                status, WEXITSTATUS( status ) );
+        }
+
+        else if ( WIFSIGNALED( status ) )
+        {
+           printf( "child %i '%s' returned status %i - killed by signal %d \n",
             *pid,
             name,
-            status, WEXITSTATUS( status ) );
-    }
+            status, WTERMSIG( status ) );
+        }
 
-    else if ( WIFSIGNALED( status ) )
-    {
-       printf( "child %i '%s' returned status %i - killed by signal %d \n",
-        *pid,
-        name,
-        status, WTERMSIG( status ) );
-    }
+        else if ( WIFSTOPPED( status ) )
+        {
+           printf( "child %i '%s' returned status %i - stopped by signal %d\n",
+            *pid,
+            name,
+            status, WSTOPSIG( status ) );
+        }
 
-    else if ( WIFSTOPPED( status ) )
-    {
-       printf( "child %i '%s' returned status %i - stopped by signal %d\n",
-        *pid,
-        name,
-        status, WSTOPSIG( status ) );
-    }
+        else if ( WIFCONTINUED( status ) )
+        {
+           printf( "child %i '%s' returned status %i - continued\n",
+            *pid,
+            name,
+            status );
+        }
 
-    else if ( WIFCONTINUED( status ) )
-    {
-       printf( "child %i '%s' returned status %i - continued\n",
-        *pid,
-        name,
-        status );
     }
 }

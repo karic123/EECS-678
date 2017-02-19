@@ -9,7 +9,7 @@
 
 int terminalStopCounter = 0;
 const int QUIT_INTERRUPT_THRESHOLD = 5;
-const int QUIT_TIMER_THRESHOLD = 10;
+const int QUIT_TIMER_THRESHOLD = 1;
 bool idleFlag = false;
 
 void HandleInterrupt( int signal );
@@ -22,14 +22,21 @@ int main()
 {
     SetupInterruptSignals();
 
-    printf( "Welcome to program. \n " );
-    printf( "Press CTRL+C 5 times to prompt for quit, " );
-    printf( "or CTRL+Z to view tstp counter. \n\n" );
-    fflush( stdout );
-
     while ( 1 );
 
     return 0;
+}
+
+void SetupInterruptSignals()
+{
+    signal( SIGTSTP, HandleTerminalStop );
+    signal( SIGINT, HandleInterrupt );
+}
+
+void HandleTerminalStop( int signal )
+{
+    printf( "\n\nSo far, '%d' Ctrl-C presses were counted\n\n", terminalStopCounter );
+    fflush( stdout );
 }
 
 void HandleInterrupt( int signal )
@@ -42,54 +49,33 @@ void HandleInterrupt( int signal )
 
         // Prompt user whether they want to quit
         char answer[30];
+
         printf("\nReally exit? [Y/n]: ");
         fflush( stdout );
         fgets( answer, sizeof( answer ), stdin );
         idleFlag = true;
 
-        if ( tolower( answer[0] ) == 'n' )
-        {
-            idleFlag = false;
-            printf("\nContinuing\n");
-            fflush( stdout );
-            // Reset counter
-            terminalStopCounter = 0;
-        }
-        else
+        if ( tolower( answer[0] ) == 'y' )
         {
             printf("\nExiting...\n");
             fflush( stdout );
             exit( 0 );
+        }
+        else
+        {
+            idleFlag = false;
+            printf("\nContinuing\n");
+            fflush( stdout );
+            terminalStopCounter = 0;
         }
     }
 
     printf( "Interrupt \n" );
 }
 
-void HandleTerminalStop( int signal )
-{
-    printf( "\n\n So far, '%d' Ctrl-C presses were counted. \n\n", terminalStopCounter );
-    fflush( stdout );
-}
-
-void HandleAlarm()
-{
-    if ( idleFlag )
-    {
-        // Alarm went off, user is idle.
-        exit( 0 );
-    }
-    // Otherwise: don't quit
-}
-
-void SetupInterruptSignals()
-{
-    signal( SIGTSTP, HandleTerminalStop );
-    signal( SIGINT, HandleInterrupt );
-}
-
 void SetupAlarmSignal()
 {
+    printf( "\nSetup Alarm" );
     // Set up HandleAlarm to be the function
     // to handle the signal
     struct sigaction signalAction;
@@ -105,4 +91,16 @@ void SetupAlarmSignal()
 
     //signal( SIGALRM, HandleAlarm );
     alarm( QUIT_TIMER_THRESHOLD );
+}
+
+void HandleAlarm()
+{
+    printf( "\nAlarm" );
+    if ( idleFlag )
+    {
+        printf( "\nIdle" );
+        // Alarm went off, user is idle.
+        exit( 0 );
+    }
+    // Otherwise: don't quit
 }
