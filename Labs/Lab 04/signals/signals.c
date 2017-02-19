@@ -9,7 +9,7 @@
 
 int terminalStopCounter = 0;
 const int QUIT_INTERRUPT_THRESHOLD = 5;
-const int QUIT_TIMER_THRESHOLD = 1;
+const int QUIT_TIMER_THRESHOLD = 10;
 bool idleFlag = false;
 
 void HandleInterrupt( int signal );
@@ -46,6 +46,7 @@ void HandleInterrupt( int signal )
     {
         // Set up timer that will "log out" after 10 seconds
         SetupAlarmSignal();
+        idleFlag = true;
 
         // Prompt user whether they want to quit
         char answer[30];
@@ -53,7 +54,6 @@ void HandleInterrupt( int signal )
         printf("\nReally exit? [Y/n]: ");
         fflush( stdout );
         fgets( answer, sizeof( answer ), stdin );
-        idleFlag = true;
 
         if ( tolower( answer[0] ) == 'y' )
         {
@@ -69,13 +69,10 @@ void HandleInterrupt( int signal )
             terminalStopCounter = 0;
         }
     }
-
-    printf( "Interrupt \n" );
 }
 
 void SetupAlarmSignal()
 {
-    printf( "\nSetup Alarm" );
     // Set up HandleAlarm to be the function
     // to handle the signal
     struct sigaction signalAction;
@@ -94,13 +91,13 @@ void SetupAlarmSignal()
 }
 
 void HandleAlarm()
-{
-    printf( "\nAlarm" );
+{    
     if ( idleFlag )
     {
-        printf( "\nIdle" );
+        fflush( stdout );
         // Alarm went off, user is idle.
         exit( 0 );
     }
     // Otherwise: don't quit
+    fflush( stdout );
 }
