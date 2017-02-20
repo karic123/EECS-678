@@ -2,6 +2,8 @@
 
 Rachel's summary notes
 
+* [Official book slides - Chapter 3](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/PPT-dir/ch3.ppt)
+
 ## Vocabulary
 
 * [Process](https://en.wikipedia.org/wiki/Process_(computing))

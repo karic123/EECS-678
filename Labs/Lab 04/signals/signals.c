@@ -5,10 +5,12 @@
 #include <unistd.h>
 #include <signal.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 int terminalStopCounter = 0;
 const int QUIT_INTERRUPT_THRESHOLD = 5;
 const int QUIT_TIMER_THRESHOLD = 10;
+bool idleFlag = false;
 
 void HandleInterrupt( int signal );
 void HandleTerminalStop( int signal );
@@ -25,36 +27,10 @@ int main()
     return 0;
 }
 
-void HandleInterrupt( int signal )
+void SetupInterruptSignals()
 {
-    terminalStopCounter++;
-    if ( terminalStopCounter >= QUIT_INTERRUPT_THRESHOLD )
-    {
-        // Set up timer that will "log out" after 10 seconds
-        SetupAlarmSignal();
-
-        // Prompt user whether they want to quit
-        char answer[30];
-       printf("\nReally exit? [Y/n]: ");
-       fflush(stdout);
-       fgets(answer, sizeof(answer), stdin);
-
-        if ( tolower( answer[0] ) == 'n' )
-        {
-            // Reset counter
-            printf("\nContinuing\n");
-            fflush(stdout);
-            terminalStopCounter = 0;
-        }
-        else
-        {
-            printf("\nExiting...\n");
-            fflush(stdout);
-            exit( 0 );
-        }
-    }
-
-    printf( "Interrupt \n" );
+    signal( SIGTSTP, HandleTerminalStop );
+    signal( SIGINT, HandleInterrupt );
 }
 
 void HandleTerminalStop( int signal )
@@ -63,15 +39,36 @@ void HandleTerminalStop( int signal )
     fflush( stdout );
 }
 
-void HandleAlarm()
+void HandleInterrupt( int signal )
 {
-    // TODO: Add output
-}
+    terminalStopCounter++;
+    if ( terminalStopCounter >= QUIT_INTERRUPT_THRESHOLD )
+    {
+        // Set up timer that will "log out" after 10 seconds
+        SetupAlarmSignal();
+        idleFlag = true;
 
-void SetupInterruptSignals()
-{
-    signal( SIGTSTP, HandleTerminalStop );
-    signal( SIGINT, HandleInterrupt );
+        // Prompt user whether they want to quit
+        char answer[30];
+
+        printf("\nReally exit? [Y/n]: ");
+        fflush( stdout );
+        fgets( answer, sizeof( answer ), stdin );
+
+        if ( tolower( answer[0] ) == 'y' )
+        {
+            printf("\nExiting...\n");
+            fflush( stdout );
+            exit( 0 );
+        }
+        else
+        {
+            idleFlag = false;
+            printf("\nContinuing\n");
+            fflush( stdout );
+            terminalStopCounter = 0;
+        }
+    }
 }
 
 void SetupAlarmSignal()
@@ -91,4 +88,16 @@ void SetupAlarmSignal()
 
     //signal( SIGALRM, HandleAlarm );
     alarm( QUIT_TIMER_THRESHOLD );
+}
+
+void HandleAlarm()
+{    
+    if ( idleFlag )
+    {
+        fflush( stdout );
+        // Alarm went off, user is idle.
+        exit( 0 );
+    }
+    // Otherwise: don't quit
+    fflush( stdout );
 }

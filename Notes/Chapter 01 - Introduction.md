@@ -2,6 +2,8 @@
 
 Rachel's summary notes
 
+* [Official book slides - Chapter 1](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/PPT-dir/ch1.ppt)
+
 ## Vocabulary
 
 * [Operating System](https://en.wikipedia.org/wiki/Operating_system)
