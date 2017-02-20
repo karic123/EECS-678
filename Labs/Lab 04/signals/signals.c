@@ -9,7 +9,7 @@
 
 int terminalStopCounter = 0;
 const int QUIT_INTERRUPT_THRESHOLD = 5;
-const int QUIT_TIMER_THRESHOLD = 10;
+const int QUIT_TIMER_THRESHOLD = 1;
 bool idleFlag = false;
 
 void HandleInterrupt( int signal );
@@ -91,9 +91,10 @@ void SetupAlarmSignal()
 }
 
 void HandleAlarm()
-{    
+{
     if ( idleFlag )
     {
+        printf( "\n\n User taking too long to respond. Exiting  . . . \n\n" );
         fflush( stdout );
         // Alarm went off, user is idle.
         exit( 0 );
