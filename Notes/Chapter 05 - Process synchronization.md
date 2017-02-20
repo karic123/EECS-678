@@ -59,3 +59,12 @@ Rachel's summary notes
 
 # Notes
 
+## Spinlocks
+
+> In software engineering, a spinlock is a lock which causes a thread trying to acquire it to simply wait in a loop ("spin") while repeatedly checking if the lock is available. Since the thread remains active but is not performing a useful task, the use of such a lock is a kind of busy waiting. Once acquired, spinlocks will usually be held until they are explicitly released, although in some implementations they may be automatically released if the thread being waited on (that which holds the lock) blocks, or "goes to sleep".
+
+> Because they avoid overhead from operating system process rescheduling or context switching, spinlocks are efficient if threads are likely to be blocked for only short periods.
+
+[From Spinlocks - Wikipedia](https://en.wikipedia.org/wiki/Spinlock)
+
+
