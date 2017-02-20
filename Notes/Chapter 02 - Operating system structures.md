@@ -2,6 +2,8 @@
 
 Rachel's summary notes
 
+* [Official book slides - Chapter 2](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/PPT-dir/ch2.ppt)
+
 ## Vocabulary
 
 * User interface, command line interface (CLI), graphical user interface (GUI)
