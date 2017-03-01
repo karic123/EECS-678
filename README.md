@@ -21,40 +21,111 @@ Don't just copy my assignments - it is easy to find plagarism.
 
 ## Class schedule
 
-* Week 1	(Chapter 1)
-	* Introduction
-	* Architecture and OS
-* Week 2	(Chapters 1 - 3)
-	* Architecture support
-	* OS structure
-	* Process
-* Week 3	(Chapters 3 - 4)
-	* Process
-	* IPC
-* Week 4	(Chapter 5)
-	* Thread
-	* Synchronization
-* Week 5	(Chapter 5)
-	* Synchronization
-* Week 6	(Chapter 7)
-	* Deadlock
-* Week 7	(Chapter 6)
-	* CPU scheduling
-* Week 8	(Chapter 6)
-	* CPU scheduling
-* Week 9	(Chapters 8 - 9)
-	* Midterm week
-* Week 10
-	* Spring break
-* Week 11	(Chapters 8 - 9)
-	* Virtual memory
-* Week 12	(Chapters 8 - 9)
-	* Virtual memory
-* Week 13	(Chapters 11 - 13)
-	* Filesystem
-* Week 14	(Chapters 11 - 13)
-	* Filesystem
-* Week 15	(Chapters 15 - 16)
-	* Security, VM
-* Week 16
-	* Final review
+<table>
+	<thead>
+		<tr><th>Week</th>
+		<th>Chapter</th>
+		<th>Topics</th></tr>
+	</thead>
+	
+	<tbody>
+		<!-- row -->
+		<tr>
+			<td>1</td><!-- Week -->
+			<td> 1 </td><!-- Chapter -->
+			<td> Introduction, architecture and OS </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>2</td><!-- Week -->
+			<td> 1, 2, 3 </td><!-- Chapter -->
+			<td> Architecture support, OS structure, process </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>3</td><!-- Week -->
+			<td> 3, 4 </td><!-- Chapter -->
+			<td> Process, inter-process communication </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>4</td><!-- Week -->
+			<td> 5 </td><!-- Chapter -->
+			<td> Threads, synchronization </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>5</td><!-- Week -->
+			<td> 5 </td><!-- Chapter -->
+			<td> Synchronization </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>6</td><!-- Week -->
+			<td> 7 </td><!-- Chapter -->
+			<td> Deadlocks </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>7</td><!-- Week -->
+			<td> 6 </td><!-- Chapter -->
+			<td> CPU scheduling </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>8</td><!-- Week -->
+			<td> 6 </td><!-- Chapter -->
+			<td> CPU scheduling </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>9</td><!-- Week -->
+			<td>  </td><!-- Chapter -->
+			<td> Midterms </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>10</td><!-- Week -->
+			<td>  </td><!-- Chapter -->
+			<td> Spring break </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>11</td><!-- Week -->
+			<td> 8, 9 </td><!-- Chapter -->
+			<td> Virtual memory </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>12</td><!-- Week -->
+			<td> 8, 9 </td><!-- Chapter -->
+			<td> Virtual memory </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>13</td><!-- Week -->
+			<td> 11, 12, 13 </td><!-- Chapter -->
+			<td> Filesystem </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>14</td><!-- Week -->
+			<td> 11, 12, 13 </td><!-- Chapter -->
+			<td> Filesystem </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>15</td><!-- Week -->
+			<td> 15, 16 </td><!-- Chapter -->
+			<td> Security, VM </td><!-- Topics -->
+		</tr>
+		<!-- row -->
+		<tr>
+			<td>16</td><!-- Week -->
+			<td>  </td><!-- Chapter -->
+			<td> Final review </td><!-- Topics -->
+		</tr>
+		
+	</tbody>
+</table>
+
