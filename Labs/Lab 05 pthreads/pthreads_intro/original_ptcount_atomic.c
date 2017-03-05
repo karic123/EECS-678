@@ -4,26 +4,6 @@
 
 #define NUM_THREADS  3
 
-/*
-
-for ( i = 0; i < NUM_THREADS; i++)  
-. . .
-pthread_create(&threads[i], &attr, inc_count, (void *)targs);
-}
-
-* Run thread in default settings
-* How to create a thread, pthread_create, give thread control block, 
-and pass structure into it, and pass the inc_count function, and pass in the
-argument structure, which has already been created.
-* Parent makes call to pthread_join. Don't need to pass in anything for value_ptr
-(location for the return value...no return value here.)
-
-* Make update operation atomic, use __atomic_add_fetch
-to make the operation atomic.
-* Can do that or use mutexes... there are two files.
-* Solve one with atomic, solve the other with mutex
-*/
-
 struct thread_args {
   int tid;
   int inc;
@@ -51,10 +31,8 @@ void *inc_count(void *arg)
      * does their repsective locations have for critical section
      * existence and the need for Critical section protection?
      */
-     // set mutex
     count = count + my_args->inc;
     loc = loc + my_args->inc;
-    // release mutex
   }
   printf("Thread: %d finished. Counted: %d\n", my_args->tid, loc);
   free(my_args);
@@ -81,7 +59,7 @@ int main(int argc, char *argv[])
   inc = atoi(argv[2]);
 
   /* Initialize mutex */
-  //pthread_mutex_init(&count_mutex, NULL);
+  pthread_mutex_init(&count_mutex, NULL);
 
   /* For portability, explicitly create threads in a joinable state */
   pthread_attr_init(&attr);
@@ -99,7 +77,6 @@ int main(int argc, char *argv[])
     targs->loop = loop;
     targs->inc = inc;
     /* Make call to pthread_create here */
-    pthread_create(&threads[i], &attr, inc_count, (void*)&targs);
   }
 
   /* Wait for all threads to complete using pthread_join.  The threads
@@ -107,7 +84,6 @@ int main(int argc, char *argv[])
    */
   for (i = 0; i < NUM_THREADS; i++) {
     /* Make call to pthread_join here */
-    pthread_join(threads[i], NULL);
   }
 
   printf ("Main(): Waited on %d threads. Final value of count = %d. Done.\n",
@@ -115,7 +91,7 @@ int main(int argc, char *argv[])
 
   /* Clean up and exit */
   pthread_attr_destroy(&attr);
-  //pthread_mutex_destroy(&count_mutex);
+  pthread_mutex_destroy(&count_mutex);
   pthread_exit (NULL);
 }
 

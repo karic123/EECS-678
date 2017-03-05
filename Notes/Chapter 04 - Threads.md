@@ -4,8 +4,18 @@ Rachel's summary notes
 
 * [Official book slides - Chapter 4](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/PPT-dir/ch4.ppt)
 
+## Lab
+
+T.A. mentioned that we should be familiar with these terms. **(IMPORTANT)**
+
+* [Reentrancy](https://en.wikipedia.org/wiki/Reentrancy_(computing)
+* [Thread safety](https://en.wikipedia.org/wiki/Thread_safety)
+
+We are dealing with a non-thread-safe function (inc_count) in Lab 5.
+
 ## Vocabulary
 
+* Atomic
 * [Threads](https://en.wikipedia.org/wiki/Thread_(computing))
 * [Single-threaded process](https://en.wikipedia.org/wiki/Thread_(computing)#Single_threading)
 * [Multi-threaded process](https://en.wikipedia.org/wiki/Thread_(computing)#Multithreading)
@@ -195,7 +205,7 @@ We can also use **deferred cancellation**...
 With pthreads, we can use
 
 	pthread_cancel()
-	
+
 though this is only a request. The target thread must have something set up
 to handle the request.
 
@@ -205,7 +215,7 @@ Another function that can be used is
 
 	pthread_testcancel()
 
-If cancellation is pending, then a cleanup handler is called. 
+If cancellation is pending, then a cleanup handler is called.
 
 
 #### Thread-local storage (aka TLS)
@@ -228,7 +238,7 @@ One way for the user-level thread library to talk to the kernel is **scheduler a
 * The kernel provides a set of LWPs
 * The application schedules user-threads to an available LWP virtual processor.
 * The kernel has to let the application know about certain events (upcall).
-* The upcall handler of a thread library handles upcalls. 
+* The upcall handler of a thread library handles upcalls.
 * The upcall handler is run on a virtual processor.
 
 ---

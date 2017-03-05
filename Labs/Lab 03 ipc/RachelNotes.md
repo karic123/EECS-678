@@ -21,6 +21,7 @@ so that the *write* from the first ends up being a *read* for the third?
 * execv was ignoring my arguments list... because we're not SUPPOSED to use
 execv, but the instructions SOUNDED like you were supposed to use execv...
 but NNOOOOOO we use execl. Thanks for hours and hours of FRUSTRATION! ARG!
+* why are we calling bash instead of just calling find, grep, etc.?
 
 
 ## Pipeline
