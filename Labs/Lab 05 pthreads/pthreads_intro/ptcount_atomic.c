@@ -4,6 +4,13 @@
 
 #define NUM_THREADS  3
 
+/*
+for ( i = 0; i < NUM_THREADS; i++)  
+. . .
+pthread_create(&threads[i], &attr, inc_count, (void *)targs);
+}
+ * */
+
 struct thread_args {
   int tid;
   int inc;
