@@ -66,7 +66,7 @@ void * inc_count( void * arg )
     loc = 0;
     for ( i = 0; i < my_args->loop; i++ )
     {
-        __atomic_add_fetch( &count, my_args->inc, __ATOMIC_RELAXED );
+        count = count + my_args->inc;
         loc = loc + my_args->inc;
     }
 
