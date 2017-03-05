@@ -4,10 +4,11 @@
 
 #define NUM_THREADS  3
 
-struct thread_args {
-  int tid;
-  int inc;
-  int loop;
+struct thread_args
+{
+    int tid;
+    int inc;
+    int loop;
 };
 
 int count = 0;
@@ -20,78 +21,91 @@ pthread_mutex_t count_mutex;
  */
 void *inc_count(void *arg)
 {
-  int i,loc;
-  struct thread_args *my_args = (struct thread_args*) arg;
+    int i,loc;
+    struct thread_args *my_args = (struct thread_args*) arg;
 
-  loc = 0;
-  for (i = 0; i < my_args->loop; i++) {
-    /*
-     * How many machine instructions are required to increment count
-     * and loc. Where are these variables stored? What implications
-     * does their repsective locations have for critical section
-     * existence and the need for Critical section protection?
-     */
-    count = count + my_args->inc;
-    loc = loc + my_args->inc;
-  }
-  printf("Thread: %d finished. Counted: %d\n", my_args->tid, loc);
-  free(my_args);
-  pthread_exit(NULL);
+    loc = 0;
+    for (i = 0; i < my_args->loop; i++)
+    {
+        /*
+         * How many machine instructions are required to increment count
+         * and loc. Where are these variables stored? What implications
+         * does their repsective locations have for critical section
+         * existence and the need for Critical section protection?
+         */
+        pthread_mutex_lock( &count_mutex );
+        count = count + my_args->inc;
+        loc = loc + my_args->inc;
+        pthread_mutex_unlock( &count_mutex );
+    }
+    printf("Thread: %d finished. Counted: %d\n", my_args->tid, loc);
+    free(my_args);
+    pthread_exit(NULL);
 }
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+int main()
 {
-  int i, loop, inc;
-  struct thread_args *targs;
-  pthread_t threads[NUM_THREADS];
-  pthread_attr_t attr;
+    int i, loop, inc;
+    struct thread_args *targs;
+    pthread_t threads[NUM_THREADS];
+    pthread_attr_t attr;
 
-  if (argc != 3) {
-    printf("Usage: PTCOUNT LOOP_BOUND INCREMENT\n");
-    exit(0);
-  }
+    int argc = 3;
+    char* argv[3] = { "", "1000", "1" };
 
-  /*
-   * First argument is how many times to loop. The second is how much
-   * to increment each time.
-   */
-  loop = atoi(argv[1]);
-  inc = atoi(argv[2]);
+    if (argc != 3)
+    {
+        printf("Usage: PTCOUNT LOOP_BOUND INCREMENT\n");
+        exit(0);
+    }
 
-  /* Initialize mutex */
-  pthread_mutex_init(&count_mutex, NULL);
+    /*
+     * First argument is how many times to loop. The second is how much
+     * to increment each time.
+     */
+    loop = atoi(argv[1]);
+    inc = atoi(argv[2]);
 
-  /* For portability, explicitly create threads in a joinable state */
-  pthread_attr_init(&attr);
-  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    /* Initialize mutex */
+    pthread_mutex_init(&count_mutex, NULL);
 
-  /* Create each thread using pthread_create.  The start routine for
-   * each thread should be inc_count. The attribute object should be
-   * attr. You should pass as the thread's sole argument the populated
-   * targs struct. Note we create a different copy of it for each
-   * thread.
-   */
-  for (i = 0; i < NUM_THREADS; i++) {
-    targs = malloc(sizeof(targs));
-    targs->tid = i;
-    targs->loop = loop;
-    targs->inc = inc;
-    /* Make call to pthread_create here */
-  }
+    /* For portability, explicitly create threads in a joinable state */
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-  /* Wait for all threads to complete using pthread_join.  The threads
-   * do not return anything on exit, so the second argument is NULL
-   */
-  for (i = 0; i < NUM_THREADS; i++) {
-    /* Make call to pthread_join here */
-  }
+    /* Create each thread using pthread_create.  The start routine for
+     * each thread should be inc_count. The attribute object should be
+     * attr. You should pass as the thread's sole argument the populated
+     * targs struct. Note we create a different copy of it for each
+     * thread.
+     */
+    printf( "Create %d threads... \n", NUM_THREADS );
+    for (i = 0; i < NUM_THREADS; i++)
+    {
+        targs = malloc(sizeof(targs));
+        targs->tid = i;
+        targs->loop = loop;
+        targs->inc = inc;
+        /* Make call to pthread_create here */
+        pthread_create(&threads[i], &attr, inc_count, (void*)&targs);
+    }
 
-  printf ("Main(): Waited on %d threads. Final value of count = %d. Done.\n",
-          NUM_THREADS, count);
+    /* Wait for all threads to complete using pthread_join.  The threads
+     * do not return anything on exit, so the second argument is NULL
+     */
+    for (i = 0; i < NUM_THREADS; i++)
+    {
+        /* Make call to pthread_join here */
+        pthread_join(threads[i], NULL);
+    }
 
-  /* Clean up and exit */
-  pthread_attr_destroy(&attr);
-  pthread_mutex_destroy(&count_mutex);
-  pthread_exit (NULL);
+    printf ("Main(): Waited on %d threads. Final value of count = %d. Done.\n",
+            NUM_THREADS, count);
+
+    /* Clean up and exit */
+    pthread_attr_destroy(&attr);
+    pthread_mutex_destroy(&count_mutex);
+    pthread_exit (NULL);
 }
 
