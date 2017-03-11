@@ -25,6 +25,21 @@ We are dealing with a non-thread-safe function (inc_count) in Lab 5.
 * User threads
 * Kernel threads
 * Green threads
+* Benefits of multithreaded programming
+	* Responsiveness
+	* Resource sharing
+	* Economy
+	* Scalability
+* Multicore programming
+	* Programming challenges
+		* Identifying tasks
+		* Balance
+		* Data splitting
+		* Data dependency
+		* Testing and debugging
+	* Types of parallelism
+		* Data parallelism
+		* Task parallelism
 * Multithreading models
 	* One-to-one model
 	* Many-to-many model
@@ -33,13 +48,13 @@ We are dealing with a non-thread-safe function (inc_count) in Lab 5.
 	* POSIX
 * Pthreads, Windows threads, Java threads
 * Implicit threading
-* Thread pools
-* OpenMP - Compiler directives and API
-* Parallel regions
-* Grand Central Dispatch - Apple's extentions to C, API
-	* Blocks
-	* Dispatch queue
-	* Main queue
+	* Thread pools
+	* OpenMP - Compiler directives and API
+	* Parallel regions
+	* Grand Central Dispatch - Apple's extentions to C, API
+		* Blocks
+		* Dispatch queue
+		* Main queue
 * Threading issues
 	* fork() and exec()
 	* Signal handling

@@ -6,67 +6,112 @@ Rachel's summary notes
 
 ## Vocabulary
 
-* [Process](https://en.wikipedia.org/wiki/Process_(computing))
-* User programs / tasks
-* Text section
-* [Program counter](https://en.wikipedia.org/wiki/Program_counter)
-* [Stack pointer](https://en.wikipedia.org/wiki/Call_stack#STACK-POINTER)
-* Process stack
-* Data section
-* Process heap
+* Process concepts
+	* [Process](https://en.wikipedia.org/wiki/Process_(computing))
+		* Parent process
+		* Child process
+		* Sibling process
+	* Jobs
+	* User programs / tasks
+	* The Process...
+		* Text section
+		* [Program counter](https://en.wikipedia.org/wiki/Program_counter)
+		* [Stack pointer](https://en.wikipedia.org/wiki/Call_stack#STACK-POINTER)
+		* Process stack
+		* Data section
+		* Process heap
+	* Process state
+		* States
+			* New
+			* Running
+			* Waiting
+			* Ready
+			* Terminated
+	* Process control block (PCB) aka Task control block
+		* Process state
+		* Program counter
+		* CPU registers
+		* CPU-scheduling information
+		* Memory-management information
+		* Accounting information
+		* I/O status information
+	* Threads
+* Process scheduling
+	* Process scheduler
+	* Scheduling queues
+		* Job queue
+		* Ready queue
+		* Device queue
+		* Queueing diagram
+		* Dispatched
+	* Schedulers
+		* [Long-term scheduler / job scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#LONG-TERM)
+		* [Short-term scheduler / CPU scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#Short-term_scheduling)
+		* [Medium-term scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#Medium-term_scheduling)
+		* [I/O-bound process](https://en.wikipedia.org/wiki/I/O_bound)
+		* [CPU-bound process](https://en.wikipedia.org/wiki/CPU-bound)
+		* Swapping
+	* [Context switching](https://en.wikipedia.org/wiki/Context_switch)
+		* State save, state restore
+* Operations on processes
+	* Process creation
+		* Tree of processes
+		* Process identifier (pid)
+	* Process termination
+		* Foreground application, background application
+		* Cascading termination
+		* Zombie process
+		* Orphan process
+	* [Interprocess communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication)
+		* Shared memory
+			* Producer process
+			* Consumer process
+			* Unbounded buffer
+			* Bounded buffer
+		* Message passing
+			* Direct communication
+			* Blocking (synchronous)
+			* Nonblocking (asynchronous)
+			* Blocking send
+			* Nonblocking send
+			* Blocking receive
+			* Nonblocking receive
+			* Rendezvous
+		* Buffering
+			* Zero capacity
+			* Bounded capacity
+			* Unbounded capacity
+* Examples of IPC systems
+	* POSIX shared memory
+	* Mach (for Mac)
+	* Windows
+		* Advanced local procedure call (ALPC)
+		* Connection ports
+		* Communication ports
+		* Section object
+* Communication in client-server systems
+	* Socket
+		* Connection-oriented sockets (TCP)
+		* Connectionless sockets (UDP)
+		* Loopback 127.0.0.1
+	* Remote procedure calls
+		* Port
+		* Stub
+		* Microsoft Interface Definition Language (MIDL)
+		* Big-endian
+		* Little-endian
+		* External data representation (XDR)
+		* Matchmaker
+	* [Pipes](https://en.wikipedia.org/wiki/Pipeline_(Unix)#pipe_character)
+		* Write-end
+		* Read-end
+		* [Anonymous pipes](https://en.wikipedia.org/wiki/Anonymous_pipe)
+		* [Named pipes](https://en.wikipedia.org/wiki/Named_pipe)
+
 * [Address space](https://en.wikipedia.org/wiki/Address_space)
 * [Virtual memory](https://en.wikipedia.org/wiki/Virtual_memory)
 * [Process state](https://en.wikipedia.org/wiki/Process_state) - New, running, waiting, ready, terminated
 * [Process control block (PCB)](https://en.wikipedia.org/wiki/Process_control_block)
-* Task control block
-* Thread
-* Parent process
-* Child process
-* Sibling process
-* Process scheduler
-* Job queue
-* Ready queue
-* Device queue
-* [Long-term scheduler / job scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#LONG-TERM)
-* [Short-term scheduler / CPU scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#Short-term_scheduling)
-* [Medium-term scheduler](https://en.wikipedia.org/wiki/Scheduling_(computing)#Medium-term_scheduling)
-* [I/O-bound process](https://en.wikipedia.org/wiki/I/O_bound)
-* [CPU-bound process](https://en.wikipedia.org/wiki/CPU-bound)
-* Swapping
-* State save, state restore
-* [Context switching](https://en.wikipedia.org/wiki/Context_switch)
-* Foreground application, background application
-* Tree of processes
-* Process identifier (pid)
-* Cascading termination
-* Zombie process
-* Orphan process
-* [Interprocess communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication)
-* Shared memory
-* Message passing
-* Producer process, consumer process
-* Unbounded buffer, bounded buffer
-* Direct communication
-* Blocking, nonblocking
-* Synchronous, asynchronous
-* Advanced local procedure call (ALPC)
-* Connection ports
-* Communication ports
-* Section object
-* Socket
-* Connection-oriented sockets (TCP)
-* Connectionless sockets (UDP)
-* Loopback
-* Port
-* Stub
-* Microsoft Interface Definition Language (MIDL)
-* big-endian, little-endian
-* External data representation (XDR)
-* Matchmaker
-* [Pipe](https://en.wikipedia.org/wiki/Pipeline_(Unix)#pipe_character)
-* Write-end, read-end
-* [Anonymous pipes](https://en.wikipedia.org/wiki/Anonymous_pipe)
-* [Named pipes](https://en.wikipedia.org/wiki/Named_pipe)
 * [fork](https://en.wikipedia.org/wiki/Fork_(system_call)) system call
 * [exec](https://en.wikipedia.org/wiki/Exec_(system_call)) system call
 
