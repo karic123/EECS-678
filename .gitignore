@@ -1,3 +1,6 @@
+ptcount_atomic
+ptcount_mutex
+
 obj/
 bin/
 # Compiled Object files

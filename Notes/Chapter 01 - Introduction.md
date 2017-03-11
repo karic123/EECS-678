@@ -4,40 +4,6 @@ Rachel's summary notes
 
 * [Official book slides - Chapter 1](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/PPT-dir/ch1.ppt)
 
-## Vocabulary
-
-* [Operating System](https://en.wikipedia.org/wiki/Operating_system)
-* [Hardware](https://en.wikipedia.org/wiki/Computer_hardware)
-* [CPU](https://en.wikipedia.org/wiki/Central_processing_unit)
-* [Memory](https://en.wikipedia.org/wiki/Computer_memory)
-* [Input/output devices](https://en.wikipedia.org/wiki/Input/output)
-* [Application programs](https://en.wikipedia.org/wiki/Application_software)
-* Control program - such as the OS, a program which manages program execution, prevents errors and improper use.
-* [Moore's law](https://en.wikipedia.org/wiki/Moore%27s_law)
-* [Kernel](https://en.wikipedia.org/wiki/Kernel_(operating_system))
-* System programs
-* [Middleware](https://en.wikipedia.org/wiki/Middleware)
-* [Bootstrap program](https://en.wikipedia.org/wiki/Booting)
-* [ROM](https://en.wikipedia.org/wiki/Read-only_memory)
-* EEPROM
-* [Firmware](https://en.wikipedia.org/wiki/Firmware)
-* [System processes/daemons](https://en.wikipedia.org/wiki/Daemon_(computing))
-* [Software/hardware interrupt](https://en.wikipedia.org/wiki/Interrupt)
-* [System call/monitor call](https://en.wikipedia.org/wiki/System_call)
-* Interrupt vector
-* [RAM](https://en.wikipedia.org/wiki/Random-access_memory)
-* DRAM
-* [von Neumann architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture)
-* [Instruction register](https://en.wikipedia.org/wiki/Instruction_register)
-* [Direct memory access (DMA)](https://en.wikipedia.org/wiki/Direct_memory_access)
-* Fault tolerant
-* [Asymmetric multiprocessing](https://en.wikipedia.org/wiki/Asymmetric_multiprocessing), [symmetric multiprocessing](https://en.wikipedia.org/wiki/Symmetric_multiprocessing)
-* Asymmetric, symmetric clustering
-* [Parallelization](https://en.wikipedia.org/wiki/Parallel_computing)
-* Distributed lock manager (DLM)
-* Storage-area networks (SANs)
-* [Memory Management Unit MMU](https://en.wikipedia.org/wiki/Memory_management_unit)
-
 ---
 
 # Notes
@@ -64,7 +30,6 @@ These areas generally are:
 * [I/O](https://en.wikipedia.org/wiki/Input/output)
 
 
-
 The Operating System is responsible for allocating resources between software
 in a manner such that everything gets processing time, memory to work with
 to get its task done, and access to Input/Output devices.
@@ -84,6 +49,13 @@ users to interact with that hardware via the software on top of the Operating Sy
 
 On the hardware layer, the Operating System needs to work with the CPU,
 memory (RAM), and the I/O devices. 
+
+### Goals of the Operating System
+
+		Goals: Execute user programs, make the comp. system easy to use, utilize hardware efficiently
+		
+		(From Study Guide to Accompany Operating Systems Concepts 9th Ed, By Andrew DeNicola,
+		http://codex.cs.yale.edu/avi/os-book/OS9/)
 
 ## User view vs. System view
 
@@ -289,4 +261,38 @@ We can handle thread synchronization via using atomic operations,
 or lock methods, or even (for single-core systems), disabling interrupts while a thread is
 working with data that shouldn't be changed at the same time.
 
+---
 
+# Vocabulary
+
+* [Operating System](https://en.wikipedia.org/wiki/Operating_system)
+* [Hardware](https://en.wikipedia.org/wiki/Computer_hardware)
+* [CPU](https://en.wikipedia.org/wiki/Central_processing_unit)
+* [Memory](https://en.wikipedia.org/wiki/Computer_memory)
+* [Input/output devices](https://en.wikipedia.org/wiki/Input/output)
+* [Application programs](https://en.wikipedia.org/wiki/Application_software)
+* Control program - such as the OS, a program which manages program execution, prevents errors and improper use.
+* [Moore's law](https://en.wikipedia.org/wiki/Moore%27s_law)
+* [Kernel](https://en.wikipedia.org/wiki/Kernel_(operating_system))
+* System programs
+* [Middleware](https://en.wikipedia.org/wiki/Middleware)
+* [Bootstrap program](https://en.wikipedia.org/wiki/Booting)
+* [ROM](https://en.wikipedia.org/wiki/Read-only_memory)
+* EEPROM
+* [Firmware](https://en.wikipedia.org/wiki/Firmware)
+* [System processes/daemons](https://en.wikipedia.org/wiki/Daemon_(computing))
+* [Software/hardware interrupt](https://en.wikipedia.org/wiki/Interrupt)
+* [System call/monitor call](https://en.wikipedia.org/wiki/System_call)
+* Interrupt vector
+* [RAM](https://en.wikipedia.org/wiki/Random-access_memory)
+* DRAM
+* [von Neumann architecture](https://en.wikipedia.org/wiki/Von_Neumann_architecture)
+* [Instruction register](https://en.wikipedia.org/wiki/Instruction_register)
+* [Direct memory access (DMA)](https://en.wikipedia.org/wiki/Direct_memory_access)
+* Fault tolerant
+* [Asymmetric multiprocessing](https://en.wikipedia.org/wiki/Asymmetric_multiprocessing), [symmetric multiprocessing](https://en.wikipedia.org/wiki/Symmetric_multiprocessing)
+* Asymmetric, symmetric clustering
+* [Parallelization](https://en.wikipedia.org/wiki/Parallel_computing)
+* Distributed lock manager (DLM)
+* Storage-area networks (SANs)
+* [Memory Management Unit MMU](https://en.wikipedia.org/wiki/Memory_management_unit)
