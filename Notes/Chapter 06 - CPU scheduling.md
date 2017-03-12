@@ -375,14 +375,90 @@ is something less important - video game events, video decoding, etc.
 A **hard deadline** is much more important and could result in the loss of
 life if something goes wrong - Engine control, anti-lock break system, etc.
 
+Additionally, a **soft real-time system** provides no guarantees for when
+a critical real-time process will be scheduled. A **hard real-time system** 
+has stricter deadlines, and it must be executed by its deadline, otherwise
+afterwards it is useless.
+
 We can also do priority scheduling on real-time systems, which may include
 **static priority scheduling** or **dynamic priority scheduling**.
 
+### Latency
+
+**Event latency** is the time it takes from when an event occurs until
+when that event is serviced.
+
+**Interrupt latency** is the time it takes from when an interrupt occurs
+until the start of the response process.
+
+**Dispatch latency** is the time it takes for the dispatcher to stop
+one process and start another process. The best way to keep this latency
+low is to allow preemption.
+
+**Interrupt latency** and **Dispatch latency** affect a real-time
+system's performance.
+
+
+### Scheduling for real-time systems
+
+Since real-time systems need to respond as soon as possible to external
+information, CPU scheduling must require preemption (allow interrupts)
+and the system must also support priority raking of processes.
+
+However, only providing a scheduler that allows for prioritization and
+preemption **does not** guarantee hard real-time functionality;
+it merely guarantees soft real-time functionality.
+To have hard real-time functionality, there must be some guarantee
+that tasks will be processed by their deadlines.
+
+
+#### Characteristics of processes in real-time systems
+
+In a real-time system, the processes must be consudered **periodic**.
+This means that they require the CPU at constant time periods.
+
+When a process is created, its deadline may also be included as 
+information going to the scheduler. Using an **admission-control algorithm**,
+the scheduler will either *accept the process* with the guarantee that it
+will be processed by the deadline, or it will *reject the process* if
+it is unable to *guarantee* that the process will be taken care of by the deadline.
+
+
+#### Scheduling methods for real-time systems
+
+**Rate-Monotonic scheduling:** Tasks are prioritized based on their periods.
+If a task has a short period, then it is higher priority, and vice versa.
+
+The rate-monotonic scheduling algorithm utilizes a static priority policy
+and it allows for preemption.
+
+**Earliest-deadline-first (EDF):** Priorities are assigned based on the
+deadline. If the deadline comes sooner, then the task is higher priority.
+If the deadline is further away, then the task is lower priority.
+
+EDF scheduling doesn't require periodic processes, or constant CPU burst
+time, only that a process provides its deadline to the scheduler.
+
+**Proportional share:** These schedulers will allocate a specific amount
+of shares, *T*, to each application. The application will also receive
+*N* shares of time, so that it will have *N/T* total time processing.
+
+An **admission-control policy** must also be used so that shares of time
+are properly received.
+
+
+#### Linux scheduling framework
+
+To go over later, FML.
 
 
 ### Multicore Scheduling
 
-.
+FML
+
+### Algorithm Evaluation
+
+FML
 
 ---
 
