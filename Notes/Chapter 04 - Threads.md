@@ -55,6 +55,9 @@ the thread itself.
 ![address spaces, single-threaded vs. multi-threaded](images/process_threads.png)
 
 
+![Single-threaded vs Multi-threaded](images/single_multi_threaded.png)
+
+
 ### Threads vs. Processes!
 
 <table>
@@ -68,11 +71,9 @@ the thread itself.
 <tr>
 <td>Pros</td>
 <td>
-<!-- Process ->
 <p>Processes can run independently of each other; one crashing doesn't affect others directly.</p>
 </td>
-<td>
-<!-- Thread ->
+<td>=
 <p>Responsive: Simple model, don't need to block on I/O</p>
 <p>Resource sharing: Easier & faster than memory sharing.</p>
 <p>Economy: Less context-switching overhead, less space taken up.</p>
@@ -83,10 +84,9 @@ the thread itself.
 <tr>
 <td>Cons</td>
 <td>
-<!-- Process ->
+<p>Have to rely on some IPC model to communicate between threads, which adds overhead.</p>
 </td>
 <td>
-<!-- Thread ->
 <p>Synchronization issues</p>
 </td>
 </tr>
@@ -95,7 +95,6 @@ the thread itself.
 
 
 
-![Single-threaded vs Multi-threaded](images/single_multi_threaded.png)
 
 An individual thread has:
 
@@ -110,6 +109,21 @@ And the threads of a process share:
 * Data section
 * OS resources (open files, signals)
 
+
+
+
+### Models
+
+* **User threads** are above the kernel level and no support is given by the kernel.
+	* **PROS:** No kernel support, and it is fast - no kernel crossing.
+	* **CONS:** What happens when there is a blocking system call?
+* **Kernel threads** are managed by the operating system.
+	* **PROS:** No threading runtime and native system call handling
+	* **CONS:** Overhead
+	
+
+
+## Multithreading
 
 ### Benefits of multithreading
 
@@ -126,9 +140,10 @@ becomes even more powerful.
 
 ### Parallelism vs. Concurrency
 
-* Parallelism - the system can perform more than one task at the same time.
-* Concurrency - the system supports multiple tasks by allowing all tasks to progress.
+* **Parallelism** - the system can perform more than one task at the same time.
+* **Concurrency** - the system supports multiple tasks by allowing all tasks to progress.
 
+Think of a multi-core processor vs. a single-core processor
 
 ### Programming challenges
 
@@ -145,15 +160,6 @@ becomes even more powerful.
 this data to multiple cores so that they can work on the same problem together.
 * **Task parallelism** - Being able to divide tasks (threads) across multiple cores.
 
-
-### Models
-
-* **User threads** are above the kernel level and no support is given by the kernel.
-	* **PROS:** No kernel support, and it is fast - no kernel crossing.
-	* **CONS:** What happens when there is a blocking system call?
-* **Kernel threads** are managed by the operating system.
-	* **PROS:** No threading runtime and native system call handling
-	* **CONS:** Overhead
 
 
 #### Many-to-one model
@@ -209,17 +215,17 @@ threading, rather than having developers do it at the application-development le
 
 
 
-### Threading issues
+## Threading issues
 
 
-#### fork and exec
+### fork and exec
 
 * When fork() is called, should the threads be duplicated across the
 processes, or should the new process be single-threaded?
 * Some UNIX systems have two versions of fork().
 
 
-#### Signal handling
+### Signal handling
 
 When a signal is caught, where should it be handled?
 
@@ -229,7 +235,7 @@ When a signal is caught, where should it be handled?
 * Assign a specific thread to receive all signals of a process?
 
 
-#### Thread cancellation
+### Thread cancellation
 
 A thread may end up being terminated before it completes...
 
@@ -262,14 +268,14 @@ Another function that can be used is
 If cancellation is pending, then a cleanup handler is called.
 
 
-#### Thread-local storage (aka TLS)
+### Thread-local storage (aka TLS)
 
 Sometimes threads just need their own data, not the stuff shared by all threads in the process.
 
 TLS is similar to static data, but unique to each thread.
 
 
-#### Scheduler activations
+### Scheduler activations
 
 * Systems that use many-to-many threading model, or the two-level threading model, will usually have a data structure in between the User and the Kernel threads.
 * This is the LWP (Lightweight Process).
