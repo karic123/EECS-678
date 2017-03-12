@@ -161,7 +161,10 @@ the CPU while the smaller processes wait.
 
 Also the FCFS scheduling scheme is **nonpreemptive**.
 
-**CON:** The average response time sucks, and is also unreliable!
+**PROS:** Simple to implement, low overhead, and good for batch jobs.
+
+**CONS:** The average response time sucks, and is also unreliable! Short jobs
+may end up becoming stuck behind longer jobs.
 
 
 ### Shortest-Job-First Scheduling
@@ -176,9 +179,10 @@ SJF scheduling is used more commonly with long-term job scheduling,
 rather than as short-term CPU scheduling, as we cannot know how long
 of a CPU burst a process will need.
 
-**PRO:** Good average response time
+**PROS:** Good average response time. Shortest job is performed first.
 
-**CON:** Can't predict the future
+**CONS:** Can't predict the future. Long jobs may be starved by
+the short jobs.
 
 We can try to approximate this scheduling for short-term by estimating
 the CPU burst length of a process. This might mean looking at how long
@@ -229,18 +233,156 @@ priority the longer it lives, so that it will eventually get some processing tim
 
 * [Wikipedia article](https://en.wikipedia.org/wiki/Scheduling_(computing)#Round-robin_scheduling)
 
+Round-Robin Scheduling is essentially First-Come, First-Served but with
+the ability to preempt. It was designed especially for time-sharing systems.
 
+For Round-Robin, each job is executed for some fixed time slice,
+known as a **time quantum**. The Ready Queue is now a circular queue.
 
+The scheduler "travels" around the queue, giving each process a bit
+of time to work, up to one *time quantum*.
+
+The ready queue is essentially still *First-In, First-Out*, but a process
+doesn't get to spend the entire time processing, blocking others
+while it does so. New processes are added to the tail of the queue.
+
+**CONS:** The average wait time AND turnaround time is still pretty long 
+on average, though
+the performance relies greatly on the length of the time quantum.
+
+If the time quantum is very small, then overhead is added in the form of
+*context switching*.
+
+If the time quantum is large, then the response time is bad.
+
+**PROS:** Better interactivity, low average scheduling latency.
+
+**CONS:** Performance depends on the quantum size.
 
 
 ### Multilevel Queue Scheduling
 
 * [Wikipedia article](https://en.wikipedia.org/wiki/Scheduling_(computing)#Multilevel_queue_scheduling)
 
+It may be handy to divide our processes in groups, such as **Foreground** and **Background** processes.
+Foreground processes are interactive, and background processes are batch.
+
+With the **Multilevel Queue** scheme, we maintain separate queues for
+the separate groups, and the separate queues have separate algorithms
+they follow.
+
+Additionally, different groups may overall have different priorities,
+like the foreground queue might have priority over the background queue.
+This is known as *fixed-priority preemptive scheduling.*
+
+Another alternative is to use time-slices for each of the queues.
+
+**PROS:** Low scheduling overhead
+
+**CONS:** Inflexible
+
 
 ### Multilevel Feedback Queue Scheduling
 
+With a Multilevel Feedback Queue, processes are allowed to move between
+the queues.
 
+This might be useful if a process takes a lot of CPU time, and it
+can be moved to a lower-priority queue. Likewise, if a process uses
+a lot of I/O time, it can go in a high-priority queue.
+
+We can also implement aging by allowing a process move from low-priority
+to higher-priority if it sits in the low-priority queue for too long.
+
+A Multilevel Feedback Queue scheduler is defined by the following:
+
+* The number of queues it has
+* The scheduling algorithm used for each queue
+* The means by which a decision is made to move a process to a higher-priority queue
+* The means by which a decision is made to move a process to a lower-priority queue
+* The way it decides which queue a process will be assigned to.
+
+**PROS:** Most general algorithm. Most flexibility.
+
+**CONS:** Most complex algorithm.
+
+
+### Completely Fair Scheduler
+
+* [Wikipedia article](https://en.wikipedia.org/wiki/Completely_Fair_Scheduler)
+
+Linux uses CFS, the Completely Fair Scheduler. For this scheme,
+each task owns a fraction of the CPU time share.
+
+For the scheduling algorithm, each task keeps track of its "virtual runtime",
+which is the **amount of time executed * weight**.
+
+The scheduler chooses the task that has the *smallest* virtual runtime,
+and tasks are sorted according to the virtual runtimes.
+
+The CFS is not based on run queues, but on a red-black tree.
+
+Edge-cases ? For a new task, what do we set the virtual time to?
+
+#### Red-Black Tree
+
+A Red-Black Tree is used in CFS to implement a "timeline" of task
+executions to be done. This type of tree structure is self-balancing,
+as well as a binary search tree.
+
+#### Weighted Fair Sharing
+
+
+### Comparisons
+
+What has the smallest average wait time? -- **SRTF/SFJ**.
+
+What has better interactivity? **RR with a small time quantum, or SRTF**.
+
+What is best for minimizing overhead? **FCFS**
+
+
+## Real-time Scheduling
+
+* [Wikipedia article](https://en.wikipedia.org/wiki/Real-time_computing)
+
+	In computer science, real-time computing (RTC), 
+	or reactive computing describes hardware and software 
+	systems subject to a "real-time constraint", 
+	for example from event to system response.[1] 
+	Real-time programs must guarantee response within 
+	specified time constraints, often referred to as "deadlines".[2] 
+	
+	The correctness of these types of systems depends on their 
+	temporal aspects as well as their functional aspects. 
+	Real-time responses are often understood to be in the 
+	order of milliseconds, and sometimes microseconds.
+	
+	(From https://en.wikipedia.org/wiki/Real-time_computing)
+
+For real-time systems, processes are trying to react to, or controlling, events
+that are taking place in the real world. These events take place in
+"real time" and the system must be able to keep up with these events.
+There are timing constraints such as deadlines.
+
+The real-time aspect of events belongs on a spectrum. At the "Hard RT" end,
+we might have flight control. In the middle, towards "Soft RT", we
+may have internet communication - video, audio, etc. And towards "No RT",
+we may have a computer simulation.
+
+The ultimate goal is to meet the deadlines of our tasks. **A soft deadline**
+is something less important - video game events, video decoding, etc.
+A **hard deadline** is much more important and could result in the loss of
+life if something goes wrong - Engine control, anti-lock break system, etc.
+
+We can also do priority scheduling on real-time systems, which may include
+**static priority scheduling** or **dynamic priority scheduling**.
+
+
+
+### Multicore Scheduling
+
+.
 
 ---
 
