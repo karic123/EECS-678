@@ -58,38 +58,38 @@ the thread itself.
 ### Threads vs. Processes!
 
 <table>
-	<tr>
-		<th></th>
-		<th>PROCESSES</th>
-		<th>THREADS</th>
-	</th>
-	</tr>
-	
-	<tr>
-		<td>Pros</td>
-		<td>
-			<!-- Process ->
-			<p>Processes can run independently of each other; one crashing doesn't affect others directly.</p>
-		</td>
-		<td>
-			<!-- Thread ->
-			<p>Responsive: Simple model, don't need to block on I/O</p>
-			<p>Resource sharing: Easier & faster than memory sharing.</p>
-			<p>Economy: Less context-switching overhead, less space taken up.</p>
-			<p>Scalability: Can utilize multicore CPU</p>
-		</td>
-	</tr>
-	
-	<tr>
-		<td>Cons</td>
-		<td>
-			<!-- Process ->
-		</td>
-		<td>
-			<!-- Thread ->
-			<p>Synchronization issues</p>
-		</td>
-	</tr>
+<tr>
+<th></th>
+<th>PROCESSES</th>
+<th>THREADS</th>
+</th>
+</tr>
+
+<tr>
+<td>Pros</td>
+<td>
+<!-- Process ->
+<p>Processes can run independently of each other; one crashing doesn't affect others directly.</p>
+</td>
+<td>
+<!-- Thread ->
+<p>Responsive: Simple model, don't need to block on I/O</p>
+<p>Resource sharing: Easier & faster than memory sharing.</p>
+<p>Economy: Less context-switching overhead, less space taken up.</p>
+<p>Scalability: Can utilize multicore CPU</p>
+</td>
+</tr>
+
+<tr>
+<td>Cons</td>
+<td>
+<!-- Process ->
+</td>
+<td>
+<!-- Thread ->
+<p>Synchronization issues</p>
+</td>
+</tr>
 <table>
 
 
