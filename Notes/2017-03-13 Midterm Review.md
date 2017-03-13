@@ -466,7 +466,9 @@ Define **scheduled latency** - between ready to the first scheduled time
 	</tr>
 	<tr>
 		<td>P1</td><td>24</td>
+	</tr><tr>
 		<td>P2</td><td>3</td>
+	</tr><tr>
 		<td>P3</td><td>3</td>
 	</tr>
 </table>
