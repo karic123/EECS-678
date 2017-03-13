@@ -35,15 +35,127 @@ that they want.
 
 ### Handling deadlocks
 
+We can handle deadlocks in one of three ways: By making sure we can
+never enter a deadlocked state, by detecting a deadlocked state and
+resolving it, and to ignore the possibility of deadlocks.
+
 
 
 
 ### Deadlock prevention
 
+To implement deadlock prevention, we need to make sure that at least one
+of the three deadlock conditions cannot occur.
+
+#### We cannot prevent "mutual exclusion"
+
+This condition must be true - otherwise, if we didn't have critical sections,
+why would be worried about multithreading and synchronization to begin with?
+
+
+#### Preventing "hold and wait"
+
+To prevent the "hold and wait" condition, we must make sure that a process
+can only work with one resource at a time, and not be taking up multiple
+resources that other processes may need while it is doing its work,
+or not request additional resources that it didn't specify when it first began.
+
+
+
+**Option 1:** We can have the process request all the resources it will need ahead of time,
+so that no new resources are requested "unexpectedly" that others might need
+during its lifetime.
+
+**Option 2:** We can only allow the process to have one resource at a
+time, and only be able to request resources when that process is not currently
+holding any resources.
+
+* **CONS:** 
+	* Resource utilization can be low; resources go unused. 
+	* Starvation is possible. If something needs multiple resources, 
+	those various resources may always be taken up by other processes.
+
+
+
+#### Preventing "no preemption"
+
+For this method, if the current process is running and holding some resources,
+and it needs some additional resources, if it must then hold and wait, then we
+allow the resources of this process to be preempted while it is waiting.
+
+This is mostly a decent choice if you can save and restore states easily.
+
+
+
+
+#### Preventing "circular wait"
+
+To prevent the circular wait, we order our resources.
+Processes can only request resources in an increasing numerical order.
+
+Therefore, certain resources have "prerequisites", and if you want a
+resource you must also grab its prereqs.
+
+The problem is that the application programmers have to make sure to
+abide by this rule!
 
 
 
 ### Deadlock avoidance
+
+To implement deadlock avoidance, the OS needs more information about processes
+and the resources that they need ahead of time.
+
+Generally, this might be the order in which resources are requested by
+each program.
+
+
+#### Safe state
+
+For deadlock avoidance, we can be in a safe state or unsafe state.
+An unsafe state may result in a deadlock, but it is not guaranteed.
+
+The idea is to allow processes to run if the system will remain in 
+a safe state. If a process wants resources, but allocating those resources
+will cause the process to enter an *unsafe state*, then even though those
+resources are free, it will not be allowed to start and take those
+resources until a safe state is guaranteed.
+
+
+
+
+#### Resource-allocation-graph algorithm
+
+**Claim edge:** For nodes P<sub>i</sub> and R<sub>j</sub> if there
+is an edge P<sub>i</sub> → R<sub>j</sub>, this means that process
+P<sub>i</sub> may request resource R<sub>j</sub>. 
+
+In a graph, the line is marked as a dashed line to show that
+P<sub>i</sub> may, in the future, request R<sub>j</sub>.
+
+Once P<sub>i</sub> requests R<sub>j</sub>, we convert the claim edge to a **request edge**.
+Once the process is done with the resource, the request edge is changed to a claim edge.
+
+**Request edge:** Once P<sub>i</sub> requests R<sub>j</sub>, then
+we convert the dashed directional line to a solid directional line.
+
+**Assignment edge:** If the request can be completed,
+and we specify an assignment edge R<sub>j</sub> → P<sub>i</sub>
+without creating a circle / cycle,
+then we may allocate that resource.
+
+For this graph, there are currently no cycles in the directions of
+our edges, so this is currently in a *safe state:*
+
+![safe state](images/rag_safe.png)
+
+But once we allocate resource R<sub>2</sub> to P<sub>2</sub>,
+the diagram becomes a cycle and shows that this is an unsafe state.
+
+![unsafe state](images/rag_unsafe.png)
+
+
+#### Banker's algorithm
 
 
 
