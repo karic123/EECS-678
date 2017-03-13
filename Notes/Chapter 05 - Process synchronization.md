@@ -196,7 +196,16 @@ With a counting semaphore, we can keep track of resources. We can initialize
 the value of the *semaphore* to the amount of resources available,
 and increment/decrement as the resources become available/unavailable.
 
+Instead of sitting around in a **busy waiting** state, when a semaphore
+finds that the resources is unavailable, it can block itself and put
+itself in a waiting queue.
 
+If the semaphore becomes negative, then |semaphore| is the amount
+of processes waiting on the semaphore lock.
+
+Note that if we use a waiting queue with our semaphores, a case could
+arise where multiple processes wait indefinitely, and therefore starve.
+This is known as a **deadlocked** state.
 
 
 **CONS:**
@@ -206,8 +215,96 @@ and increment/decrement as the resources become available/unavailable.
 * They are very easy to get wrong
 
 
+#### Priority inversion
+
+Sometimes, a lower priority process is holding up the line and a 
+higher priority job needs to get done. This is known as **priority inversion**.
+
+The problem can be solved by **priority-inheritance protocol**, where 
+processes inherit the higher priority when dealing with high priority resources,
+then go back to normal once finished. This helps with preemption, or something.
+
+
+
 ### Monitor
 
+It can be difficult to implement semaphores correctly, and it can be
+difficult to detect errors that arise from using semaphores.
+
+A Monitor type can be used to help with this problem.
+
+	In concurrent programming, a monitor is a synchronization construct that allows 
+	threads to have both mutual exclusion and the ability to wait (block) for a 
+	certain condition to become true. Monitors also have a mechanism for signalling 
+	other threads that their condition has been met.
+	
+	From https://en.wikipedia.org/wiki/Monitor_(synchronization)
+
+RACHEL DO MORE READING ON MONITORS LATER OK?
+
+
+## Synchronization problems
+
+What could possibly go wrong?
+
+### The bounded-buffer problem (aka the producer-consumer problem)
+
+	In computing, the producer–consumer problem[1][2] (also known as the bounded-buffer problem) 
+	is a classic example of a multi-process synchronization problem. The problem describes two processes, 
+	the producer and the consumer, who share a common, fixed-size buffer used as a queue. The producer's 
+	job is to generate data, put it into the buffer, and start again. At the same time, the consumer is 
+	consuming the data (i.e., removing it from the buffer), one piece at a time. The problem is to make 
+	sure that the producer won't try to add data into the buffer if it's full and that the consumer won't 
+	try to remove data from an empty buffer.
+
+	The solution for the producer is to either go to sleep or discard data if the buffer is full. 
+	The next time the consumer removes an item from the buffer, it notifies the producer, who starts
+	to fill the buffer again. In the same way, the consumer can go to sleep if it finds the buffer to 
+	be empty. The next time the producer puts data into the buffer, it wakes up the sleeping consumer. 
+	The solution can be reached by means of inter-process communication, typically using semaphores. 
+	An inadequate solution could result in a deadlock where both processes are waiting to be awakened. 
+	The problem can also be generalized to have multiple producers and consumers.
+
+	From https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem
+
+
+### The readers-writers problem
+
+	In computer science, the readers-writers problems are examples of a common computing problem 
+	in concurrency. There are at least three variations of the problems, which deal with situations 
+	in which many threads try to access the same shared resource at one time. Some threads may read
+	and some may write, with the constraint that no process may access the shared resource for either 
+	reading or writing while another process is in the act of writing to it. (In particular, it is 
+	allowed for two or more readers to access the share at the same time.) A readers-writer lock is 
+	a data structure that solves one or more of the readers-writers problems.
+	
+	From https://en.wikipedia.org/wiki/Readers%E2%80%93writers_problem
+
+
+
+### The dining-philosophers problem
+
+I think this problem is stupid.
+
+	Five silent philosophers sit at a round table with bowls of spaghetti. Forks are placed between 
+	each pair of adjacent philosophers.
+
+	Each philosopher must alternately think and eat. However, a philosopher can only eat spaghetti when 
+	they have both left and right forks. Each fork can be held by only one philosopher and so a philosopher 
+	can use the fork only if it is not being used by another philosopher. After an individual philosopher 
+	finishes eating, they need to put down both forks so that the forks become available to others. A 
+	philosopher can take the fork on their right or the one on their left as they become available, but 
+	cannot start eating before getting both forks.
+
+	Eating is not limited by the remaining amounts of spaghetti or stomach space; an infinite supply and 
+	an infinite demand are assumed.
+
+	The problem is how to design a discipline of behavior (a concurrent algorithm) such that no philosopher 
+	will starve; i.e., each can forever continue to alternate between eating and thinking, assuming that no 
+	philosopher can know when others may want to eat or think.
+
+	From https://en.wikipedia.org/wiki/Dining_philosophers_problem#Problem_statement
+	
 
 
 ---
