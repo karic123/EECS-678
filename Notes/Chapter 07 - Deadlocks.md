@@ -261,7 +261,9 @@ we need to do the following:
 	Else: Error - process exceeded max claim
 
 
+#### See also
 
+* [Wikipedia article](https://en.wikipedia.org/wiki/Banker%27s_algorithm)
 
 
 

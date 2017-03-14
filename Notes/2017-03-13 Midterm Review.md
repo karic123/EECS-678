@@ -18,6 +18,54 @@ Earliest deadline first - no question this time on exam? might be on final.
 
 ---
 
+## Note to self
+
+Make sure to review the following:
+
+* Application:
+	* Figuring out the output of some code that uses fork()
+	* Given two threads, possible output of a shared variable (without locks)
+	* How to write `test_and_set` and `compare_and_swap` functions
+	* Draw address space layout - single- and multi-threaded processes
+	* Draw process state diagram
+	* How to write a mutex spinlock
+	* Working with the Bounded Buffer problem
+	* Drawing a Resource Allocation Graph
+	* Solving Banker's Algorithm problems
+	* Solving Dining Philosophers problems
+	* Recognizing whether a state is safe or unsafe given some max/alloc table
+	* How to draw a Gantt diagram
+
+* Medium:
+	* How PCB works
+	* How context switching works
+	* How pipes work
+	* How **exec** works
+	* How to detect a deadlock
+	* How to avoid a deadlock
+	* Conditions for a deadlock
+	* 3 main types of scheduling
+
+* Small:
+	* Pros/Cons of monolithic kernel
+	* User-mode vs. Kernel-mode
+	* How system calls work
+	* Shared memory vs. Message passing, pros/cons
+	* User threads vs. Kernel threads
+	* Threads vs. Processes, pros/cons of multi-threading vs. multi-processing
+	* Define race condition
+	* Define critical section
+	* Mutex vs. Semaphore, pros/cons
+	* Starvation vs. deadlock
+	* Review CFS
+	* Review fixed priority scheduling
+	* Review multi-level queue scheduling
+	* Review load balancing and multicore scheduling
+	* Define waiting time
+	* Define scheduled latency
+
+---
+
 ## OS Structure
 
 * OS Structure
