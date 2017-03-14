@@ -157,6 +157,37 @@ the diagram becomes a cycle and shows that this is an unsafe state.
 
 #### Banker's algorithm
 
+The banker's algorithm is not as efficient as the resource-allocation
+graph scheme.
+
+The idea behind this algorithm is that a banker shouldn't be in a state
+where it cannot provide money to any of its customers.
+
+A maximum amount of resources must be known when a new process enters
+the system. When resources are requested, the state must be analyzed -
+if the resources are provided, is the system left in a safe or unsafe state?
+
+If it will be left in a safe state, then the resources will be given.
+Otherwise, the requesting process must wait for more resources to be freed.
+
+We need to keep track of the following data:
+
+* **Available:** The amount of resources currently available.
+The value of **`Available[j]`** is the amount of Resources
+of type **R<sub>j</sub>** available.
+
+* **Max:** The maximum amount of resources that a process may ask for.
+The value of **`Max[i][j]`** is the maximum amount of resources that can be
+requested, for Process **P<sub>i</sub>** and of Resource **R<sub>j</sub>**.
+
+* **Allocation:** The current amount of resources allocated to processes.
+The value of **`Allocation[i][j]`** is the amount of resources allocated by
+Process **P<sub>i</sub>** of Resource type **R<sub>j</sub>**
+
+* **Need:** The remaining amount of resources needed by a process.
+The value of **`Need[i][j]`** is the remaining amount of resources
+that Process **P<sub>i</sub>** may need of Resource type **R<sub>j</sub>**.
+
 
 
 
