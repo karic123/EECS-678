@@ -188,6 +188,80 @@ Process **P<sub>i</sub>** of Resource type **R<sub>j</sub>**
 The value of **`Need[i][j]`** is the remaining amount of resources
 that Process **P<sub>i</sub>** may need of Resource type **R<sub>j</sub>**.
 
+#### The Safety Algorithm
+
+	Define sizes:
+		m: The amount of resource types
+		n: The amount of processes
+	
+	Define:
+		VECTOR		Work, 			size m
+		VECTOR		Finish, 		size n
+		VECTOR		Available,		size m
+		MATRIX		Max,			size n x m
+		MATRIX		Allocation,		size n x m
+		MATRIX		Need,			size n x m
+	
+	1. Initialize:
+		Work = Available
+		Initialize all values of Finish (i=0 through n-1) to false.
+	
+	Algorithm: 
+		2. Find an index i such that both...
+			Finish[i] == false AND
+			Need[i] <= Work
+			
+			If i is found:
+				3. 	Work = Work + Allocation
+					Finish[i] = true
+					Go to step 2.
+			
+			If i doesn't exist:
+				4. If Finish[i] == true for all values of i
+					System is safe.
+				
+I'm not sure where the end state for unsafe is...
+
+This algorithm is also pretty costly... will take *m x n<sup>2</sub>* operations
+at worst case.
+
+
+#### The Resource-Request Algorithm
+
+This is an algorithm to determine if a request can be granted and
+the system will remain in a safe state.
+
+* **Request<sub>i</sub>**: A vector of requests for Process **P<sub>i</sub>**.
+The value of **`Request[i][j]`** is the amount of instances of Resource type **R<sub>j</sub>**
+that it is requesting.
+
+When Process **P<sub>i</sub>** makes a request for Resource type **R<sub>j</sub>**,
+we need to do the following:
+
+	1. If Request[i] <= Need:
+	
+		2. If Request[i] <= Available:
+		
+			3. Simulate the change by using the changes:
+			
+				Available = Available - Request
+				Allocation[i] = Allocation[i] + Request[i]
+				Need[i] = Need[i] - Request[i]
+				
+				If safe:
+					Complete the transaction,
+					allocate resources to P[i].
+				
+				Else:
+					P[i] must wait for Request[i],
+					restore previous state.
+		
+		Else: P[i] must wait; resource is not available
+	
+	Else: Error - process exceeded max claim
+
+
+
 
 
 
