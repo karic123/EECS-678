@@ -26,8 +26,23 @@ Make sure to review the following:
 	* Figuring out the output of some code that uses fork()
 	* Given two threads, possible output of a shared variable (without locks)
 	* How to write `test_and_set` and `compare_and_swap` functions
+		* test_and_set
+			* will change the bool ptr passed in to true, whether it is true or false
+			* returns the value of what the bool was originally - true or false
+		* compare_and_swap
+			* stores the current value of the ptr passed in
+			* if the current value is the expected value, assign ptr's value to new value
+			* return the original ptr value
 	* Draw address space layout - single- and multi-threaded processes
+		* per thread: stack(s), register(s)
+		* shared: code, data, files
 	* Draw process state diagram
+		* new -> ready
+		* ready -> running
+		* running -> terminated
+		* running -> ready
+		* running -> waiting
+		* waiting -> ready
 	* How to write a mutex spinlock
 	* Working with the Bounded Buffer problem
 	* Drawing a Resource Allocation Graph
@@ -38,21 +53,38 @@ Make sure to review the following:
 
 * Medium:
 	* How PCB works
+		* Contains pid
+		* state data (registers)
+		* control data
+		* data used by OS to manage the process
 	* How context switching works
+		* save state - register values, program counter
+		* restore state
+		* cache is invalidated
 	* How pipes work
-	* How **exec** works
+	* How [**exec**](https://en.wikipedia.org/wiki/Exec_(system_call)) works
+		* pass in path
+		* pass in arg0 - program name
+		* pass in arguments (list, vector, path vars, env var ptrs)
 	* How to detect a deadlock
 	* How to avoid a deadlock
 	* Conditions for a deadlock
+		* Mutual exclusion
+		* No preemption
+		* Hold and wait
+		* Circular wait
 	* 3 main types of scheduling
+		* First Come First Served
+		* Shorted Job First
+		* Round Robin
 
 * Small:
 	* Chapter 1: Pros/cons of monolithic kernel
-		* + Overhead is low (no IPC overhead.)
-		* + Data sharing among modules is easy, since it is one program.
-		* - Too big! Large program.
-		* - Device drivers are "hard-coded" into the kernel, not flexible.
-		* - If there is a bug in one part of the kernel, it can bring down the entire system.
+		* (+) Overhead is low (no IPC overhead.)
+		* (+) Data sharing among modules is easy, since it is one program.
+		* (-) Too big! Large program.
+		* (-) Device drivers are "hard-coded" into the kernel, not flexible.
+		* (-) If there is a bug in one part of the kernel, it can bring down the entire system.
 	* Chapter 1: User-mode vs. Kernel-mode
 		* Restrict operations like accessing registers, updating memory state.
 		* Kernel has special privileges that any random app does not.
@@ -415,7 +447,6 @@ All four conditions must simultaneously hold
 Determine whether this state is safe or unsafe.
 
 * Total resources: 12
-* Available resources: 3
 
 <table>
 	<tr>
@@ -440,12 +471,27 @@ Determine whether this state is safe or unsafe.
 	</tr>
 </table>
 
+* P0:
+	* We are going to allocate **4** resources to P0. 
+	* This leaves us with 8 total resources.
+	* If we look at how many more resources *could* be requested by P0,
+	that is 10 - 4, which is 6.
+	* Since 6 <= 8, this is OK.
+* P1:
+	* We are going to allocate **1** resource to P1.
+	* This leaves us with 7 total resources.
+	* P1 could request 3 total resources, 3 - 1 = 2, so it might request
+	an additional 2 resources.
+	* 2 <= 7, so this is OK.
+* P2:
+	* We are going to allocate **4** resources to P2.
+	* This leaves us with 3 total resources.
+	* P2 might allocate 2 more resources (6-4).
+	* 2 <= 3, so this is OK.
 
-* 10 - 4
+Available resources left over: 3.
 
-8
-
-safe
+**SAFE**
 
 ### Review
 
@@ -477,7 +523,8 @@ Can a request by P0 be granted?
 	</tr>
 </table>
 
-unsafe
+**UNSAFE**
+
 
 More complicated example will have more resources, can be a vector.
 
