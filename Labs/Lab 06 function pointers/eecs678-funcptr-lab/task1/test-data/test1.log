@@ -1,9 +1,7 @@
-
- SORTED DATA - pid, arrival, priority 
-PID: 1 	 Arrival: 2 	 Priority: 1 
-PID: 2 	 Arrival: 4 	 Priority: 0 
-PID: 3 	 Arrival: 6 	 Priority: 1 
-PID: 4 	 Arrival: 8 	 Priority: 2 
-PID: 5 	 Arrival: 10 	 Priority: 3 
-PID: 6 	 Arrival: 12 	 Priority: 3 
-PID: 7 	 Arrival: 14 	 Priority: 0 
+5 (3, 10)
+6 (3, 12)
+4 (2, 8)
+1 (1, 2)
+3 (1, 6)
+2 (0, 4)
+7 (0, 14)

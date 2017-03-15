@@ -29,16 +29,6 @@ int my_comparer(const void *this, const void *that)
 	Process* ptr1 = (Process*)this;
 	Process* ptr2 = (Process*)that;
 
-	if ( ptr1->arrival_time < ptr2->arrival_time )
-	{
-		return -1;
-	}
-	else if ( ptr1->arrival_time > ptr2->arrival_time )
-	{
-		return 1;
-	}
-
-	// arrival times are the same, check priority
 	if ( ptr1->priority < ptr2->priority )
 	{
 		return 1;	// (descending)
@@ -46,6 +36,16 @@ int my_comparer(const void *this, const void *that)
 	else if ( ptr1->priority > ptr2->priority )
 	{
 		return -1;
+	}
+
+	// priority is same, check arrival times
+	if ( ptr1->arrival_time < ptr2->arrival_time )
+	{
+		return -1; // ascending
+	}
+	else if ( ptr1->arrival_time > ptr2->arrival_time )
+	{
+		return 1;
 	}
 
 	// Otherwise treat as same
@@ -92,17 +92,17 @@ int main(int argc, char *argv[])
 	/**************************/
 	/* print the sorted data  */
 	/**************************/
-
-	printf( "\n SORTED DATA - pid, arrival, priority \n" ); // debug
 	for (int i = 0; i < P_SIZE; i++) {
-		/* temp - restore plz
+
 		printf("%d (%d, %d)\n",
 				processes[i].pid,
 				processes[i].priority, processes[i].arrival_time);
-				*/
+
+		/* debug out
 		printf("PID: %d \t Arrival: %d \t Priority: %d \n",
 				processes[i].pid,
 				processes[i].arrival_time, processes[i].priority);
+				*/
 	}
 	fflush(stdout);
 	fflush(stderr);
