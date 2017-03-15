@@ -47,22 +47,59 @@ Make sure to review the following:
 	* 3 main types of scheduling
 
 * Small:
-	* Pros/Cons of monolithic kernel
-	* User-mode vs. Kernel-mode
-	* How system calls work
+	* Chapter 1: Pros/cons of monolithic kernel
+		* + Overhead is low (no IPC overhead.)
+		* + Data sharing among modules is easy, since it is one program.
+		* - Too big! Large program.
+		* - Device drivers are "hard-coded" into the kernel, not flexible.
+		* - If there is a bug in one part of the kernel, it can bring down the entire system.
+	* Chapter 1: User-mode vs. Kernel-mode
+		* Restrict operations like accessing registers, updating memory state.
+		* Kernel has special privileges that any random app does not.
+		* User-mode applications have to go through pre-defined system calls to access kernel mode.
+	* Chapter 2: How system calls work
 	* Shared memory vs. Message passing, pros/cons
+		* Shared memory is faster but you gotta synchronize
+		* Message passing is slower, copyin' yer data, but no sync (generale)
 	* User threads vs. Kernel threads
 	* Threads vs. Processes, pros/cons of multi-threading vs. multi-processing
 	* Define race condition
+		* a problem where 2+ threads attempt to access shared data at the same time.
+		Whether the result is correct depends on the order of execution of the threads.
 	* Define critical section
+		* The portion of code where shared resources may be modified.
 	* Mutex vs. Semaphore, pros/cons
 	* Starvation vs. deadlock
-	* Review CFS
+		* Starvation is where a thread doesn't get to be processed,
+		such as if it is constantly low priority and never gets dispatched.
+		* Deadlocking occurs with currently running processes, where one thread
+		is waiting on resources from a second thread, and vice versa, so
+		they are stuck because both are waiting and neither will finish.
+	* Review CFS (Completely Fair Scheduler)
+		* Uses red-black tree, which auto-balances.
+		* Weighted priority
 	* Review fixed priority scheduling
+		* Common to real-time systems
+		* The processor always executes the highest priority task.
 	* Review multi-level queue scheduling
+		* Dividing processes by groups (foreground/background, for example)
+		* Different group queues can have different scheduling schemes.
+		* Low scheduling overhead
+		* Inflexible - processes are stuck in one group.
+		* Can make flexible with multilevel feedback queue scheduling
 	* Review load balancing and multicore scheduling
+		* Load balancing
+			* SMP (Symmetric multiprocessing) systems
+			* Balance the workload across all processors
+			* Push migration
+				* A task checks the load on each processor and moves
+				jobs around if there is an imbalance.
+			* Pull migration
+				* An idle processor pulls waiting tasks from another processor.
 	* Define waiting time
+		* The amount of time a process spends in the ready queue waiting to be processed
 	* Define scheduled latency
+		* The time ti takes to schedule a task, going from the ready state to being scheduled for the first time.
 
 ---
 
