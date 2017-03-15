@@ -46,8 +46,8 @@ Make sure to review the following:
 	* How to write a mutex spinlock
 	* Working with the Bounded Buffer problem
 	* Drawing a Resource Allocation Graph
-	* Solving Banker's Algorithm problems
-	* Solving Dining Philosophers problems
+	* [Solving Banker's Algorithm problems](https://en.wikipedia.org/wiki/Banker%27s_algorithm)	
+	* [Solving Dining Philosophers problems](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
 	* Recognizing whether a state is safe or unsafe given some max/alloc table
 	* How to draw a Gantt diagram
 
@@ -77,6 +77,8 @@ Make sure to review the following:
 		* First Come First Served
 		* Shorted Job First
 		* Round Robin
+	* [Monitors](https://en.wikipedia.org/wiki/Monitor_(synchronization))
+	* [Semaphores](https://en.wikipedia.org/wiki/Semaphore_(programming))
 
 * Small:
 	* Chapter 1: Pros/cons of monolithic kernel
