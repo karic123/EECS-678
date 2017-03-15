@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1488685447 source:/home/rayechell/STUDY/EECS-678/Learning/06_Threads/HowDoThreadsWork.cpp
+	<pthread.h>
+	<stdio.h>
+	<stdlib.h>
+	<iostream>
+
+1488687531 source:/home/rayechell/STUDY/EECS-678/Learning/06_Threads/HowDoThreadsWork.c
+	<pthread.h>
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+

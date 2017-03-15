@@ -1,6 +1,6 @@
 # Defined constants for command base name and arguments for simple test
 #
-STUDENT_ID=XXXXXXX
+STUDENT_ID=X
 LOOP=100000000
 LOOP_HELGRIND=1
 INC=1

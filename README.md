@@ -14,8 +14,11 @@ Don't just copy my assignments - it is easy to find plagarism.
 
 ## Resources
 
-* [Official book slides](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/index.html)
-* [Solution to practice exercises](http://codex.cs.yale.edu/avi/os-book/OS9/practice-exer-dir/index.html)
+* [Official book webpage](http://codex.cs.yale.edu/avi/os-book/OS9/)
+	* [Official book slides](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/index.html)
+	* [Solution to practice exercises](http://codex.cs.yale.edu/avi/os-book/OS9/practice-exer-dir/index.html)
+	* [Review questions](http://codex.cs.yale.edu/avi/os-book/OS9/review-dir/index.html)
+	* [Study guide](http://codex.cs.yale.edu/avi/os-book/OS9/study-guide/index.html)
 
 ---
 

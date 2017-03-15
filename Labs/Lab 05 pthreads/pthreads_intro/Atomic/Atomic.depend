@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1488738875 source:/home/rayechell/STUDY/EECS-678/Labs/Lab 05 pthreads/pthreads_intro/ptcount_atomic.c
+	<pthread.h>
+	<stdio.h>
+	<stdlib.h>
+
