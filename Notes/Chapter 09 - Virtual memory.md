@@ -8,6 +8,44 @@ Rachel's summary notes
 
 # Notes
 
+## Basic hardware information
+
+* we care about efficiency, speed, and correctness
+* we need to care about protection
+* processes will need their own individual memory spaces
+
+[registers](https://en.wikipedia.org/wiki/Processor_register)
+
+* contained within the processor
+* processor can access registers directly
+* fast access - usually within one clock cycle
+
+[Main memory](https://en.wikipedia.org/wiki/Computer_data_storage#Primary_storage)
+
+* aka RAM
+* processor can also access main memory directly
+* data must be moved into memory in order for CPU to work with it
+* main memory cannot be accessed by the CPU as quickly as registers can
+* if the processor has to wait for memory access, then the processor
+will **stall** since it is waiting on info that it needs to process.
+	* need to design around this to make sure CPU usage is efficient
+	* cache is a solution
+	
+[Cache](https://en.wikipedia.org/wiki/CPU_cache)
+
+* a cache is used "in-between" the CPU and the main memory.
+
+### Splitting up memory between processes
+
+* Split up memory so that each process has its own memory space
+* **base register** - smallest physical memory address
+* **limit register** - size of the range
+* base and limit registers are used to protect operating-system memory,
+and can only be loaded by the OS.
+* The OS has access to all memory though, including process memory.
+
+
+
 ---
 
 # Vocabulary
