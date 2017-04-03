@@ -6,6 +6,16 @@ Average grade: 84%
 
 My grade: 78%
 
+## Suggested resources
+
+I spent too much time reading through every page of all 7
+chapters that were covered. I should have **reviewed the BB quizzes**
+and based most of my studying off of the **slides**.
+
+The teacher had told me the lecture slides and the book I should have
+reviewed from, but I think that hurt me in the long run and I was
+burnt out after a week of studying.
+
 ## Question breakdown
 
 * Matching terms to statements (5 pts)
