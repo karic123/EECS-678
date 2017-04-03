@@ -122,6 +122,15 @@ in case user wants to restore it but it was killed to regain processing resource
 
 Page 360 - 361
 
+		enig-atendovico = input queue
+		parto = partition
+		koneksa = contiguous
+		memoro = memory
+		procezo = process
+		skemo = scheme
+		operaciumo = operating system
+		tabelo = table
+
 * Need to be efficient, yo.
 * Memoro estas dividita al du partoj (partitions)
 	* Unu: por la operaciumo
@@ -151,9 +160,50 @@ Page 361
 
 Page 362
 
+* simpla metodo (simple method) - Creating partitions that store one proecss each
+	* Kiam parto estas sen-procezo, unu de la procezoj estas selektita el
+	la *enig-atendovico* kaj donita al la libera parto.
+	* Neniu ankoraŭ uzas tiun metodon.
+* variabla-parto skemo (variable-parition scheme) - 
+	* la operaciumo havas tabelon, kiu specifas ke kiuj partoj de la memoro estas
+	uzebla, kaj kiuj estas okupitaj.
+	* Unue, ĉiom de la memoro estas uzeblaj, kaj estas unu granda bloko. (a hole)
+	* Eventuale, memoro havos truojn de multaj grandecoj.
+	* La uzeblaj blokoj de memoro estas signaro (set) de truoj.
+	* Eble la sistemo bezonas malfragmentigi la memoron do estus sufiĉe da
+	grand-truo por aldoni al procezo.
 
+* Translokigo de memoro-blokoj:
+	* dinamika-konservado-asigni-problemo (**dynamic storage-allocation problem**).
+		* first-fit, best-fit, worst-fit...
+
+* **first-fit** - Asigni la unua truo kiu estas sufiĉe granda.
+	* Ni povas serĉi el la komenco de la truo-signaro, aŭ ĉe la loko, kie
+	la pasinta first-fit serĉo finis.
+	* Ni haltas kiam ni trovas la unuan uzeblan truon.
+* **best-fit** - Asigni la plej malgranda truo kiu estas sufiĉe granda.
+	* Ni bezonas serĉi la tutan liston (sed ne se la listo estas ordigita de grandeco.)
+* **worst-fit** - Asigni la plej grand atruo. 
+	* Ni bezonas serĉi la tutan liston (sed ne se la listo estas ordigita de grandeco.)
+	* Ni havos la plej grandan "leftover" truon. Tiu eble estus plia utila ol
+	malgrandaj truoj el la best-fit metodo.
+
+### Fragmentation
+
+Page 363
+
+La "first-fit" kaj "best-fit" metodoj havas problemon: externa fragmentado.
+(**external fragmentation**).
+
+* internal fragmentation
+* external fragmentation
+
+* solution: compaction
+* solution: permit noncontiguousness
 
 ## Segmentation
+
+Page 364
 
 ## Paging
 
