@@ -205,7 +205,53 @@ La "first-fit" kaj "best-fit" metodoj havas problemon: externa fragmentado.
 
 Page 364
 
+* Segmentation is treating memory as if it is segments within the
+logical address space, rather than viewing it as all contiguous memory
+spaces.
+* A segment has a name and length.
+* La adreso specifas la nomo de la segment kaj la offset inter la segment.
+* La programisto specifas segment-nomon kaj offset por ĉiu adreso.
+
+* Logical address: <segment-number, offset>
+
+### Hardware
+
+* **segment table**
+* **segment base**
+* **segment limit**
+
+* Ĉiu segmento de la segmentabelo havas segmentbazon kaj segmentlimon.
+
 ## Paging
+
+* Segmentation is one kind of scheme, and paging is another.
+* Paging also allows memory to be viewed as non-contiguous.
+* Paging can avoid external fragmentation (segmentation doesn't).
+
+### Basics
+
+* Ni dividas la fizikan memoron al fiksgrandaj blokoj, kiuj estas nomiĝitaj "kadroj" (frames),
+kaj ni dividas la logikan memoron al samgrandecaj blokoj, kiuj estas nomiĝitaj "paĝoj" (pages).
+
+* Kiam procezo volas plenumi (execute), ĝiaj paĝoj estas ŝargata al
+iuj uzeblaj memoro-kadroj (memory-frames).
+
+* Ĉiu adreso havas du partojn: paĝnombron (Page number p), kaj paĝdeŝovon (Page offset d).
+
+La page number estas la indekso al la paĝtabelo.
+
+La bazadreso estas aldonas al la page offset, por akiri la fizikan memadreson, kaj
+tiu ĉi estas sendita al la Memory Unit.
+
+Page 369 has some diagrams of page offset stuff.
+
+Also calculations.
+
+Boring boring boring.
+
+### Hardware
+
+I'm going to read this shit tomorrow.
 
 ## Structure of the page table
 
