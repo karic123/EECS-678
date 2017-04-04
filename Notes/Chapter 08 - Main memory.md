@@ -45,6 +45,30 @@ y = 2<sup>x</sup>
 
 ## How to calculate page number given address and page size
 
+Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
+and a page size of *p* bytes, what is the page number?
+
+**Given:**
+
+* *a*: hexadecimal address
+* *p*: page size
+
+Remember that the logical address layout is like:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+
+
 ## How to calculate bits in second-level page table
 
 
