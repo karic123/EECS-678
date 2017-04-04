@@ -97,7 +97,7 @@ Each digit in a hexadecimal number corresponds to 4 bits
 </table>
 
 So given the amount of bits *b*, you would take the first *b*
-bits from the address...
+bits from the address. If *b* were 8, then...
 
 <table>
 <tr>
@@ -132,6 +132,13 @@ F
 </td>
 <td>
 F
+</td>
+</tr>
+<tr>
+<td colspan="2">
+First 8
+</td>
+<td colspan="2">
 </td>
 </tr>
 </table>
