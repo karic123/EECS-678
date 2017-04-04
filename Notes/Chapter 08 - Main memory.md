@@ -53,6 +53,15 @@ and a page size of *p* bytes, what is the page number?
 * *a*: hexadecimal address
 * *p*: page size
 
+
+The page size is *p* bytes. In bits, it would be
+
+p = 2<sup>b</sup>
+
+or
+
+b = log<sub>2</sub>( p )
+
 Remember that the logical address layout is like:
 
 <table>
@@ -67,6 +76,26 @@ Remember that the logical address layout is like:
 </tr>
 </table>
 
+Each digit in a hexadecimal number corresponds to 4 bits
+
+<table>
+<tr>
+<th>Hex</th>
+<td>A</td>
+<td>F</td>
+</tr>
+<tr>
+<th>Binary</th>
+<td>1111</td>
+</tr>
+<tr>
+<th>Decimal</th>
+<td>10</td>
+<td>15</td>
+</tr>
+</table>
+
+So given the amount of bits *b*, you would
 
 
 ## How to calculate bits in second-level page table
