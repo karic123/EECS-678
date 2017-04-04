@@ -16,30 +16,11 @@ Structure of a Page Table: Page 378, Chapter 8.6
 We have a logical address with a page size of *x* KB.
 In this logical address, how many bits are used to represent the page offset?
 
-Logical addresses are structured as:
-
-<table>
-<tr>
-<td>
-p<sub>1</sub>
-</td>
-<td>
-p<sub>2</sub>
-</td>
-<td>
-d
-</td>
-</tr>
-</table>
-
-p<sub>1</sub> and p<sub>2</sub> are part of the "page number",
-and d is the offset.
-
-Given:
+**Given:**
 
 * *x*: Page size of logical address, in KB
 
-Calculate:
+**Calculate:**
 
 The offset field must contain *y* bits...
 
@@ -47,6 +28,20 @@ The offset field must contain *y* bits...
 
 
 ## How to calculate entries in page table
+
+How many entries are in a page table if we are using *x* bits
+of a virtual address as the index bits?
+
+**Given:**
+
+* *x*: size of the index bits for a virtual address
+
+**Calculate:**
+
+The amount of entries *y* in the page table...
+
+y = 2<sup>x</sup>
+
 
 ## How to calculate page number given address and page size
 
