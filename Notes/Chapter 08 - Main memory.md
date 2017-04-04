@@ -54,7 +54,7 @@ and a page size of *p* bytes, what is the page number?
 * *p*: page size
 
 
-The page size is *p* bytes. In bits, it would be
+The page size is *p* bytes. In bits *b*, it would be
 
 p = 2<sup>b</sup>
 
@@ -86,6 +86,7 @@ Each digit in a hexadecimal number corresponds to 4 bits
 </tr>
 <tr>
 <th>Binary</th>
+<td>1010</td>
 <td>1111</td>
 </tr>
 <tr>
@@ -95,7 +96,45 @@ Each digit in a hexadecimal number corresponds to 4 bits
 </tr>
 </table>
 
-So given the amount of bits *b*, you would
+So given the amount of bits *b*, you would take the first *b*
+bits from the address...
+
+<table>
+<tr>
+<th>
+Address (Binary)
+</th>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+</tr>
+<tr>
+<th>
+Address (Hex)
+</th>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+</tr>
+</table>
 
 
 ## How to calculate bits in second-level page table
