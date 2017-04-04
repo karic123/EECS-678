@@ -102,6 +102,24 @@ bits from the address. If *b* were 8, then...
 <table>
 <tr>
 <th>
+Address (Hex)
+</th>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+</tr>
+
+<tr>
+<th>
 Address (Binary)
 </th>
 <td>
@@ -118,23 +136,6 @@ Address (Binary)
 </td>
 </tr>
 <tr>
-<th>
-Address (Hex)
-</th>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-</tr>
-<tr>
 <td></td>
 <td colspan="2">
 First 8
@@ -147,6 +148,43 @@ First 8
 
 ## How to calculate bits in second-level page table
 
+For a two-level paging system with a *p* KB page size,
+we have a 32-bit address. The outer page (1st level) has
+*p<sub>1</sub>* entries. How many bits are used to represent the
+second-level page table?
+
+**Given:**
+
+* *p*: Page size, in KB
+* *p<sub>1</sub>*: Amount of entries in the 1st level page table
+* *32*-bit address
+
+Address layout again:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+* How many bits are needed to represent p<sub>1</sub>?
+	* p<sub>1</sub> = 2<sup>x</sup>
+	* *x*: amount of bits needed to represent p<sub>1</sub>.
+
+* Page offset needs to be able to index *p* bytes
+	* p = 2<sup>y</sup>
+	* *y*: bits needed for page offset
+
+So we have bits for p<sub>1</sub> and offset *d*, but need to find p<sub>2</sub>.
+Our address is 32 bits, so...
+
+p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
 ---
 
