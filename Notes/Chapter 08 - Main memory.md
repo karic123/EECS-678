@@ -7,6 +7,54 @@ Rachel's summary notes
 
 ---
 
+# Blorp
+
+Structure of a Page Table: Page 378, Chapter 8.6
+
+## How to calculate bits for page offset
+
+We have a logical address with a page size of *x* KB.
+In this logical address, how many bits are used to represent the page offset?
+
+Logical addresses are structured as:
+
+<table>
+<tr>
+<td>
+p<sub>1</sub>
+</td>
+<td>
+p<sub>2</sub>
+</td>
+<td>
+d
+</td>
+</tr>
+</table>
+
+p<sub>1</sub> and p<sub>2</sub> are part of the "page number",
+and d is the offset.
+
+Given:
+
+* *x*: Page size of logical address, in KB
+
+Calculate:
+
+The offset field must contain *y* bits...
+
+2<sup>y</sup> = x
+
+
+## How to calculate entries in page table
+
+## How to calculate page number given address and page size
+
+## How to calculate bits in second-level page table
+
+
+---
+
 # Notes
 
 Only the processor can directly access main memory and registers (which are part of the processor).
