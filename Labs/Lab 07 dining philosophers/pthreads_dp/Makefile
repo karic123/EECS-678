@@ -1,7 +1,7 @@
 # Add the dp_asymmetric and dp_waiter targets to all as you implement
 # them
 
-STUDENT_ID=XXXXXX
+STUDENT_ID=xxxxxx
 
 SRCDIR = ./
 CFILELIST = dining_philosophers.c dp_asymmetric.c dp_waiter.c
