@@ -52,7 +52,7 @@ static int available_chopsticks[NUM_CHOPS];
 
 /*
  * Helper functions for grabbing chopsticks, referencing neighbors.
- * Numbering assumptions: 
+ * Numbering assumptions:
  *   Philosophers: 1 -> NUM_PHILS
  *      - Left philosopher is (number + 1) modulo NUM_PHILS
  *      - Right philosopher is (number - 1) modulo NUM_PHILS
@@ -149,11 +149,30 @@ static void *dp_thread(void *arg)
       think_one_thought();
     }
 
+    pthread_mutex_lock( &waiter );
+
+    while ( !left_chop_available( me ) && !right_chop_available( me ) )
+    {
+        pthread_cond_wait( &(me->can_eat), &waiter );
+    }
+
+
     /*
      * Grab both chopsticks: ASYMMETRIC and WAITER SOLUTION
      */
-    pthread_mutex_lock(left_chop(me));
-    pthread_mutex_lock(right_chop(me));
+    // mark my chopsticks taken
+//    pthread_mutex_lock(left_chop(me));
+//    pthread_mutex_lock(right_chop(me));
+    // static int available_chopsticks[NUM_CHOPS];
+
+    int* leftStatus = left_chop_available( me );
+    int* rightStatus = right_chop_available( me );
+
+    *leftStatus = 0;    // not available
+    *rightStatus = 0;   // not available
+
+
+    pthread_mutex_unlock( &waiter );
 
     /*
      * Eat some random amount of food. Again, this involves a
@@ -164,13 +183,40 @@ static void *dp_thread(void *arg)
       eat_one_mouthful();
     }
 
+    pthread_mutex_lock( &waiter );
+
     /*
      * Release both chopsticks: WAITER SOLUTION
      */
-    pthread_mutex_unlock(right_chop(me));
-    pthread_mutex_unlock(left_chop(me));
+    // mark chopsticks free
+//    pthread_mutex_unlock(right_chop(me));
+//    pthread_mutex_unlock(left_chop(me));
 
-    /* 
+    // Signal others
+//    int leftIndex = me->id - 1;
+//    if ( leftIndex < 0 )
+//    {
+//        leftIndex = NUM_PHILS - 1;
+//    }
+//
+//    int rightIndex = me->id + 1;
+//    if ( rightIndex >= NUM_PHILS )
+//    {
+//        rightIndex = 0;
+//    }
+
+//    pthread_cond_signal( &Diners[leftIndex].can_eat );
+//    pthread_cond_signal( &Diners[rightIndex].can_eat );
+
+    philosopher* lefty = left_phil( me );
+    right_chop_available( lefty );
+
+    philosopher* righty = right_phil( me );
+    left_chop_available( righty );
+
+    pthread_mutex_unlock( &waiter );
+
+    /*
      * Update my progress in current session and for all time.
      */
     me->prog++;
@@ -258,7 +304,7 @@ void print_progress()
        * with a constant width to make things line up in columns for
        * better readability.
        */
-      sprintf(buf, "%d/%d", 
+      sprintf(buf, "%d/%d",
               Diners[i].prog, Diners[i].prog_total);
       printf("p%d=%*s   ", i, STATS_WIDTH, buf);
       i++;
@@ -272,7 +318,7 @@ void print_progress()
     /*
      * Print the 5th on the line, with a newline to end the line
      */
-    sprintf(buf, "%d/%d", 
+    sprintf(buf, "%d/%d",
             Diners[i].prog, Diners[i].prog_total);
     printf("p%d=%*s\n", i, STATS_WIDTH, buf);
     i++;
