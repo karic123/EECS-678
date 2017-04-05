@@ -160,9 +160,6 @@ static void *dp_thread(void *arg)
     /*
      * Grab both chopsticks: ASYMMETRIC and WAITER SOLUTION
      */
-    // mark my chopsticks taken
-//    pthread_mutex_lock(left_chop(me));
-//    pthread_mutex_lock(right_chop(me));
     // static int available_chopsticks[NUM_CHOPS];
 
     int* leftStatus = left_chop_available( me );
@@ -188,31 +185,18 @@ static void *dp_thread(void *arg)
     /*
      * Release both chopsticks: WAITER SOLUTION
      */
+
     // mark chopsticks free
-//    pthread_mutex_unlock(right_chop(me));
-//    pthread_mutex_unlock(left_chop(me));
+
+    *leftStatus = 1;    // available
+    *rightStatus = 1;   // available
 
     // Signal others
-//    int leftIndex = me->id - 1;
-//    if ( leftIndex < 0 )
-//    {
-//        leftIndex = NUM_PHILS - 1;
-//    }
-//
-//    int rightIndex = me->id + 1;
-//    if ( rightIndex >= NUM_PHILS )
-//    {
-//        rightIndex = 0;
-//    }
-
-//    pthread_cond_signal( &Diners[leftIndex].can_eat );
-//    pthread_cond_signal( &Diners[rightIndex].can_eat );
-
     philosopher* lefty = left_phil( me );
-    right_chop_available( lefty );
-
     philosopher* righty = right_phil( me );
-    left_chop_available( righty );
+
+    pthread_cond_broadcast( &lefty->can_eat );
+    pthread_cond_broadcast( &righty->can_eat );
 
     pthread_mutex_unlock( &waiter );
 
