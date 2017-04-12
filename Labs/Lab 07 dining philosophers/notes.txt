@@ -1,0 +1,3 @@
+1. Asymmetric solution works because it makes circular wait impossible.
+
+2. Asymmetric cannot prevent starvation; no guarantee that a philosopher will eventually get their chopsticks due to random requesting.

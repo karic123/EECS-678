@@ -1,4 +1,4 @@
-STUDENT_ID=XXXXXXX
+STUDENT_ID=xxx
 
 all:
 	gcc -g read_write.c -o read_write
