@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <linux/unistd.h>
+#include <stdbool.h>
 
 #define gettid() syscall(__NR_gettid)
 
@@ -21,7 +22,7 @@
 
 typedef struct {
   pthread_t thread;
-  pthread_cond_t can_eat; 
+  pthread_cond_t can_eat;
   int id;
   int tid;
 } philosopher;
@@ -98,7 +99,7 @@ static void *dp_thread(void *arg)
   philosopher *me;
 
   me = (philosopher *) arg;
-    
+
   me->tid = gettid();
 
   while (!stop) {
@@ -106,7 +107,7 @@ static void *dp_thread(void *arg)
     eat_rnd = (rand() % 10000);
 
     /*
-     * Think a random number of thoughts before getting hungry 
+     * Think a random number of thoughts before getting hungry
      */
     for (i = 0; i < think_rnd; i++){
       think_one_thought();
@@ -117,13 +118,13 @@ static void *dp_thread(void *arg)
      */
 #if DEADLOCK
     /*
-     * This order results in deadlock 
+     * This order results in deadlock
      */
     pthread_mutex_lock(left_chop(me));
     pthread_mutex_lock(right_chop(me));
 #else
     /*
-     * This order avoids deadlock 
+     * This order avoids deadlock
      */
     if(me->id % 2 == 0) {
       pthread_mutex_lock(left_chop(me));
@@ -171,9 +172,9 @@ void set_table()
   for (i = 0; i < NUM_PHILS; i++) {
     pthread_create(&(diners[i].thread), NULL, dp_thread, &diners[i]);
   }
-    
+
   /*
-   * Stall until the diners initialize their tids 
+   * Stall until the diners initialize their tids
    */
   i = 0;
   while (i < NUM_PHILS) {
@@ -185,7 +186,7 @@ void set_table()
 void print_progress()
 {
   int i;
-    
+
   char buf[MAX_BUF];
 
   printf ("\nUser time:\t");
@@ -193,19 +194,19 @@ void print_progress()
     sprintf(buf, "%lu / %lu", user_progress[i], user_time[i]);
     if (strlen(buf) < 8)
       printf("%s\t\t", buf);
-    else 
+    else
       printf("%s\t", buf);
   }
-     
+
   printf ("\nSystem time:\t");
   for (i = 0; i < NUM_PHILS; i++) {
     sprintf(buf, "%lu / %lu", sys_progress[i], sys_time[i]);
     if (strlen(buf) < 8)
       printf("%s\t\t", buf);
-    else 
+    else
       printf("%s\t", buf);
   }
-     
+
   printf("\n");
 }
 
@@ -220,7 +221,7 @@ int check_for_deadlock()
   unsigned long new_sys_time;
   unsigned long new_user_time;
 
-  deadlock = 1;
+  deadlock = 1; // Assume there is a deadlock, unless there isn't one.
   for (i = 0; i < NUM_PHILS; i++) {
 
     /*
@@ -229,9 +230,9 @@ int check_for_deadlock()
      */
      sprintf( filename, "/proc/self/task/%d/stat", diners[i].tid );
      printf( "[STATUS] Philosopher-%d : %s \n", i, filename );
-    
 
-    /* 
+
+    /*
      * 2. Use fopen to open the stat file as a file stream. Open it
      * with read only permissions.
      */
@@ -245,7 +246,7 @@ int check_for_deadlock()
 
 
 
-    /* 
+    /*
      * 3. Seek over uninteresting fields. Use fscanf to perform the seek.  You
      * also need to determine how many fields to skip over - see proc(5)
      * HINT: Use the the * qualifier to skip tokens without storing them.
@@ -261,14 +262,14 @@ int check_for_deadlock()
 
 
 
-    
-    /* 
-     * 4. Read the time values you want. Use fscanf again. 
-     */ 
+
+    /*
+     * 4. Read the time values you want. Use fscanf again.
+     */
      if ( fscanf( statf, "%lu %lu", &new_user_time, &new_sys_time ) == 2 )
      {
-		 printf( "Status, philosopher %d, new user time: %lu \n", i, new_user_time );
-		 printf( "Status, philosopher %d, new sys time: %lu \n", i, new_sys_time );
+		 printf( "\t* new user time: %lu ", new_user_time );
+		 printf( "\t* new sys time: %lu ", new_sys_time );
 	 }
 	 else
 	 {
@@ -279,24 +280,52 @@ int check_for_deadlock()
 
 
 
-   
+
     /*
      * 5. Use time values to determine if deadlock has occurred.
      */
-   
- 
 
+     /*
+        static philosopher diners[NUM_PHILS];
+        static int stop=0;
+        static pthread_mutex_t chopstick[NUM_CHOPS];
+        static unsigned long user_progress[NUM_PHILS];
+        static unsigned long user_time[NUM_PHILS];
+        static unsigned long sys_progress[NUM_PHILS];
+        static unsigned long sys_time[NUM_PHILS];
+     */
 
+    // Check if there was no change
+    bool userTimeProgress = ( new_user_time != user_progress[i] );
+    bool sysTimeProgress = ( new_sys_time != sys_progress[i] );
+    if ( userTimeProgress || sysTimeProgress )
+    {
+        // Update stats
+        user_progress[i]    = new_user_time - user_progress[i];
+        user_time[i]        = new_user_time;
+        sys_progress[i]     = new_sys_time - sys_progress[i];
+        sys_time[i]         = new_sys_time;
+
+        deadlock = false;
+        printf( "\t* progress was made" );
+    }
+    else
+    {
+        printf( "\t* no progress made" );
+    }
+
+    printf( "\n\n" );
 
 
 
 
     /*
-     * 6. Close the stat file stream 
+     * 6. Close the stat file stream
      */
+     fclose( statf );
 
   }
-  
+
   return deadlock;
 }
 
