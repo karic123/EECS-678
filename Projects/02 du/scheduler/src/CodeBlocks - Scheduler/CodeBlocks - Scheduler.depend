@@ -1,0 +1,51 @@
+# depslib dependency file v1.0
+1490764471 source:/home/rayechell/STUDY/KU Project 2/prioritata-vicigilo/scheduler/src/libpriqueue/libpriqueue.c
+	<stdlib.h>
+	<stdio.h>
+	"libpriqueue.h"
+
+1490656563 /home/rayechell/STUDY/KU Project 2/prioritata-vicigilo/scheduler/src/libpriqueue/libpriqueue.h
+	<stdbool.h>
+
+1490766760 source:/home/rayechell/STUDY/KU Project 2/prioritata-vicigilo/scheduler/src/libscheduler/libscheduler.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"libscheduler.h"
+
+1490766774 /home/rayechell/STUDY/KU Project 2/prioritata-vicigilo/scheduler/src/libscheduler/libscheduler.h
+	"../libpriqueue/libpriqueue.h"
+
+1490663666 source:/home/rayechell/STUDY/KU Project 2/prioritata-vicigilo/scheduler/src/simulator.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<string.h>
+	<assert.h>
+	"libscheduler/libscheduler.h"
+
+1490817430 source:/home/rayechell/STUDY/KU Project 2/final branch/prioritata-vicigilo/scheduler/src/libpriqueue/libpriqueue.c
+	<stdlib.h>
+	<stdio.h>
+	"libpriqueue.h"
+
+1490817430 /home/rayechell/STUDY/KU Project 2/final branch/prioritata-vicigilo/scheduler/src/libpriqueue/libpriqueue.h
+	<stdbool.h>
+
+1490817268 source:/home/rayechell/STUDY/KU Project 2/final branch/prioritata-vicigilo/scheduler/src/simulator.c
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+	<string.h>
+	<assert.h>
+	"libscheduler/libscheduler.h"
+
+1490817430 /home/rayechell/STUDY/KU Project 2/final branch/prioritata-vicigilo/scheduler/src/libscheduler/libscheduler.h
+	"../libpriqueue/libpriqueue.h"
+
+1490818286 source:/home/rayechell/STUDY/KU Project 2/final branch/prioritata-vicigilo/scheduler/src/libscheduler/libscheduler.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"libscheduler.h"
+
