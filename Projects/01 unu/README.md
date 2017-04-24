@@ -1,308 +1,303 @@
-
-
-## Introduction
-
-In this project, you will complete the Quite a Shell (quash) program using the
-UNIX system calls. You may work in groups of 2. The purpose of this project is
-as follows:
-
-- Getting familiar with the Operating System (UNIX) interface.
-- Exercising UNIX system calls.
-- Understanding the concept of a process from the user point of view.
-
-A skeleton has been provided, but it lacks most of the core functionality one
-would expect from a shell program. Quash should behave similar to csh, bash or
-other popular shell programs.
-
-## Installation
-
-To build Quash use:
-> `make`
-
-To generate this documentation in HTML and LaTeX use:
-> `make doc`
-
-To clean quash use:
-> `make clean`
-
-## Usage
-
-To run Quash use:
-> `./quash`
-or
-> `make test`
-
-## Features
-
-<em><b>The main file you will modify is src/execute.c. You may not use or modify
-files in the src/parsing directory, with the notable exception of the
-destroy_parser() function in src/parsing/parse_interface.c if necessary. Your
-output should match our example result files exactly.</b></em>
-
-The following features should be implemented in Quash:
-
-- Quash should be able to run executables (the basic function of a shell) with
-  command line parameters
-
-- If the executable is not specified in the absolute or relative path format
-  (starting with sequences of ‘/’, './', or '../'), quash should search the
-  directories in the environment variable PATH (see below). If no executable
-  file is found, quash should print an error message to standard error. Quash
-  should allow both foreground and background executions. Character ‘&’ is used
-  to indicate background execution. Commands without ‘&’ are assumed to run in
-  foreground.
-
-    - When a command is run in the background, quash should print: "Background
-      job started: [JOBID]    PID    COMMAND"
-
-    - When a background command finishes, quash should print: "Completed:
-      [JOBID]    PID    COMMAND"
-
-```bash
-[QUASH]$ program1 &
-Background job started: [1]    2342    program1 &
-[QUASH]$ ls
-Documents Downloads
-Completed: [1]    2342    program1 &
-```
-
-- Quash should implement I/O redirection. The `<` character is used to redirect
-  the standard input from a file. The `>` character is used to redirect the
-  standard output to a file while truncating the file. The `>>` string is used
-  to redirect the standard output to a file while appending the output to the
-  end of the file.
-
-```bash
-[QUASH]$ echo Hello Quash! > a.txt  # Write "Hello Quash!\n" to a file
-[QUASH]$ cat a.txt
-Hello Quash!
-[QUASH]$ echo Hey Quash! > a.txt  # Truncate the previous contents of a.txt and write "Hey Quash!\n" to the file
-[QUASH]$ cat a.txt          # Print file contents. If we didn't actually truncate we would see "Hey Quash!h!\n" as the output of this command.
-Hey Quash!
-[QUASH]$ cat < a.txt        # Make cat read from a.txt via standard in
-Hey Quash!
-[QUASH]$ cat < a.txt > b.txt  # Multiple redirect. Read from a.txt and write to b.txt.
-[QUASH]$ cat b.txt
-Hey Quash!
-[QUASH]$ cat a.txt >> b.txt  # Append output of a.txt to b.txt
-[QUASH]$ cat b.txt
-Hey Quash!
-Hey Quash!
-[QUASH]$
-```
-
-- Quash should support pipes `|`.
-
-```bash
-[QUASH]$ cat src/quash.c | grep running
-// Check if loop is running
-bool is_running() {
-  return state.running;
-  state.running = false;
-  while (is_running()) {
-[QUASH]$ cat src/quash.c | grep running | grep return
-  return state.running;
-```
-
-### Built-in Functions
-
-All built-in commands should be implemented in quash itself. They cannot be
-external programs of any kind. Quash should support the following built-in
-functions:
-
-- `echo` - Print a string given as an argument. The output format should be
-  the same as bash (a string followed by new line '\\n')
-
-```bash
-[QUASH]$ echo Hello world! 'How are you today?'
-Hello world! How are you today?
-[QUASH]$ echo $HOME/Development
-/home/jrobinson/Development
-[QUASH]$
-```
-
-- export - Sets the value of an environment variable. Quash should support
-  reading from and writing to environment variables.
-
-```bash
-[QUASH]$ export PATH=/usr/bin:/bin  # Set the PATH environment variable
-[QUASH]$ echo $PATH                 # Print the current value of PATH
-/usr/bin:/bin
-[QUASH]$ echo $HOME
-/home/jrobinson
-[QUASH]$ export PATH=$HOME  # Set the PATH environment variable to the value of HOME
-[QUASH]$ echo $PATH         # Print the current value of PATH
-/home/jrobinson
-[QUASH]$
-```
-
-- `cd` - Change current working directory. This updates both the actual working
-  directory and the PWD environment variable.
-
-```bash
-[QUASH]$ echo $PWD
-/home/jrobinson
-[QUASH]$ cd ..              # Go up one directory
-[QUASH]$ echo $PWD
-/home
-[QUASH]$ cd $HOME           # Go to path in the HOME environment variable
-/home/jrobinson
-[QUASH]$
-```
-
-- `pwd` - Print the absolute path of the current working directory. Make sure
-  you are printing out the actual working directory and not just the PWD
-  environment variable.
-
-```bash
-[QUASH]$ pwd                # Print the working directory
-/home/jrobinson
-[QUASH]$ echo $PWD          # Print the PWD environment variable
-/home/jrobinson
-[QUASH]$ export PWD=/usr    # Change the PWD environment variable
-[QUASH]$ pwd
-/home/jrobinson
-[QUASH]$ echo $PWD
-/usr
-[QUASH]$
-```
-
-- `quit` & `exit` - Use these to terminate quash. These are already implemented
-  for you.
-
-```bash
-[BASH]$ ./quash
-Welcome...
-[QUASH]$ exit
-[BASH]$ ./quash
-Welcome...
-[QUASH]$ quit
-[BASH]$
-```
-
-- `jobs` - Should print all of the currently running background processes in the
-  format: "[JOBID] PID COMMAND" where JOBID is a unique positive integer quash
-  assigns to the job to identify it, PID is the PID of the child process used
-  for the job, and COMMAND is the command used to invoke the job.
-
-```bash
-[QUASH]$ find -type f | grep '*.c' > out.txt &
-Background job started: [1]    2342    find / -type f | grep '*.c' > out.txt &
-[QUASH]$ sleep 15 &
-Background job started: [2]    2343    sleep 15 &
-[QUASH]$ jobs               # List currently running background jobs
-[1]    2342    find / -type f | grep '*.c' > out.txt &
-[2]    2343    sleep 15 &
-[QUASH]$
-```
-
-## Useful Functions in the Quash Skeleton
-
-The following are some funtions outside of src/execute.c that you may want to
-use in your implementation:
-
-- @a get_command_string()
-
-- @a destroy_parser()
-
-- Things in src/deque.h. Quash can make due with only implementations of this
-  data structure (i.e. background jobs list, process id list). These are
-  preprocessor macro definitions of the data structure and will expand and
-  specialize to a type when used (similar to templates in c++). See example
-  usage at the bottom of src/deque.h. <b>You don't have to use this deque
-  implementation if you would rather write your own list data structure.</b>
-
-  - @a IMPLEMENT_DEQUE_STRUCT() - Generates the double ended queue structure
-    specialized to a type
-
-  - @a PROTOTYPE_DEQUE() - Generates the function prototypes for the functions
-    that are generated by the @a IMPLEMENT_DEQUE() macro
-
-  - @a IMPLEMENT_DEQUE() - Generates functions for use with the structure
-    generated by @a IMPLEMENT_DEQUE_STRUCT().
-
-    - NOTE: The following functions were generated with a call to @a
-      IMPLEMENT_DEQUE(Example, Type). Each function is named after the contents
-      passed into the first argment of this macro (in this case @a Example).
-
-    - @a new_Example()
-
-    - @a new_destructable_Example()
-
-    - @a destroy_Example()
-
-    - @a empty_Example()
-
-    - @a is_empty_Example()
-
-    - @a length_Example()
-
-    - @a as_array_Example()
-
-    - @a apply_Example()
-
-    - @a push_front_Example()
-
-    - @a push_back_Example()
-
-    - @a pop_front_Example()
-
-    - @a pop_back_Example()
-
-    - @a peek_front_Example()
-
-    - @a peek_back_Example()
-
-    - @a update_front_Example()
-
-    - @a update_back_Example()
-
-## Useful System Calls and Library Functions
-
-The following is a list and brief description of some system calls and library
-functions you may want to use and their respective man page entries. Note that
-this list may not be exhaustive, but be sure what ever library functions you use
-will run on the lab machines:
-
-- atexit(3) - Enroll functions that should be called when exit(3) is called
-
-- chdir(2) - Changes the current working directory
-
-- close(2) - Closes a file descriptor
-
-- dup2(2) - Copies a file descriptor into a specified entry in the file
-  descriptor table
-
-- execvp(3) - Replaces the current process with a new process
-
-- exit(3) - Imediately terminate the current process with an exit status
-
-- fork(2) - Creates a new process by duplicating the calling process
-
-- getenv(3) - Reads an environment variable from the current process environment
-
-- getwd(3) - Gets the current working directory as a string
-  (get_current_dir_name(3) may be easier to use)
-
-- get_current_dir_name(3) - Gets the current working directory and stores it in
-  a newly allocated string
-
-- kill(2) - Sends a signal to a process with a given pid
-
-- open(2) - Opens a file descriptor with an entry at the specified path in the
-  file system
-
-- pipe(2) - Creates a unidirectional communication pathway between two processes
-
-- printf(3) - Prints to the standard out (see also fprintf)
-
-- setenv(3) - Sets an environment variable in the current process environment
-
-- waitpid(2) - Waits or polls for a process with a given pid to finish
-
-You may NOT use the system(3) function anywhere in your project
-
-## Project Hints and Comments
+# EECS 678 Project 1, Spring 2017
+
+Aishwarya & Rachel
+
+hhiii
+
+---
+
+## Quash tutorial
+
+### Quash in a nutshell
+
+**quash.c**
+
+	main ( ... ) {
+		while (is_running) {
+			CommandHolder *script = parse(&state);
+			
+			run_script (script);
+		}
+	}
+
+**execute.c**
+
+	run_script (CommandHolder* holders) {
+		if ( end_condition_reached 1 ) {
+			is_running = false;
+		}
+		for each holder in holders {
+			create_process (holder);
+		}
+		if (holder_contains_forground_jobs) {
+			wait_for_all_the_proceses_in_the_job_to_complete;
+		} else {
+			push_the_job_in_background_job_queue;
+		}
+	}
+
+	create_process (CommandHolder holder) {
+		Setup_pipes_and_io_redirection_based_on_flags;
+
+		fork_a_child ();
+
+		if (in_child) {
+			run_child_command(holder.cmd);
+			exit (EXIT_SUCCESS);
+		} else {
+			run_parent_command(holder.cmd);
+		}
+	}
+
+
+	run_*****_command (Command cmd) {
+		switch based on command type {
+			case command_type:
+				run_command_action (command_arguments);
+			break;
+			...
+			default:
+				fprintf (stderr, “Unknown Command\n”);
+		}
+	}
+	
+### Essential data structures
+
+**command.h**
+
+	struct CommandHolder {
+		char* redirect_in;
+		char* redirect_out;
+		int flags;
+		Command cmd;
+	}
+
+	union Command {
+		SimpleCommand simple;
+		GenericCommand generic;
+		EchoCommand echo;
+		ExportCommand export;
+		CDCommand cd;
+		KillCommand kill;
+		PWDCommand pwd;
+		JobsCommand jobs;
+		ExitCommand exit;
+		EOCCommand eoc;
+	} Command;
+	
+	struct CDCommand {
+		CommandType type;
+		char* dir;
+	} CDCommand;
+	
+### Quash invocation - Example 1
+
+	>> ./quash
+	[<QUASH_PROMPT>] cd/home/
+	
+**quash.c**
+
+	main ( ... ) {
+		while (is_running) {
+			CommandHolder *script = parse(&state);
+			run_script(script);
+		}
+	}
+	
+	----------------------------
+	
+	After 3 rd line CommandHolder structure array
+	pointed to by script looks like the following:
+	
+	script[0].redirect_in = 0;
+	script[0].redirect_out = 0;
+	script[0].flags = 0;
+	script[0].cmd =>
+		script.cmd.type = 5;
+		script.cmd.dir = “/home/”;
+	
+### Quash invocation - Example 2
+
+	[<QUASH_PROMPT>] cd /home/ | ls –ll /home/
+	
+**quash.c**
+
+	main ( ... ) {
+		while (is_running) {
+			CommandHolder *script = parse(&state);
+			run_script(script);
+		}
+	}
+	
+	----------------------------
+	
+	After 3rd line CommandHolder structure array
+	pointed to by script looks like the following:
+	
+	script[0].redirect_in = 0;
+	script[0].redirect_out = 0;
+	script[0].flags = 0x10;
+	script[0].cmd =>
+		script.cmd.type = CD;
+		script.cmd.dir = “/home/”;
+		
+	script[1].redirect_in = 0;
+	script[1].redirect_out = 0;
+	script[1].flags = 0x10;
+	script[1].cmd =>
+		script.cmd.type = GENERIC;
+		script.cmd.args = [“ls”, “-ll”, “/home/”];
+	
+**execute.c**
+
+	run_script (CommandHolder* holders) {
+		if ( end_condition_reached ) {
+			is_running = false;
+		}
+		
+		for each holder in holders {
+			create_process( holder );
+			----------------------------------
+			Iteration-0: Create process for CD
+			Iteration-1: Create process for ls
+			----------------------------------
+		}
+		
+		if (holder_contains_foreground_jobs) {
+			wait_for_all_the_proceses_in_the_job_to_complete;
+			----------------------------------------------
+			NOTE: You need a queue here which is populated
+			by create_process () function; to track the
+			pids of created processes and wait for them
+			to exit
+			-----------------------------------------------
+		}
+		else {
+			push_the_job_in_background_job_queue;
+			-----------------------------------------------
+			NOTE: Another queue required to accomplish this
+			task
+			-----------------------------------------------
+		}
+		
+	}
+	
+	create_process (CommandHolder holder) {
+		Setup_pipes_and_io_redirection_based_on_flags;
+		
+		pid = fork_a_child ();
+		
+		if (pid == 0) {
+			run_child_command(holder.cmd);
+			exit (EXIT_SUCCESS);
+		} else {
+			-----------------------------------------------
+			NOTE: This is a good place to populate the pid
+			queue
+			-----------------------------------------------
+			run_parent_command(holder.cmd);
+		}
+	}
+	
+### Command handling
+
+* Parent side
+	* export
+	* cd
+	* kill
+
+* Child side
+	* generic
+	* echo
+	* pwd
+	* jobs
+
+### Quash milestones
+
+* get_current_directory
+* create_process (Step 1) 
+	- just uncomment child and parent run process functions
+* lookup_env
+* run_pwd
+* run_cd
+* run_export
+* run_echo
+* run_generic
+* create_process (Step 2) 
+	- Set up pipes to establish IO redirection among children
+* run_script (Step 1) 
+	- Implement PID-queue, 
+	- update create_process to track the pids of children.
+	- After returning from process creation, and if the job is 
+	foreground, pop processes one by one from the queue and
+	wait for each of them to exit
+* create_process (Step 3)
+	- Setup file redirection for child process outputs
+* run_script (Step 2)
+	- Implement background job handling
+* run_kill
+	- Implement signal handling in quash to process kill signal
+	
+---
+
+## Notes
+
+**Getting started with the project:**
+
+> Hi Rachel,
+
+> 1) Deque is a double sided que that is implemented through macros. If you open memory_pool.c and look at the top you will see where they used it to implement the memory pools. After they put the two macro lins:
+
+	IMPLEMENT_DEQUE_STRUCT(MemoryPoolDeque, MemoryPool);
+	IMPLEMENT_DEQUE(MemoryPoolDeque, MemoryPool);
+
+> they were then able to use all of the functions from deque.h as if they were in their code for their structure.
+
+> MemoryPoolDeque: became a struct that they could initialize to represent a que.
+
+> MemoryPool: was a structure that could be stored in the que.
+
+> You can do this else where in your code to manage your own structures. I personally did not use it, because I thought that I would need to remove elements from the middle of the que. Looking back, you do not need to do that. You need to decide how you want to manage your jobs and processes, and then choose the structures to hold them. If you write your own, you risk it being buggy, but if you use deque you risk using it incorrectly. Also, if you need to gdb step through deque, good luck as you will not be able to debug through the macro functions.
+
+> 2) You do not need to know anything that happens down in the parsing directory, and anything that calls function in it, you should just be able to assume that they work fine. I would say that 90% of the work and things that you need to be familiar with happen in execute.c, unless you decide to make your own structures, then those could take a considerable amount of work also. I would also say that 90% of the things that you need to complete are very spelled out for you. How you decide to implement the project though could effect how much you need to go off coarse and edit other parts. You will need to know a little about how the commands are set up, but almost all of that work is already done. Compiling, and a quick spin through gdb through the skeleton program will be a quick way to learn just how small the area is that you need to work with, again, you do not need to step down into the parsing directory.
+
+> 3) I did not use destroy_parser(), I feel like it is just a function that they have already registered with atexit() that you could put code in to destroy your own data structures that you make. That way, you will be able to call exit() in your program without needing to de-allocate all your global structures every time. I just made a cleanup function and then registered it with atexit() and it worked fine.
+
+> Hope this was useful.
+
+> Good luck.
+
+(From another student)
+
+**Queues:**
+
+> You need queue for processes and for background jobs. Please note the distinction between a job and a process. 
+> When you type a command in quash terminal and press enter, that creates a job i.e.
+
+> 		<QUASH BLAH BLAH>] echo "Hello World!" | cat somefile.txt <ENTER>
+
+> creates  a job consisting of two processes. A job is considered a background job if you put ampersand ('&') at the end of it before pressing <ENTER>. If a job is marked as background, all the processes in that job will be marked as background and hence, they should not cause the parent process to hang up before completion.
+
+> So here is what you need:
+
+> * You need to keep track of all the processes in a job (be it foreground or background). You can do that by creating a queue which stores process-type objects and encapsulating it in a job-type structure.
+
+> * You need to keep track of background jobs and for that you need another queue which stores job-type objects. As soon as you have created all the processes in a background job, you push that job into the background job queue
+
+(From the TA)
+
+
+**Job IDs:**
+
+> Job id should be assigned in incremental order i.e. first job has id=1 second has id=2 and so on. Also, run_script () (in the skeleton code you have been given) does not do anything with the pids or the job queues. It is up-to you how you want to manage this. Ideally pids should go into job structure and job structure should go into job queue.
+
+> I am a little confused about your question. Can you please send me an email @ (wali@ku.edu); describing the problem you are facing in detail so that I may give some specific help with the problem you are facing?
+
+(From the TA)
+
+---
+
+## "Hints" from the main readme spec:
 
 In Quash, a job is defined as a single command or a list of commands separated
 by pipes. For example the following are each one job:
@@ -353,181 +348,126 @@ You should not have to search for environment variables ($) in your functions.
 The parser uses your implementation of @a lookup_env() function to expand the
 environment variables for you.
 
-## Testing
+---
 
-There is an automated testing script written for this project in run_tests.bash.
-Using the "make test" target in the make file will run the ./run-tests.bash
-command present in the Makefile. If you want more control you may run this
-script directly from the command line with "./run_tests.bash [-cdstuv]". The
-various options are listed below or with "./run_tests.bash -h".
+## Dynamic Pipeline help
 
-- -c Clean up all files created during testing.
+Hi Everyone,
 
-- -d If there is a difference between what is seen and what is expected this
-   option will immediately print out the diff file rather than telling you where
-   you can find the diff file.
+I hope you are making good progress with your project-1. Regarding the questions I have gotten from you so far, it seems that the most troublesome part for most of the students is the creation of a dynamic pipe-line which can cater to multiple processes on the fly. I gave a simple algorithm to a couple of students which can aid them in this task. To be fair to all other students, I am sharing the algorithm here. You can use it in your code but make sure that you understand it because that's what matters.
 
-- -p Allow all tests to be run in parallel as background processes. This will
-   greatly speed up the testing process but output to the command line will be
-   scattered.
+ 
 
-- -s Keep the sandbox directory around after testing (this is a debug option for
-   the tester and probably not of much use unless modifying run-tests.bash).
+A couple of observations regarding a dynamic pipe-line:
 
-- -t Keep the the temporary directory "test-cases/<test-name-dir>/.tmp" around
-   after tests are complete (this is a debug option for the tester and probably
-   not of much use unless modifying run-tests.bash).
+ 
 
-- -v Print out all output from the test case if diff picked up any differences
-   between the test output and expected output.
+- A dynamic pipe-line should be capable of handling multiple processes i.e.
 
-## Grading Policy
+	>> find src -name *.[ch] | xargs grep -c pipe | sort | head -n 5
 
-Partial credit will be given for incomplete programs. However, a program that
-cannot compile will get 0 points. The feature tests are placed into multiple
-tiers of completeness. The output to standard out from your code must match our
-output exactly, except for whitespace, for the next tier of grading to be
-accessible. This is due to reliance of previous tiers in subsequent tier tests.
-If we cannot run your code in one tier then it becomes far more difficult test
-later tiers. The point breakdown for features is below:
+ 
 
-<table>
-    <tr>
-        <th> Description </th>
-        <th> Score </th>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Tier 0 </li>
-                <ul>
-                    <li> Quash compiles </li>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            10%
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Tier 1 </li>
-                <ul>
-                    <li> Single commands without arguments (ls) </li>
-                    <li> Simple built-in commands </li>
-                    <ul>
-                        <li> pwd </li>
-                        <li> echo with a single argument </li>
-                    </ul>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            30%
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Tier 2 </li>
-                <ul>
-                    <li> Single commands with arguments (ls -a /) </li>
-                    <li> Built-in commands </li>
-                    <ul>
-                        <li> echo with multiple arguments </li>
-                        <li> cd </li>
-                        <li> export </li>
-                    </ul>
-                    <li> Environment Variables </li>
-                    <ul>
-                        <li> echo with environment variables (echo $HOME) </li>
-                        <li> Execution with environment variables (du -H $PWD/..)
-                    </ul>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            30%
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Tier 3 </li>
-                <ul>
-                    <li> Built-in commands </li>
-                    <ul>
-                        <li> jobs </li>
-                        <li> kill </li>
-                    </ul>
-                    <li> Piping output between one command and another (find -type f \| grep '*.c') </li>
-                    <li> Redirect standard input to any command from file (cat < a.txt) </li>
-                    <li> Redirect standard output from a command to a file (cat b.txt > a.txt) </li>
-                    <li> Background processes </li>
-                    <ul>
-                        <li> Job completion notification </li>
-                    </ul>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            30%
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Tier 4 (extra credit) </li>
-                <ul>
-                    <li> Pipes and redirects can be mixed (cat < a.txt \| grep -o World \| cat > b.txt) </li>
-                    <li> Pipes and redirects work with built-in commands </li>
-                    <li> Append redirection (cat a.txt \| grep -o World >> b.txt) </li>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            10%
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li> Valgrind Memory Errors </li>
-                <ul>
-                    <li> While not ideal, you will not lose any points for "still reachable" blocks </li>
-                    <li> Unacceptable Memory Leaks </li>
-                    <ul>
-                        <li> Definately lost </li>
-                        <li> Indirectly lost </li>
-                        <li> Possibly lost </li>
-                    </ul>
-                    <li> Unacceptable Access Violations </li>
-                    <ul>
-                        <li> Invalid Read </li>
-                        <li> Invalid Write </li>
-                        <li> Invalid free </li>
-                        <li> Use of uninitialized values </li>
-                    </ul>
-                </ul>
-            </ul>
-        </td>
-        <td>
-            -5% from tier grade down to 0% for each tier with violations
-        </td>
-    </tr>
-</table>
+- In order to construct such a pipe-line, all we need to keep track of, is two pipes. These are (Make sure that you understand this):
 
-## Submission
+    The pipe the previous child process has written to (so that we may read from it in the new child process)
+    The pipe the new child process is going to write to (so that the next child may read from it)
 
-Each group should submit the project to your TA via Blackboard. Create a zip
-file of your code using "make submit". You should also check that the zipped
-project still builds and runs correctly after building the submit target with
-"make unsubmit". Your TA will be using this command to extract and build your
-project so make sure it works correctly. If you modify either of these targets,
-please ensure all file extensions are renamed to ".txt" in the submission and
-extract correctly with the unsubmit target.
+ 
 
-## Miscellaneous
-Start early!
-You need to use C language to implement this project.
+- Pipes need to be connected (via dup2) only in the child process. And they should be created only in the parent process
+
+ 
+
+- In order to connect n-processes, n-1 pipes are required
+
+ 
+
+- Pipes are used only in blocking mode i.e. the second stage of a pipe-line cannot proceed until the first stage has completed
+
+ 
+
+With this information at hand, the following algorithm can take care of your dynamic pipe-lining needs in quash.
+
+
+
+File: execute.c
+
+	#define    READ_END     0
+	#define    WRITE_END    1
+
+	/* Create a global tracker for active pipes */
+	static int environment_pipes[2][2];        	/* Global Variable */
+	static int prev_pipe = -1;                 ​​​	/* Global Variable */
+	static int next_pipe = 0;                  	/* Global Variable */
+
+	...
+
+	create_process (...)
+	{
+
+		​...
+
+	if (p_out) {
+		/* This is the only condition under which a new pipe creation is required.
+		   You should be able to understand why this is the case */
+		pipe (environment_pipes[next_pipe]);
+	}
+
+	...
+
+	pid = fork ();
+
+	if (0 == pid) {
+		/* Check if this process needs to receive from previous process */
+		if (p_in) {
+			dup2 (environment_pipes[prev_pipe][READ_END], STDIN_FILENO);
+
+			
+			/* We are never going to write to the previous pipe so we can safely close it */
+			close (environment_pipes[prev_pipe][WRITE_END]);
+		}
+
+		if (p_out) {
+			dup2 (environment_pipes[next_pipe][WRITE_END], STDOUT_FILENO);
+
+			/* We are never going to read from our own pipe so we can safely close it */
+			close (environment_pipes[next_pipe][READ_END]);
+		}
+
+		/* Execute what-ever needs to be run in the child process */
+		child_run_command (blah blah);
+
+		/* Adios child process */
+		exit (EXIT_SUCCESS);
+	} else {
+		/* Close the hanging pipes in parent */
+		if (p_out) {
+			close (environment_pipes[next_pipe][WRITE_END]);
+		}
+
+		/* Update the pipe trackers for next iteration */
+		next_pipe = (next_pipe + 1) % 2;
+		prev_pipe = (prev_pipe + 1) % 2;
+	}
+
+	/* This function can safely kick  the bucket now */
+	return;
+
+ 
+
+If you have trouble understanding this algorithm, try to work it out for this example:
+
+	>> find src -name *.[ch] | head -n 3
+
+ 
+
+Try answering the following question for the above pipe-line when it is constructed in quash using the described algorithm:
+
+    What is the pipe-descriptor that find process is writing to?
+    What is the pipe-descriptor that head process is reading from?
+    How many pipes are constructed in the algorithm when the above command is executed by quash?
+
+ 
+
+Please note that this algorithm takes care of all your dynamic pipe-lining needs i.e. you don't need to do anything else with pipes if you just appropriately include the stated algorithm in your code.

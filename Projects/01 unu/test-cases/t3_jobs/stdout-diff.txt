@@ -1,9 +1,0 @@
-2c2,4
-< Background job started: [1]	#PID#	sleep 1 & 
----
-> Background job started: [2]	#PID#	sleep 1 & 
-> [1]	#PID#	delayed_echo Hello World 1 & 
-> [2]	#PID#	sleep 1 & 
-3a6,7
-> Completed: 	[1]	#PID#	delayed_echo Hello World 1 & 
-> Completed: 	[2]	#PID#	sleep 1 & 

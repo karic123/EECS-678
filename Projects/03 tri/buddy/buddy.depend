@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1492447231 source:/home/rayechell/STUDY/amiko-asignilo/buddy/simulator.c
+	<assert.h>
+	<errno.h>
+	<getopt.h>
+	<limits.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+	<string.h>
+	"buddy.h"
+
+1492798956 /home/rayechell/STUDY/amiko-asignilo/buddy/buddy.h
+	"list.h"
+
+1492801537 source:/home/rayechell/STUDY/amiko-asignilo/buddy/buddy.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<math.h>
+	"buddy.h"
+	"list.h"
+
+1491758029 /home/rayechell/STUDY/amiko-asignilo/buddy/list.h
+

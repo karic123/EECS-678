@@ -1,0 +1,3 @@
+a = alloc(400K)
+b = alloc(200K)
+c = alloc(400K)

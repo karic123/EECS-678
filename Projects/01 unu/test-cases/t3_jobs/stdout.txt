@@ -1,8 +1,0 @@
-Background job started: [1]	#PID#	delayed_echo Hello World 1 & 
-Background job started: [1]	#PID#	sleep 1 & 
-Hello World
-dir1
-dir2
-dir3
-lorem_ipsum.txt
-valgrind_expected.txt
