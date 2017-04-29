@@ -34,19 +34,6 @@ to the exam.
 	* UNIX: Monolithic Kernel - *on exam*
 		* Pros and cons
 
-*Other things not necessarily on the slides:*
-
-* *Multiprogramming*
-* *Time sharing*
-* *Dual mode hardware mechanism*
-* *"who" manages the CPU cache?*
-* *What hardware support is required to implement a preemptive CPU scheduler?*
-* *Where CPU register values are stored*
-* *Where global variables are stored*
-* *Anonymous piping*
-* *User-level threading*
-* *Protection of multi-threaded architecture vs. multi-process architecture*
-
 * Processes
 	* Address space layout
 	* Process states - *on exam*
@@ -91,15 +78,34 @@ to the exam.
 	* Round-Robin Gantt chart, waiting time, schedule latency - *on exam*
 	* Pros and Cons - *on exam*
 
-Types of application problems:
+**Types of application problems:**
 
 * Given code that forks a process and runs an exec command, what is the output?
-* Spinlock code with fill-in-the-blank parts to complete it.
+	* Slides had different example without exec; lack of time and not paying attention caused me to get this one partially wrong.
+* Spinlock code / Test-and-set with fill-in-the-blank parts to complete it.
+	* *On the slides*
 * Multithreaded program without locks, possible outcomes.
+	* Kind of on slides
 * Implementing a monitor and a sempahore for bounded-buffer problem.
 	* Subjective question of "Which version is easier to understand?" that I apparently got 1 point off on???
+	* Examples were in the slides
 * Given tables of processes and resources, figure out if there is a deadlock.
+	* *Example on slides*
 * Given a table of processes and arrival/burst times, draw Gantt diagrams and calculate averages.
+	* *Example on slides*
+
+**Other things not necessarily on the slides:**
+
+* Multiprogramming
+* Time sharing
+* Dual mode hardware mechanism
+* "who" manages the CPU cache?
+* What hardware support is required to implement a preemptive CPU scheduler?
+* Where CPU register values are stored
+* Where global variables are stored
+* Anonymous piping
+* User-level threading
+* Protection of multi-threaded architecture vs. multi-process architecture
 
 ---
 
