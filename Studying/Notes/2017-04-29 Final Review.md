@@ -2,12 +2,13 @@
 
 FML.
 
+* [Go to my midterm analysis](#midterm-analysis)
+* [Go to my final review stuff](#final-exam-review)
+* [Go to my final exam postmortem](#final-exam-postmortem)
+
 ---
 
 # Midterm analysis
-
-[Go to my final review stuff]()
-[Go to my final exam postmortem]()
 
 I got a 78% on the Midterm, partially because I did not study from the
 *right* resources. The lesson I learned from the midterm was:
