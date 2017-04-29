@@ -6,11 +6,14 @@ Rachel's summary notes
 
 ---
 
-# Notes
+# Slide notes
+
+These are the topics covered in the slides, but finding those topics
+covered elseware on the internet, such as Wikipedia.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 * File concept
   * file
