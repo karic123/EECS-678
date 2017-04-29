@@ -22,9 +22,22 @@ by those intended, for all circumstances. This is impossible.
 
 ### Stack/Buffer overflow
 
-> In software, a stack overflow occurs if the call stack pointer exceeds the stack bound. [Wikipedia](https://en.wikipedia.org/wiki/Stack_overflow)
+> In software, a stack overflow occurs if the call stack pointer exceeds the stack bound. 
+[Wikipedia](https://en.wikipedia.org/wiki/Stack_overflow)
 
-> In computer security and programming, a buffer overflow, or buffer overrun, is an anomaly where a program, while writing data to a buffer, overruns the buffer's boundary and overwrites adjacent memory locations. [https://en.wikipedia.org/wiki/Buffer_overflow](Wikipedia)
+> In computer security and programming, a buffer overflow, or buffer overrun, 
+is an anomaly where a program, while writing data to a buffer, 
+overruns the buffer's boundary and overwrites adjacent memory locations. 
+> Exploiting the behavior of a buffer overflow is a well-known security exploit. 
+On many systems, the memory layout of a program, or the system as a whole, is well defined. 
+By sending in data designed to cause a buffer overflow, 
+it is possible to write into areas known to hold executable code, 
+and replace it with malicious code. Buffers are widespread in operating system (OS) code, 
+so it is possible to make attacks that perform privilege escalation and gain unlimited access 
+to the computer's resources. The famed Morris worm used this as one of its attack techniques.
+[Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow)
+
+
 
 ### Run-time checking: StackGuard
 
