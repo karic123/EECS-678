@@ -4,11 +4,63 @@ Introduction to Operating Systems, Spring 2017
 
 ## Don't cheat off my stuff!
 
-If you're having trouble with specific content, check out the **Learning**
+If you're having trouble with specific content, check out the **Studying/Coding-examples**
 folder where I created some small, concise sample programs as I was
 learning new topics.
 
 Don't just copy my assignments - it is easy to find plagarism.
+
+## Why put these things on GitHub?
+
+Everybody has their own learning style. I teach computer science courses
+at a community college, and a lot of my teaching style is based on the
+frustrations I've had throughout my undergrad career.
+
+Now that I'm in gradschool, I find the same frustrations; namely,
+not having access to the resources that I would like to have.
+
+Whenever there is a deficit in resources that I want, I create those resources.
+
+So, essentially, I'm cataloging what I'm learning in my GitHub account.
+This is mostly for my own future reference, but perhaps my notes or
+example code (See the "Learning" folder) will help someone else grasp
+these concepts.
+
+## Obscurity isn't security
+
+As a teacher myself, I have to acknowledge and accept that students are
+going to share their resources. Sometimes certain students have access
+to past students' exams or programs or whatever else. These students
+can pass around their solutions between themselves as a resource that
+is *not* afforded to all students of the class, giving an unfair advantage
+based on connections rather than study skills.
+
+Additionally, I know that I cannot stop students from sharing this 
+information, online or offline. Some teachers make the students give
+their exams back after they've seen their results, so that the teacher
+can proceed to re-use those same exam questions every semester.
+
+Although it does mean *a lot of work* for me as a teacher, I work to
+make sure that not all of the assignments I give, semester-to-semester,
+are the same items.
+
+I also give my students access to example code, written by myself.
+
+I also give my students all my slides, and record my lectures in video form.
+
+I also give my students exams from previous semesters, or at least
+study guides that I've written that highlight all of the important things
+that I expect them to know - because it can be difficult for a student
+to intuit what the teacher will expect them to know.
+
+My teaching style is to not obscure anything. I have my students create
+public GitHub accounts and post their work there. It isn't some dirty
+secret that only some students know about. They know they're posting it
+online, *I* know they're posting it online.
+
+My teaching style is to give everybody a level playing field, and to let
+them know specifically what I expect of my students. Trying to mind-read
+the teacher's thoughts is not a fun game to be playing.
 
 ---
 

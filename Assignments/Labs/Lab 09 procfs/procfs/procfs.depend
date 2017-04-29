@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1492398819 source:/home/rayechell/STUDY/EECS-678/Labs/Lab 09 procfs/procfs/dine.c
+	<stdio.h>
+	<pthread.h>
+	<unistd.h>
+	<math.h>
+	<string.h>
+	<stdlib.h>
+	<errno.h>
+	<pthread.h>
+	<sys/types.h>
+	<linux/unistd.h>
+	<stdbool.h>
+
