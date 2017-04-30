@@ -145,11 +145,11 @@ Given a virtual address ```0x12345678```, or:
 The *p* portion goes to the *page table* at location ```0x12345```:
 
 <table>
-<tr><th>0x00000<th><td>...</td></tr>
-<tr><th>...<th><td>...</td></tr>
+<tr><th>0x00000</th><td>...</td></tr>
+<tr><th>...</th><td>...</td></tr>
 <tr><th>0x12345<th>Frame #: 0xabcde</td></tr>
-<tr><th>...<th><td>...</td></tr>
-<tr><th>...<th><td>...</td></tr>
+<tr><th>...</th><td>...</td></tr>
+<tr><th>...</th><td>...</td></tr>
 </table>
 
 We use the same *offset (d)* from the virtual address to the physical address,
