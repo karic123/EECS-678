@@ -177,8 +177,11 @@ Therefore, we can use the TLB...
 
 ## Translation Lookaside Buffer TLB
 
-> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce the time taken to access a user memory location.
+> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce 
+the time taken to access a user memory location.
 [Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+
+![MMU with paging and TLB](images/mmu_with_paging_and_tlb.png)
 
 ## Multi-level paging
 
