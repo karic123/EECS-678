@@ -87,14 +87,27 @@ This would be fast, but has no protection and it is wasteful.
 
 The routine is only loaded as-needed, and not when it is not.
 
+### Better - Hardware support for relocation and limit registers
 
+**Better MMU**:
 
+	* If *VAddr > limit*, then trap and report error
+	* Else *PAddr = VAddr + BaseAddr*
 
-### Better - 
+![MMU with hardware support](images/hardware_realocation.png)
+
+This adds error detection, and we can trap an error.
+
+This also supports variable-sized partitions.
+
+However, it can lead to fragmentation.
+
 
 ### Modern - 
 
 ## Fragmentation
+
+
 
 ## Virtual Address Translation
 
