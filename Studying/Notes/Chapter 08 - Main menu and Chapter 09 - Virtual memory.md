@@ -138,6 +138,7 @@ Translating a virtual address to a physical address...
 Given a virtual address ```0x12345678```, or:
 
 <table>
+<tr><th colspan="2">Virtual Address</th></tr>
 <tr><th>p</th><th>d</th></tr>
 <tr><td>0x12345</td><td>0x678</td></tr>
 </table>
@@ -145,10 +146,10 @@ Given a virtual address ```0x12345678```, or:
 The *p* portion goes to the *page table* at location ```0x12345```:
 
 <table>
+<tr><th colspan="2">Page Table</th></tr>
 <tr><th>0x00000</th><td>...</td></tr>
 <tr><th>...</th><td>...</td></tr>
 <tr><th>0x12345<th>Frame #: 0xabcde</td></tr>
-<tr><th>...</th><td>...</td></tr>
 <tr><th>...</th><td>...</td></tr>
 </table>
 
@@ -156,6 +157,7 @@ We use the same *offset (d)* from the virtual address to the physical address,
 and we use the *frame # (f)* given from the page table.
 
 <table>
+<tr><th colspan="2">Physical Address</th></tr>
 <tr><th>f</th><th>d</th></tr>
 <tr><td>0xabcde</td><td>0x678</td></tr>
 </table>
