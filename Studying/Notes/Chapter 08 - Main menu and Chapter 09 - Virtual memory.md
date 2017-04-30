@@ -123,12 +123,74 @@ These addresses look like:
 
 And the diagram for this MMU scheme:
 
-![MMU with paging](images/mmu_with_paging.png)
+![MMU with paging](images/mmu_with_paging.png) *CC-0*
 
 And mapping looks like this:
 
-![MMU Memory View](images/memory_view.png)
+![MMU Memory View](images/memory_view.png) *CC-0*
 
+
+
+## Virtual Address Translation
+
+Translating a virtual address to a physical address...
+
+Given a virtual address ```0x12345678```, or:
+
+<table>
+<tr><th>p</th><th>d</th></tr>
+<tr><td>0x12345</td><td>0x678</td></tr>
+</table>
+
+The *p* portion goes to the *page table* at location ```0x12345```:
+
+<table>
+<tr><th>0x00000<th><td>...</td></tr>
+<tr><th>...<th><td>...</td></tr>
+<tr><th>0x12345<th>Frame #: 0xabcde</td></tr>
+<tr><th>...<th><td>...</td></tr>
+<tr><th>...<th><td>...</td></tr>
+</table>
+
+We use the same *offset (d)* from the virtual address to the physical address,
+and we use the *frame # (f)* given from the page table.
+
+<table>
+<tr><th>f</th><th>d</th></tr>
+<tr><td>0xabcde</td><td>0x678</td></tr>
+</table>
+
+## Paging
+
+Advantages are that there is no external fragmentation; there is
+efficient use of memory.
+
+Internal fragmentation, however, may still exist.
+
+Each load and store instruction requires accessing the page table
+to translate the address. The table is stored in meomry, and memory
+is slow to access.
+
+Therefore, we can use the TLB...
+
+## Translation Lookaside Buffer TLB
+
+> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce the time taken to access a user memory location.
+[Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+
+## Multi-level paging
+
+## Two level address translation
+
+## Demand paging
+
+## Page Table Entry PTE
+
+## Partial memory mapping
+
+## Page fault
+
+## Anonymous page
 
 
 ## Fragmentation
@@ -150,25 +212,184 @@ And mapping looks like this:
 > For example, consider a situation wherein a program allocates 3 continuous blocks of memory and then frees the middle block. The memory allocator can use this free block of memory for future allocations. However, it cannot use this block if the memory to be allocated is larger in size than this free block.
 [Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#External_fragmentation)
 
-## Virtual Address Translation
+---
 
-## Paging
+# Application questions
 
-## Translation Lookaside Buffer TLB
+## How to calculate bits for page offset
 
-## Multi-level paging
+We have a logical address with a page size of *x* KB.
+In this logical address, how many bits are used to represent the page offset?
 
-## Two level address translation
+**Given:**
 
-## Demand paging
+* *x*: Page size of logical address, in KB
 
-## Page Table Entry PTE
+**Calculate:**
 
-## Partial memory mapping
+The offset field must contain *y* bits...
 
-## Page fault
+2<sup>y</sup> = x
 
-## Anonymous page
+
+## How to calculate entries in page table
+
+How many entries are in a page table if we are using *x* bits
+of a virtual address as the index bits?
+
+**Given:**
+
+* *x*: size of the index bits for a virtual address
+
+**Calculate:**
+
+The amount of entries *y* in the page table...
+
+y = 2<sup>x</sup>
+
+
+## How to calculate page number given address and page size
+
+Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
+and a page size of *p* bytes, what is the page number?
+
+**Given:**
+
+* *a*: hexadecimal address
+* *p*: page size
+
+
+The page size is *p* bytes. In bits *b*, it would be
+
+p = 2<sup>b</sup>
+
+or
+
+b = log<sub>2</sub>( p )
+
+Remember that the logical address layout is like:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+Each digit in a hexadecimal number corresponds to 4 bits
+
+<table>
+<tr>
+<th>Hex</th>
+<td>A</td>
+<td>F</td>
+</tr>
+<tr>
+<th>Binary</th>
+<td>1010</td>
+<td>1111</td>
+</tr>
+<tr>
+<th>Decimal</th>
+<td>10</td>
+<td>15</td>
+</tr>
+</table>
+
+So given the amount of bits *b*, you would take the first *b*
+bits from the address. If *b* were 8, then...
+
+<table>
+<tr>
+<th>
+Address (Hex)
+</th>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+</tr>
+
+<tr>
+<th>
+Address (Binary)
+</th>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+</tr>
+<tr>
+<td></td>
+<td colspan="2">
+First 8
+</td>
+<td colspan="2">
+</td>
+</tr>
+</table>
+
+
+## How to calculate bits in second-level page table
+
+For a two-level paging system with a *p* KB page size,
+we have a 32-bit address. The outer page (1st level) has
+*p<sub>1</sub>* entries. How many bits are used to represent the
+second-level page table?
+
+**Given:**
+
+* *p*: Page size, in KB
+* *p<sub>1</sub>*: Amount of entries in the 1st level page table
+* *32*-bit address
+
+Address layout again:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+* How many bits are needed to represent p<sub>1</sub>?
+	* p<sub>1</sub> = 2<sup>x</sup>
+	* *x*: amount of bits needed to represent p<sub>1</sub>.
+
+* Page offset needs to be able to index *p* bytes
+	* p = 2<sup>y</sup>
+	* *y*: bits needed for page offset
+
+So we have bits for p<sub>1</sub> and offset *d*, but need to find p<sub>2</sub>.
+Our address is 32 bits, so...
+
+p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
 ---
 
@@ -420,181 +641,6 @@ I'm going to read this shit tomorrow.
 ## Structure of the page table
 
 Structure of a Page Table: Page 378, Chapter 8.6
-
-## How to calculate bits for page offset
-
-We have a logical address with a page size of *x* KB.
-In this logical address, how many bits are used to represent the page offset?
-
-**Given:**
-
-* *x*: Page size of logical address, in KB
-
-**Calculate:**
-
-The offset field must contain *y* bits...
-
-2<sup>y</sup> = x
-
-
-## How to calculate entries in page table
-
-How many entries are in a page table if we are using *x* bits
-of a virtual address as the index bits?
-
-**Given:**
-
-* *x*: size of the index bits for a virtual address
-
-**Calculate:**
-
-The amount of entries *y* in the page table...
-
-y = 2<sup>x</sup>
-
-
-## How to calculate page number given address and page size
-
-Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
-and a page size of *p* bytes, what is the page number?
-
-**Given:**
-
-* *a*: hexadecimal address
-* *p*: page size
-
-
-The page size is *p* bytes. In bits *b*, it would be
-
-p = 2<sup>b</sup>
-
-or
-
-b = log<sub>2</sub>( p )
-
-Remember that the logical address layout is like:
-
-<table>
-<tr>
-<td colspan="2">Page</td>
-<td>Offset</td>
-</tr>
-<tr>
-<td>p<sub>1</sub></td>
-<td>p<sub>2</sub></td>
-<td>d</td>
-</tr>
-</table>
-
-Each digit in a hexadecimal number corresponds to 4 bits
-
-<table>
-<tr>
-<th>Hex</th>
-<td>A</td>
-<td>F</td>
-</tr>
-<tr>
-<th>Binary</th>
-<td>1010</td>
-<td>1111</td>
-</tr>
-<tr>
-<th>Decimal</th>
-<td>10</td>
-<td>15</td>
-</tr>
-</table>
-
-So given the amount of bits *b*, you would take the first *b*
-bits from the address. If *b* were 8, then...
-
-<table>
-<tr>
-<th>
-Address (Hex)
-</th>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-</tr>
-
-<tr>
-<th>
-Address (Binary)
-</th>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-</tr>
-<tr>
-<td></td>
-<td colspan="2">
-First 8
-</td>
-<td colspan="2">
-</td>
-</tr>
-</table>
-
-
-## How to calculate bits in second-level page table
-
-For a two-level paging system with a *p* KB page size,
-we have a 32-bit address. The outer page (1st level) has
-*p<sub>1</sub>* entries. How many bits are used to represent the
-second-level page table?
-
-**Given:**
-
-* *p*: Page size, in KB
-* *p<sub>1</sub>*: Amount of entries in the 1st level page table
-* *32*-bit address
-
-Address layout again:
-
-<table>
-<tr>
-<td colspan="2">Page</td>
-<td>Offset</td>
-</tr>
-<tr>
-<td>p<sub>1</sub></td>
-<td>p<sub>2</sub></td>
-<td>d</td>
-</tr>
-</table>
-
-* How many bits are needed to represent p<sub>1</sub>?
-	* p<sub>1</sub> = 2<sup>x</sup>
-	* *x*: amount of bits needed to represent p<sub>1</sub>.
-
-* Page offset needs to be able to index *p* bytes
-	* p = 2<sup>y</sup>
-	* *y*: bits needed for page offset
-
-So we have bits for p<sub>1</sub> and offset *d*, but need to find p<sub>2</sub>.
-Our address is 32 bits, so...
-
-p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
 ---
 
