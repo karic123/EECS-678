@@ -96,9 +96,7 @@ The routine is only loaded as-needed, and not when it is not.
 * Else:
 	* *PAddr = VAddr + BaseAddr*
 
-![MMU with hardware support](images/hardware_realocation.png)
-
-*I also hereby declare this diagram public domain as well.*
+![MMU with hardware support](images/hardware_realocation.png) *I also hereby declare this diagram public domain as well.*
 
 This adds error detection, and we can trap an error.
 
@@ -109,18 +107,27 @@ However, it can lead to fragmentation.
 
 ### Modern - Now with paging™!
 
-(Not really trademarked)
+**(Not really trademarked)**
 
 * Physical memory is divided into fixed-sized blocks, which are called **frames**.
 * Logical memory blocks are divided into fixed-sized blocks, which are called **pages**.
 * page size = frame size
 * A **page table** maps the pages onto frames.
 
-	p: page number		d: page offset (BECAUSE THAT HAS A "d" ANYWHERE IN THE NAME...)
+		p: page number		d: page offset (BECAUSE THAT HAS A "d" ANYWHERE IN THE NAME...)
 
 These addresses look like:
 
 ![Logical address and physical address diagram](images/logical_and_physical_addresses.png) *more fine public domain work by RJM*
+
+
+And the diagram for this MMU scheme:
+
+![MMU with paging](images/mmu_with_paging.png)
+
+And mapping looks like this:
+
+![MMU Memory View](images/memory_view.png)
 
 
 
