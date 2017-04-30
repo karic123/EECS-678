@@ -91,10 +91,14 @@ The routine is only loaded as-needed, and not when it is not.
 
 **Better MMU**:
 
-	* If *VAddr > limit*, then trap and report error
-	* Else *PAddr = VAddr + BaseAddr*
+* If *VAddr > limit*:
+	* Trap and report error
+* Else:
+	* *PAddr = VAddr + BaseAddr*
 
 ![MMU with hardware support](images/hardware_realocation.png)
+
+*I also hereby declare this diagram public domain as well.*
 
 This adds error detection, and we can trap an error.
 
@@ -103,11 +107,41 @@ This also supports variable-sized partitions.
 However, it can lead to fragmentation.
 
 
-### Modern - 
+### Modern - Now with paging™!
+
+(Not really trademarked)
+
+* Physical memory is divided into fixed-sized blocks, which are called **frames**.
+* Logical memory blocks are divided into fixed-sized blocks, which are called **pages**.
+* page size = frame size
+* A **page table** maps the pages onto frames.
+
+	p: page number		d: page offset (BECAUSE THAT HAS A "d" ANYWHERE IN THE NAME...)
+
+These addresses look like:
+
+![Logical address and physical address diagram](images/logical_and_physical_addresses.png) *more fine public domain work by RJM*
+
+
 
 ## Fragmentation
 
+> In computer storage, fragmentation is a phenomenon in which storage space is used inefficiently, reducing capacity or performance and often both
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing))
 
+**Internal fragmentation:**
+
+> Due to the rules governing memory allocation, more computer memory is sometimes allocated than is needed. For example, memory can only be provided to programs in chunks divisible by 4, 8 or 16, and as a result if a program requests perhaps 23 bytes, it will actually get a chunk of 32 bytes. When this happens, the excess memory goes to waste. In this scenario, the unusable memory is contained within an allocated region. This arrangement, termed fixed partitions, suffers from inefficient memory use - any process, no matter how small, occupies an entire partition. This waste is called internal fragmentation.
+
+> Unlike other types of fragmentation, internal fragmentation is difficult to reclaim; usually the best way to remove it is with a design change. For example, in dynamic memory allocation, memory pools drastically cut internal fragmentation by spreading the space overhead over a larger number of objects.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#Internal_fragmentation)
+
+**External fragmentation:**
+
+> External fragmentation arises when free memory is separated into small blocks and is interspersed by allocated memory. It is a weakness of certain storage allocation algorithms, when they fail to order memory used by programs efficiently. The result is that, although free storage is available, it is effectively unusable because it is divided into pieces that are too small individually to satisfy the demands of the application. The term "external" refers to the fact that the unusable storage is outside the allocated regions.
+
+> For example, consider a situation wherein a program allocates 3 continuous blocks of memory and then frees the middle block. The memory allocator can use this free block of memory for future allocations. However, it cannot use this block if the memory to be allocated is larger in size than this free block.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#External_fragmentation)
 
 ## Virtual Address Translation
 
