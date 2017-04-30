@@ -11,6 +11,76 @@ Rachel's summary notes
 These are the topics covered in the slides, but finding those topics
 covered elseware on the internet, such as Wikipedia.
 
+## Goals
+
+Virtual memory allows us to isolate processes, so that they do not
+corrupt each other. It achieves this by abstracting memory out to
+virtual memory, and all processes share the same virtual memory space.
+This also helps us utilize our limited physical memory more efficiently.
+
+> The primary benefits of virtual memory include freeing applications from having to manage a shared memory space, increased security due to memory isolation, and being able to conceptually use more memory than might be physically available, using the technique of paging.
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_memory)
+
+## Concepts to learn
+
+* Virtual address translation
+* Paging and TLB
+* Page table management
+* Swap
+
+## Virtual memory VM
+
+> In computing, virtual memory is a memory management technique that is implemented using both hardware and software. It maps memory addresses used by a program, called virtual addresses, into physical addresses in computer memory. Main storage as seen by a process or task appears as a contiguous address space or collection of contiguous segments. The operating system manages virtual address spaces and the assignment of real memory to virtual memory.
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_memory)
+
+**Hardware support:**
+
+>  Address translation hardware in the CPU, often referred to as a **memory management unit or MMU**, automatically translates virtual addresses to physical addresses.
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_memory)
+
+> A **Translation lookaside buffer (TLB)** is a memory cache that is used to reduce the time taken to access a user memory location.[1][2] It is a part of the chip’s memory-management unit (MMU). The TLB stores the recent translations of virtual memory to physical memory and can be called an address-translation cache.
+[Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+
+**Operating system support:**
+
+* The OS manages the MMU, and sometimes the TLB.
+* The OS determines the address mapping
+
+**Alternatives:**
+
+* Many real-time operating systems don't have virtual memory.
+
+![Virtual memory](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Virtual_memory.svg/620px-Virtual_memory.svg.png)
+*By Ehamberg - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=8352077*
+
+
+
+## Virtual address
+
+## MMU
+
+## Fragmentation
+
+## Virtual Address Translation
+
+## Paging
+
+## Translation Lookaside Buffer TLB
+
+## Multi-level paging
+
+## Two level address translation
+
+## Demand paging
+
+## Page Table Entry PTE
+
+## Partial memory mapping
+
+## Page fault
+
+## Anonymous page
+
 ---
 
 # Vocabulary
