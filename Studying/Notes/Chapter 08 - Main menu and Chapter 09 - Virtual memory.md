@@ -169,21 +169,52 @@ efficient use of memory.
 
 Internal fragmentation, however, may still exist.
 
+**Paging issues:**
+
+* Too big: Waste space, small table size
+* Too small: Large table size, wasted space minimization
+* Typical size: 4 KB
+
+**Calculation!**
+
+		How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?
+		4 GB / 4 KB = 1 Million Pages
+
+		What is the required page table size?
+		1 Page table entry is 4 bytes...
+		1 Million * 4 bytes = 4 MB
+
 Each load and store instruction requires accessing the page table
 to translate the address. The table is stored in meomry, and memory
 is slow to access.
 
 Therefore, we can use the TLB...
 
-## Translation Lookaside Buffer TLB
+### Translation Lookaside Buffer TLB
 
 > A Translation lookaside buffer (TLB) is a memory cache that is used to reduce 
 the time taken to access a user memory location.
 [Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
 
-![MMU with paging and TLB](images/mmu_with_paging_and_tlb.png)
+![MMU with paging and TLB](images/mmu_with_paging_and_tlb.png) *CC-0*
 
 ## Multi-level paging
+
+### Two-level paging
+
+The book's diagram sucked, but [this video](https://www.youtube.com/watch?v=8kBPRrHOTwg)
+made it more clear... Here's my diagram:
+
+![Two-level page table](images/two-level-paging.png)
+
+Note that I'm not 100% sure on the offset *d*... I have the logical address
+diagram from the book's slides, and otherwise drew my page tables
+after the video clip I found. I am only *assuming* that the offset
+works the same as with one-level paging, but I am not certain.
+
+#### Address translation
+
+### Multi-level paging
 
 ## Two level address translation
 
