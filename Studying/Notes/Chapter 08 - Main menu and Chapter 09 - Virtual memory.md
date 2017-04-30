@@ -229,7 +229,23 @@ and this maps to the *frame # (f)*.
 
 The physical address' offset *d* is brought over from the logical address.
 
-### Multi-level paging
+#### How does this save table space?
+
+We can use multi-level paging to save table space.
+
+> The inverted page table keeps a listing of mappings installed for all frames in physical memory. However, this could be quite wasteful. Instead of doing so, we could create a page table structure that contains mappings for virtual pages.
+> It is done by keeping several page tables that cover a certain block of virtual memory.
+> For example, we can create smaller 1024-entry 4K pages that cover 4M of virtual memory.
+[Wikipedia](https://en.wikipedia.org/wiki/Page_table#Multilevel_page_table)
+
+As the video clip (https://youtu.be/8kBPRrHOTwg?t=1m33s) mentions, 
+if there is a large unused part of the address space, where all the
+entries in a given page table have no memory blocks they map to,
+then we don't need that page table, and can remove it from the 
+*outer page table*. We can free space and eliminate the unused page table.
+
+We end up with one large outer page table, and a small number of inner
+page tables, but we save space for all of the unused tables.
 
 ## Two level address translation
 
