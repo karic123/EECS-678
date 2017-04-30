@@ -207,12 +207,27 @@ made it more clear... Here's my diagram:
 
 ![Two-level page table](images/two-level-paging.png)
 
-Note that I'm not 100% sure on the offset *d*... I have the logical address
-diagram from the book's slides, and otherwise drew my page tables
-after the video clip I found. I am only *assuming* that the offset
-works the same as with one-level paging, but I am not certain.
-
 #### Address translation
+
+We have a virtual address...
+
+<table>
+<tr><th colspan="3">Virtual Address</th></tr>
+<tr>
+<td>1st Level p<sub>1</sub></td>
+<td>2nd Level p<sub>2</sub></td>
+<td>Offset d</td></tr>
+</table>
+
+The *base ptr* points to the beginning of the **1st level page table**,
+and we use *p<sub>1</sub>* to get a position, which maps to
+one specific 2nd level page table.
+
+In the **2nd level page table**, we begin at the beginning of this
+table as well. *p<sub>2</sub>* is used to get a position,
+and this maps to the *frame # (f)*.
+
+The physical address' offset *d* is brought over from the logical address.
 
 ### Multi-level paging
 
