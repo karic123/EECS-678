@@ -70,11 +70,29 @@ This also helps us utilize our limited physical memory more efficiently.
 
 ## MMU Implementations
 
+### Simple - Dynamic relocation using a relocation register
+
+The textbook and the slides have this thing, but I can't find any references
+to this type of structure on the internet, aside from *other* Operating Systems
+classes that use the same textbook, so I'm guessing that this is just a 
+theoretical example.
+
+Here is my public domain version of the diagram that everybody uses:
+
+![Dynamic relocation](images/dynamic_relocation.png)
+
 **Simple MMU**, with some *BaseAddr*, we get the *PAddr* with *PAddr = VAddr + BaseAddr*.
 
 This would be fast, but has no protection and it is wasteful.
 
+The routine is only loaded as-needed, and not when it is not.
 
+
+
+
+### Better - 
+
+### Modern - 
 
 ## Fragmentation
 
