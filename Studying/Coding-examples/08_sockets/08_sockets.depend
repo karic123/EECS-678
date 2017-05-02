@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1493696778 source:/home/rayechell/STUDY/EECS-678/Studying/Coding-examples/08_sockets/socket_program.cpp
+	<iostream>
+	<string>
+	"socket.hpp"
+
+1493696477 /home/rayechell/STUDY/EECS-678/Studying/Coding-examples/08_sockets/socket.hpp
+	<string>
+	<iostream>
+	<sys/socket.h>
+	<sys/un.h>
+	<unistd.h>
+
+1493696666 source:/home/rayechell/STUDY/EECS-678/Studying/Coding-examples/08_sockets/socket.cpp
+	"socket.hpp"
+
