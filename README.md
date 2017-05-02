@@ -2,6 +2,11 @@
 
 Introduction to Operating Systems, Spring 2017
 
+## Items
+
+* [Studying notes](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Notes)
+* [Example code](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Coding-examples)
+
 ## Don't cheat off my stuff!
 
 If you're having trouble with specific content, check out the **Studying/Coding-examples**
@@ -21,7 +26,12 @@ not having access to the resources that I would like to have.
 
 Whenever there is a deficit in resources that I want, I create those resources.
 
-So, essentially, I'm cataloging what I'm learning in my GitHub account.
+So, essentially, I am self-learning. I'm not getting much out of the
+course lectures themselves, so I go through the textbook and other
+online resources - like Wikipedia - to learn more about the topics
+that the teacher highlights.
+
+I'm cataloging what I'm learning in my GitHub account.
 This is mostly for my own future reference, but perhaps my notes or
 example code (See the "Learning" folder) will help someone else grasp
 these concepts.

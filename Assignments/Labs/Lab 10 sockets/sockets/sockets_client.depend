@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1493691358 source:/home/rayechell/STUDY/EECS-678/Assignments/Labs/Lab 10 sockets/sockets/server.c
+	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<unistd.h>
+	<sys/socket.h>
+	<sys/un.h>
+
