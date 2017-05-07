@@ -111,29 +111,38 @@ to the exam.
 
 # Final Exam review
 
-	Topics: 	* Virtual Memory			* Paging			* MMU / TLB
-				* Address Translation		* Demand Paging		* Page Replacement & Swapping
-				* I/O Devices				* Disk				*  I/O Mechanisms
-				* Filesystem				* Name resolution	* Storage caches
-				* Network					* Security & Virtual Machine
+Topics:
 
+* [Main memory](#main-memory)
+	* [Paging](#paging)
+	* [MMU](#memory-management-unit-mmu)
+	* [TLB]()
+	* [Address Translation]()
+* [Virtual memory](#virtual-memory)
+	* [Demand paging](#demand-paging)
+	* [Page replacement & swapping](#page-replacement-swapping)
+* I/O Devices
+* Disk
+*  I/O Mechanisms
+* Filesystem
+* Name resolution
+* Storage caches
+* Network
+* Security & Virtual Machine
 
+Application problem examples:
+* Main memory
+* Virtual memory
 
+---
 
+## Main memory
 
+### Swapping
 
-## Virtual Memory
+### Segmentation
 
-How the operating system makes it appear that there's more memory
-than there actually is, so that each process thinks it has more memory than
-is available.
-
-
-
-
-
-
-## Paging
+### Paging
 
 The OS creates the page table and the hardware reads the page table.
 
@@ -160,10 +169,7 @@ efficient use of memory. Internal fragmentation, however, may still exist.
 
 
 
-
-
-
-## Types of MMUs
+### Memory-management unit (MMU)
 
 > A memory management unit (MMU), sometimes called paged memory management unit (PMMU), is a computer hardware unit having all memory references passed through itself, primarily performing the translation of virtual memory addresses to physical addresses. It is usually implemented as part of the central processing unit (CPU), but it also can be in the form of a separate integrated circuit.
 
@@ -172,11 +178,11 @@ efficient use of memory. Internal fragmentation, however, may still exist.
 
 
 
-### Segmentation MMU (base+limit)
+#### Segmentation MMU (base+limit)
 
 ![Dynamic relocation](images/dynamic_relocation.png)
 
-**Simple MMU**, with some *BaseAddr*, we get the *PAddr* with *PAddr = VAddr + BaseAddr*.
+**Simple MMU**, with some ```BaseAddr```, we get the ```PAddr``` with ```PAddr = VAddr + BaseAddr```.
 
 This would be fast, but has no protection and it is wasteful.
 
@@ -185,10 +191,10 @@ The routine is only loaded as-needed, and not when it is not.
 
 **Better MMU**:
 
-* If *VAddr > limit*:
+* If ```VAddr > limit```:
 	* Trap and report error
 * Else:
-	* *PAddr = VAddr + BaseAddr*
+	* ```PAddr = VAddr + BaseAddr```
 
 ![MMU with hardware support](images/hardware_realocation.png) *I also hereby declare this diagram public domain as well.*
 
@@ -200,8 +206,7 @@ However, it can lead to fragmentation.
 
 
 
-
-### Paging MMUs (page tables)
+#### Paging MMU (page tables)
 
 * Physical memory is divided into fixed-sized blocks, which are called **frames**.
 * Logical memory blocks are divided into fixed-sized blocks, which are called **pages**.
@@ -224,10 +229,9 @@ And mapping looks like this:
 
 
 
+#### Translation lookaside buffer (TLB)
 
-## Translation lookaside buffer
-
-> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce 
+> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce
 the time taken to access a user memory location.
 [Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
 
@@ -235,20 +239,21 @@ the time taken to access a user memory location.
 
 
 
-### Two-level paging
+### Multi-level paging
+
+#### Two-level paging
 
 ![Two-level page table](images/two-level-paging.png)
 
 
 
 
-## Fragmentation
+### Fragmentation
 
 > In computer storage, fragmentation is a phenomenon in which storage space is used inefficiently, reducing capacity or performance and often both
 [Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing))
 
-
-### Internal fragmentation:
+#### Internal fragmentation:
 
 > Due to the rules governing memory allocation, more computer memory is sometimes allocated than is needed. For example, memory can only be provided to programs in chunks divisible by 4, 8 or 16, and as a result if a program requests perhaps 23 bytes, it will actually get a chunk of 32 bytes. When this happens, the excess memory goes to waste. In this scenario, the unusable memory is contained within an allocated region. This arrangement, termed fixed partitions, suffers from inefficient memory use - any process, no matter how small, occupies an entire partition. This waste is called internal fragmentation.
 
@@ -257,7 +262,7 @@ the time taken to access a user memory location.
 
 
 
-### External fragmentation:
+#### External fragmentation:
 
 > External fragmentation arises when free memory is separated into small blocks and is interspersed by allocated memory. It is a weakness of certain storage allocation algorithms, when they fail to order memory used by programs efficiently. The result is that, although free storage is available, it is effectively unusable because it is divided into pieces that are too small individually to satisfy the demands of the application. The term "external" refers to the fact that the unusable storage is outside the allocated regions.
 
@@ -267,8 +272,75 @@ the time taken to access a user memory location.
 
 
 
+---
 
-## Application: Calculate page table size
+## Virtual memory
+
+How the operating system makes it appear that there's more memory
+than there actually is, so that each process thinks it has more memory than
+is available.
+
+
+### Demand paging
+
+
+
+
+
+### Page replacement & swapping
+
+
+
+### Second-chance algorithm
+
+
+
+
+---
+
+## I/O systems
+
+
+### I/O devices
+
+### Disk
+
+### I/O mechanisms
+
+
+
+
+
+
+---
+
+## File-system
+
+### Name resolution
+
+### Storage caches
+
+### Network
+
+---
+
+## Security & virtual machine
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Problems: Main Memory
+
+### Application: Calculate page table size
 
 **How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
 
@@ -282,9 +354,7 @@ the time taken to access a user memory location.
 
 
 
-
-
-## Application: Virtual Address Translation
+### Application: Virtual Address Translation
 
 Translating a virtual address to a physical address...
 
@@ -319,7 +389,7 @@ and we use the *frame # (f)* given from the page table.
 
 
 
-## Application: Virtual Address Translation pt 2
+### Application: Virtual Address Translation pt 2
 
 We have a virtual address...
 
@@ -344,7 +414,7 @@ The physical address' offset *d* is brought over from the logical address.
 
 
 
-## Application: How to calculate bits for page offset
+### Application: How to calculate bits for page offset
 
 We have a logical address with a page size of *x* KB.
 In this logical address, how many bits are used to represent the page offset?
@@ -360,7 +430,7 @@ The offset field must contain *y* bits...
 2<sup>y</sup> = x
 
 
-## Application: How to calculate entries in page table
+### Application: How to calculate entries in page table
 
 How many entries are in a page table if we are using *x* bits
 of a virtual address as the index bits?
@@ -377,7 +447,7 @@ y = 2<sup>x</sup>
 
 
 
-## Application: How to calculate page number given address and page size
+### Application: How to calculate page number given address and page size
 
 Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
 and a page size of *p* bytes, what is the page number?
@@ -480,7 +550,7 @@ First 8
 </table>
 
 
-## Application: How to calculate bits in second-level page table
+### Application: How to calculate bits in second-level page table
 
 For a two-level paging system with a *p* KB page size,
 we have a 32-bit address. The outer page (1st level) has
@@ -521,11 +591,26 @@ Our address is 32 bits, so...
 p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
 
+---
 
 
+## Problems: Virtual Memory
 
+### Application: LRU Replacement
 
+---
 
+## Problems: File-system
+
+### Application: Maximum disk size
+
+### Application: Maximum size of a file
+
+### Knowledge: File system layers
+
+### Knowledge: Transfers between memory and disk
+
+### Knowledge: Linux VFS architecture
 
 
 
