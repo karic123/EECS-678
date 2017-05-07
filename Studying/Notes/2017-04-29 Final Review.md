@@ -183,8 +183,6 @@ This would be fast, but has no protection and it is wasteful.
 The routine is only loaded as-needed, and not when it is not.
 
 
-
-
 **Better MMU**:
 
 * If *VAddr > limit*:
@@ -237,6 +235,12 @@ the time taken to access a user memory location.
 
 
 
+### Two-level paging
+
+![Two-level page table](images/two-level-paging.png)
+
+
+
 ## Application: Calculate page table size
 
 **How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
@@ -283,6 +287,28 @@ and we use the *frame # (f)* given from the page table.
 </table>
 
 
+
+## Application: Virtual Address Translation pt 2
+
+We have a virtual address...
+
+<table>
+<tr><th colspan="3">Virtual Address</th></tr>
+<tr>
+<td>1st Level p<sub>1</sub></td>
+<td>2nd Level p<sub>2</sub></td>
+<td>Offset d</td></tr>
+</table>
+
+The *base ptr* points to the beginning of the **1st level page table**,
+and we use *p<sub>1</sub>* to get a position, which maps to
+one specific 2nd level page table.
+
+In the **2nd level page table**, we begin at the beginning of this
+table as well. *p<sub>2</sub>* is used to get a position,
+and this maps to the *frame # (f)*.
+
+The physical address' offset *d* is brought over from the logical address.
 
 ---
 
