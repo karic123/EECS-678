@@ -170,6 +170,8 @@ efficient use of memory. Internal fragmentation, however, may still exist.
 > An MMU effectively performs virtual memory management, handling at the same time memory protection, cache control, bus arbitration and, in simpler computer architectures (especially 8-bit systems), bank switching.
 [Wikipedia](https://en.wikipedia.org/wiki/Memory_management_unit)
 
+
+
 ### Segmentation MMU (base+limit)
 
 ![Dynamic relocation](images/dynamic_relocation.png)
@@ -183,15 +185,44 @@ The routine is only loaded as-needed, and not when it is not.
 
 
 
+**Better MMU**:
+
+* If *VAddr > limit*:
+	* Trap and report error
+* Else:
+	* *PAddr = VAddr + BaseAddr*
+
+![MMU with hardware support](images/hardware_realocation.png) *I also hereby declare this diagram public domain as well.*
+
+This adds error detection, and we can trap an error.
+
+This also supports variable-sized partitions.
+
+However, it can lead to fragmentation.
+
+
+
+
 ### Paging MMUs (page tables)
 
+* Physical memory is divided into fixed-sized blocks, which are called **frames**.
+* Logical memory blocks are divided into fixed-sized blocks, which are called **pages**.
+* page size = frame size
+* A **page table** maps the pages onto frames.
 
-* Page table
-	* Know: virtual address to physical address
-	* Benefit of large page table: Less TLB space for virtual address space
-	* Benefit of small page table: Faster
-* Other concepts to know
-	* Fragmentation
+		p: page number		d: page offset (BECAUSE THAT HAS A "d" ANYWHERE IN THE NAME...)
+
+These addresses look like:
+
+![Logical address and physical address diagram](images/logical_and_physical_addresses.png)
+
+And the diagram for this MMU scheme:
+
+![MMU with paging](images/mmu_with_paging.png)
+
+And mapping looks like this:
+
+![MMU Memory View](images/memory_view.png)
 
 
 
@@ -208,13 +239,11 @@ the time taken to access a user memory location.
 
 ## Application: Calculate page table size
 
-**Calculation!**
-
-*How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?*
+**How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
 
 4 GB / 4 KB = 1 Million Pages
 
-*What is the required page table size?*
+**What is the required page table size?**
 
 1 Page table entry is 4 bytes...
 
