@@ -32,9 +32,9 @@ def get_GB_to_KB( gbVal ):
 # Virtual address format: 24 bits
 
 #   4 bits    3 bits  1 bit
-# ------------------------
-# | frame # | unused | V |
-# ------------------------ 
+# --------------------------------
+# | frame # | unused | Valid bit |
+# --------------------------------
 
 # Page table entry: 8 bits
 
@@ -162,7 +162,7 @@ def get_page_number( page_size_bytes, address ):
     # Each place in hex is 4 bits, so the first two #s will be the page #
     page_num = address[:2]
     return page_num
-    
+
 
 page_size_bytes = 2048
 address = "0703fe"
@@ -186,12 +186,20 @@ print( "Page number (HEX): " + page_number )
 # Virtual address format: 24 bits
 
 #   4 bits    3 bits  1 bit
-# ------------------------
-# | frame # | unused | V |
-# ------------------------
+# --------------------------------
+# | frame # | unused | Valid bit |
+# --------------------------------
 
 # Page table entry: 8 bit
 
+#   Addr	+0	+1	+2	+3	+4	+5	+6	+7	+8	+9	+A	+B	+C	+D	+E	+F
+#   0x000				31
+#   0x010
+#   0x020				41
+#   …
+#   0x100	00	01						01	00				01
+#   …
+#   0x200
 
 
 

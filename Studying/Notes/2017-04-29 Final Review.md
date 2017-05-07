@@ -9,14 +9,14 @@ FML.
 		1. [MMU](#memory-management-unit-mmu)
 		1. [TLB](#translation-lookaside-buffer-tlb)
 		1. PROBLEMS
-			1. [Calculate size of a single page](#Application-Calculate-size-of-single-page)
-			1. [Calculate virtual address space](#Application-Calculate-virtual-address-space)
-			1. [Calculate physical address space](#Application-Calculate-physical-address-space)
-			1. [Address translation](#Application-Address-translation)
-			1. [Calculate page table size](#Application-Calculate-page-table-size)
-			1. [Calculate required page table size](#Application-Calculate-required-page-table-size)
-			1. [Calculate bits for page offset](#Application-Calculate-bits-for-page-offset)
-			1. [Page number given page size and address](#Application-page-number-given-page-size-and-address)
+			1. [Calculate size of a single page](#application-calculate-size-of-single-page)
+			1. [Calculate virtual address space](#application-calculate-virtual-address-space)
+			1. [Calculate physical address space](#application-calculate-physical-address-space)
+			1. [Address translation](#application-address-translation)
+			1. [Calculate page table size](#application-calculate-page-table-size)
+			1. [Calculate required page table size](#application-calculate-required-page-table-size)
+			1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
+			1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
 		
 	1. [Virtual memory](#virtual-memory)
 		1. [Demand paging](#demand-paging)
@@ -308,7 +308,7 @@ The size of the physical address space is **2<sup>frame</sup> * 2<sup>page_table
 
 Given the following information:
 
-**Virtual Address**
+**Page Layout**
 
 <table>
 	<tr><td> 8 bits </td><td> 8 bits </td><td> 8 bits </td></tr>
@@ -317,11 +317,11 @@ Given the following information:
 
 *Virtual address format: 8 + 8 + 8 = 24 bits*
 
-**Physical Address**
+**Frame Layout**
 
 <table>
 	<tr><td> 4 bits </td><td> 3 bits </td><td> 1 bit </td></tr>
-	<tr><th> frame # </th><th> unused </th><th> V </th></tr>
+	<tr><th> frame # </th><th> unused </th><th> Valid Bit </th></tr>
 </table>
 
 * Page table entry: 4 + 3 + 1 = 8 bits*
@@ -332,11 +332,11 @@ Given the following information:
 
 <table border="0" cellspacing="0" cellpadding="0" class="ta1"><colgroup><col width="99"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="34"/><col width="36"/><col width="36"/><col width="36"/><col width="36"/><col width="36"/><col width="35"/></colgroup><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>Addr</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+0</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+1</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+2</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+3</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+4</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+5</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+6</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+7</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+8</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>+9</p></td><td style="text-align:left;width:23.41pt; " class="ce2"><p>+A</p></td><td style="text-align:left;width:23.41pt; " class="ce2"><p>+B</p></td><td style="text-align:left;width:23.41pt; " class="ce2"><p>+C</p></td><td style="text-align:left;width:23.41pt; " class="ce2"><p>+D</p></td><td style="text-align:left;width:23.41pt; " class="ce2"><p>+E</p></td><td style="text-align:left;width:22.59pt; " class="ce2"><p>+F</p></td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>0x000</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:right; width:21.86pt; " class="ce2"><p>31</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>0x010</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>0x020</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:right; width:21.86pt; " class="ce2"><p>41</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>…</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>0x100</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>00</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>01</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"><p>01</p></td><td style="text-align:left;width:21.86pt; " class="ce2"><p>00</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"><p>01</p></td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>…</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr><tr class="ro1"><td style="text-align:left;width:64.01pt; " class="ce1"><p>0x200</p></td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:21.86pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:23.41pt; " class="ce2"> </td><td style="text-align:left;width:22.59pt; " class="ce2"> </td></tr></table>
 
-* Row 0x100 is where the first level page table is stored.
-* ```0x0703FE```, first level index is ```07```: 
-From the virtual address, the first 8 bits show the first level index.
-* ```0x0703FE```, the second level index is ```03``` (next 8 bits).
-* ```0x0703FE```, the offset is ```FE``` (last 8 bits).
+* The column headers *+0, +1, ... +F*, correspond to the *level index*.
+* The first page begins from row *0x100*, and then subsequent pages begin at row *0x000* at the base.
+* Each character in a hex address is 4 bits.
+
+#### Find the ```Paddr```, given that ```Vaddr = 0x0703FE```.
 
 <table>
 	<tr><td> 8 bits </td><td> 8 bits </td><td> 8 bits </td></tr>
@@ -344,21 +344,34 @@ From the virtual address, the first 8 bits show the first level index.
 	<tr><th><pre> 07 </pre></th><th> <pre> 03 </pre> </th><th> <pre> FE </pre> </th></tr>
 </table>
 
-* We have an 8-bit page table entry
-* Use index ```07``` to look at the cell at *(+7, 0x100)*.
-	* This cell contains ```01```.
-	* ```01```: ```0``` is the Frame #, ```1``` is the value.
-* The start frame # of the 2nd level page table is ```0```. Look at row ```0x000```.
-	* 2nd level index is ```3```. Look at the cell at *(+3, 0x000)*.
-	* This cell contains ```31```.
-	* ```3``` is a frame number
-* We use the offset in the resulting address
+**First level:**
 
-<table>
-	<tr><td> 4 bits </td><td> 3 bits </td><td> 1 bit </td></tr>
-	<tr><th> frame # </th><th> unused </th><th> V </th></tr>
-	<tr><th><pre> 3 </pre></th><th> <pre>  </pre> </th><th> <pre> FE </pre> </th></tr>
-</table>
+* Start at row ```0x100```, and move over by the *1st level index* (from the virtual address), ```07```.
+* The value in this cell is ```01```.
+	* Interpret as: *0 is the frame number*, and *1 is the valid bit*.
+	* If the valid bit is *0*, then the address is invalid.
+
+**Second level:**
+
+* Start at row ```0x000```, and move over by the *2nd level index* (from the virtual address), ```03```.
+* The value in this cell is ```31```.
+	* *3* is the data we will use in our physical address, and *1* again is the valid bit.
+
+**Offset:**
+
+* The offset from the virtual address is also part of the physical address.
+
+Final address: ```0x3FE```.
+
+
+#### Find the ```Paddr```, given that ```Vaddr = 0x072370```.
+
+1. First level: Start at row ```0x100```, offset by ```07```: Value is *01*. Frame is 0 and valid bit is 1.
+1. Second level: Start at row ```0x000```, offset by ```23```:
+	1. Go down by 2, and over by 3. This value is ```41```.
+1. Keep the offset
+
+Final address: ```0x470```
 
 
 ### Application: Calculate page table size
