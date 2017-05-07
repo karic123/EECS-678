@@ -9,13 +9,10 @@ FML.
 		1. [MMU](#memory-management-unit-mmu)
 		1. [TLB](#translation-lookaside-buffer-tlb)
 		1. PROBLEMS
-			1. [Calculate page table size](#application-calculate-page-table-size)
-			1. [Virtual address translation 1](#application-virtual-address-translation)
-			1. [Virtual address translation 2](#application-virtual-address-translation-pt-2)
-			1. [Calculate bits for page offset](#application-how-to-calculate-bits-for-page-offset)
-			1. [Calculate entries in page table](#application-how-to-calculate-entries-in-page-table)
-			1. [Calculate page number given address and page size](#application-how-to-calculate-page-number-given-address-and-page-size)
-			1. [Calculate bits in second-level page table](#application-how-to-calculate-bits-in-second-level-page-table)
+			1. [Calculate size of a single page](#Application--Calculate-size-of-single-page)
+			1. [Calculate virtual address space](#Application--Calculate-virtual-address-space)
+			1. [Calculate physical address space](#Application--Calculate-physical-address-space)
+			1. [Calculate page table size](#Application--Calculate-page-table-size)
 		
 	1. [Virtual memory](#virtual-memory)
 		1. [Demand paging](#demand-paging)
@@ -241,264 +238,12 @@ is available.
 
 ## Problems: Main Memory
 
-### Application: Calculate page table size
+### Application: Calculate size of single page
 
-**How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
 
-4 GB / 4 KB = 1 Million Pages
-
-**What is the required page table size?**
-
-1 Page table entry is 4 bytes...
-
-1 Million * 4 bytes = 4 MB
-
-
-
-### Application: Virtual Address Translation
-
-Translating a virtual address to a physical address...
-
-Given a virtual address ```0x12345678```, or:
-
-<table>
-<tr><th colspan="2">Virtual Address</th></tr>
-<tr><th>p</th><th>d</th></tr>
-<tr><td>0x12345</td><td>0x678</td></tr>
-</table>
-
-The *p* portion goes to the *page table* at location ```0x12345```:
-
-<table>
-<tr><th colspan="2">Page Table</th></tr>
-<tr><th>0x00000</th><td>...</td></tr>
-<tr><th>...</th><td>...</td></tr>
-<tr><th>0x12345<th>Frame #: 0xabcde</td></tr>
-<tr><th>...</th><td>...</td></tr>
-</table>
-
-We use the same *offset (d)* from the virtual address to the physical address,
-and we use the *frame # (f)* given from the page table.
-
-<table>
-<tr><th colspan="2">Physical Address</th></tr>
-<tr><th>f</th><th>d</th></tr>
-<tr><td>0xabcde</td><td>0x678</td></tr>
-</table>
-
-
-
-
-
-### Application: Virtual Address Translation pt 2
-
-We have a virtual address...
-
-<table>
-<tr><th colspan="3">Virtual Address</th></tr>
-<tr>
-<td>1st Level p<sub>1</sub></td>
-<td>2nd Level p<sub>2</sub></td>
-<td>Offset d</td></tr>
-</table>
-
-The *base ptr* points to the beginning of the **1st level page table**,
-and we use *p<sub>1</sub>* to get a position, which maps to
-one specific 2nd level page table.
-
-In the **2nd level page table**, we begin at the beginning of this
-table as well. *p<sub>2</sub>* is used to get a position,
-and this maps to the *frame # (f)*.
-
-The physical address' offset *d* is brought over from the logical address.
-
-
-
-
-### Application: How to calculate bits for page offset
-
-We have a logical address with a page size of *x* KB.
-In this logical address, how many bits are used to represent the page offset?
-
-**Given:**
-
-* *x*: Page size of logical address, in KB
-
-**Calculate:**
-
-The offset field must contain *y* bits...
-
-2<sup>y</sup> = x
-
-
-### Application: How to calculate entries in page table
-
-How many entries are in a page table if we are using *x* bits
-of a virtual address as the index bits?
-
-**Given:**
-
-* *x*: size of the index bits for a virtual address
-
-**Calculate:**
-
-The amount of entries *y* in the page table...
-
-y = 2<sup>x</sup>
-
-
-
-### Application: How to calculate page number given address and page size
-
-Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
-and a page size of *p* bytes, what is the page number?
-
-**Given:**
-
-* *a*: hexadecimal address
-* *p*: page size
-
-
-The page size is *p* bytes. In bits *b*, it would be
-
-p = 2<sup>b</sup>
-
-or
-
-b = log<sub>2</sub>( p )
-
-Remember that the logical address layout is like:
-
-<table>
-<tr>
-<td colspan="2">Page</td>
-<td>Offset</td>
-</tr>
-<tr>
-<td>p<sub>1</sub></td>
-<td>p<sub>2</sub></td>
-<td>d</td>
-</tr>
-</table>
-
-Each digit in a hexadecimal number corresponds to 4 bits
-
-<table>
-<tr>
-<th>Hex</th>
-<td>A</td>
-<td>F</td>
-</tr>
-<tr>
-<th>Binary</th>
-<td>1010</td>
-<td>1111</td>
-</tr>
-<tr>
-<th>Decimal</th>
-<td>10</td>
-<td>15</td>
-</tr>
-</table>
-
-So given the amount of bits *b*, you would take the first *b*
-bits from the address. If *b* were 8, then...
-
-<table>
-<tr>
-<th>
-Address (Hex)
-</th>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-<td>
-F
-</td>
-</tr>
-
-<tr>
-<th>
-Address (Binary)
-</th>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-<td>
-1111
-</td>
-</tr>
-<tr>
-<td></td>
-<td colspan="2">
-First 8
-</td>
-<td colspan="2">
-</td>
-</tr>
-</table>
-
-
-### Application: How to calculate bits in second-level page table
-
-For a two-level paging system with a *p* KB page size,
-we have a 32-bit address. The outer page (1st level) has
-*p<sub>1</sub>* entries. How many bits are used to represent the
-second-level page table?
-
-**Given:**
-
-* *p*: Page size, in KB
-* *p<sub>1</sub>*: Amount of entries in the 1st level page table
-* *32*-bit address
-
-Address layout again:
-
-<table>
-<tr>
-<td colspan="2">Page</td>
-<td>Offset</td>
-</tr>
-<tr>
-<td>p<sub>1</sub></td>
-<td>p<sub>2</sub></td>
-<td>d</td>
-</tr>
-</table>
-
-* How many bits are needed to represent p<sub>1</sub>?
-	* p<sub>1</sub> = 2<sup>x</sup>
-	* *x*: amount of bits needed to represent p<sub>1</sub>.
-
-* Page offset needs to be able to index *p* bytes
-	* p = 2<sup>y</sup>
-	* *y*: bits needed for page offset
-
-So we have bits for p<sub>1</sub> and offset *d*, but need to find p<sub>2</sub>.
-Our address is 32 bits, so...
-
-p<sub>2</sub> = 32 - p<sub>1</sub> - d
-
-### Code: Calculate size of single page
-
-
-[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
 ```python
-# Address Translation
-
 #   x bits      y bits      z bits
 # ----------------------------------
 # | 1st level | 2nd level | offset |
@@ -510,14 +255,15 @@ def get_size_of_single_page( offset_bits ):
     return 2 ** offset_bits # 2^offset_bits
 ```
 
-### Code: Calculate virtual address space
+The size of a single page is **2<sup>offset</sup>**.
 
 
-[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+
+### Application: Calculate virtual address space
+
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
 ```python
-# Address Translation
-
 #   x bits      y bits      z bits
 # ----------------------------------
 # | 1st level | 2nd level | offset |
@@ -530,9 +276,13 @@ def get_size_of_virtual_address_space_bytes( virtual_address_format_bits ):
     return 2 ** virtual_address_format_bits # 2^virtual_address_format_bits
 ```
 
-### Code: Calculate physical address space
+The size of the virtual address space is **2<sup>virtual_address_format</sup>**
 
-[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+
+
+### Application: Calculate physical address space
+
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
 ```python
 #   a bits    b bits  c bits
@@ -547,6 +297,97 @@ def get_size_of_physical_address_space_bytes( frame_bits, page_table_entry_bits 
     return ( 2 ** frame_bits ) * ( 2 ** page_table_entry_bits ) # 2^frame_bits + 2^page_table_entry_bits
 ```
 
+The size of the physical address space is **2<sup>frame</sup> * 2<sup>page_table_entry_bits</sup>**
+
+
+
+### Application: Calculate page table size
+
+
+
+**How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
+
+1. 4 GB / 4 KB = 1 Million Pages
+
+I don't know what the *@ 32 bit* specifically measures,
+and I don't know where that 4KB came from.
+
+
+
+### Application: Calculate required page table size
+
+**What is the required page table size? for 4 GB (of physical memory...?) @ 32 bit?**
+
+1. 1 Page table entry is 4 bytes...
+1. 1 Million (pages) * 4 bytes = 4 MB
+
+```python
+def get_page_table_size( pages_needed, something_bits ):
+	something_bytes = something_bits / 8
+	return pages_needed * something_bytes
+```
+
+
+### Application: Calculate bits for page offset
+
+```python
+def get_offset_size_bits( page_size_KB ):
+	# This needs to be in terms of bits...
+	offset_bits = numpy.log2( page_size_KB )
+	return offset_bits
+```
+
+In other words, with a page size of ```x```, and the page offset as ```y``` bits...
+
+* 2<sup>y</sup> = x
+* log<sub>2</sub>( x ) = y
+
+
+### Application: Entries in a page table
+
+**How many entries ```y``` are in a page table if we are using ```x``` bits
+of a virtual address as the index bits?**
+
+```python
+def get_entries_in_page_table( index_bits ):
+    return 2 ** index_bits # 2^index_bits
+```
+
+* y = 2<sup>x</sup>
+
+
+### Application: Page number given page size and address
+
+**Given some logical address *(a<sub>)16</sub>* (hexadecimal #)
+and a page size of ```p``` bytes, what is the page number?**
+
+1. Convert page size from bytes to bits:
+	1. *p = 2<sup>b</sup>* or
+	1. *b = log<sub>2</sub>( p )*
+
+Remember that the logical address layout is like:
+
+<table>
+<tr> <td colspan="2"> Page </td> 						<td> Offset </td> </tr>
+<tr> <td> p<sub>1</sub> </td> <td> p<sub>2</sub> </td> 	<td>d</td> </tr>
+</table>
+
+Each digit in a hexadecimal number corresponds to 4 bits
+
+<table>
+<tr> <th> Hex </th> 	<td> A </td> 	<td> F </td> </tr>
+<tr> <th> Binary </th> 	<td> 1010 </td> <td> 1111 </td> </tr>
+<tr> <th> Decimal </th> <td> 10 </td> 	<td> 15 </td> </tr>
+</table>
+
+So given the amount of bits *b*, you would take the first *b*
+bits from the address. If *b* were 8, then...
+
+<table> 
+<tr> <th> Address (Hex) </th> <td> F </td> <td> F </td> <td> F </td> <td> F </td> </tr>
+<tr> <th> Address (Binary) </th> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> </tr> 
+<tr> <td> </td> <td colspan="2"> First 8 </td> <td colspan="2"> </td> </tr>
+</table>
 
 ---
 
