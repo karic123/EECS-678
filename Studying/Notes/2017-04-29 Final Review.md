@@ -493,21 +493,56 @@ p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
 ### Code: Calculate size of single page
 
+
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+
 ```python
+# Address Translation
+
+#   x bits      y bits      z bits
+# ----------------------------------
+# | 1st level | 2nd level | offset |
+# ----------------------------------
+
+# Virtual address format: x + y + z bits
+
 def get_size_of_single_page( offset_bits ):
     return 2 ** offset_bits # 2^offset_bits
 ```
 
 ### Code: Calculate virtual address space
 
+
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+
 ```python
+# Address Translation
+
+#   x bits      y bits      z bits
+# ----------------------------------
+# | 1st level | 2nd level | offset |
+# ----------------------------------
+
+# Virtual address format: x + y + z bits
+# Virtual address space: 2^virtual_address_format
+
 def get_size_of_virtual_address_space_bytes( virtual_address_format_bits ):
     return 2 ** virtual_address_format_bits # 2^virtual_address_format_bits
 ```
 
 ### Code: Calculate physical address space
 
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/address_translation.py)
+
 ```python
+#   a bits    b bits  c bits
+# ------------------------
+# | frame # | unused | V |
+# ------------------------ 
+
+# Page table entry: a + b + c bits
+# Frame: a bits
+
 def get_size_of_physical_address_space_bytes( frame_bits, page_table_entry_bits ):
     return ( 2 ** frame_bits ) * ( 2 ** page_table_entry_bits ) # 2^frame_bits + 2^page_table_entry_bits
 ```
