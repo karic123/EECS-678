@@ -7,11 +7,11 @@ FML.
 	1. [Main memory](#main-memory)
 		1. [Paging](#paging)
 		1. [MMU](#memory-management-unit-mmu)
-		1. [TLB]()
-		1. [Address Translation]()
+		1. [TLB](#translation-lookaside-buffer-tlb)
 	1. [Virtual memory](#virtual-memory)
 		1. [Demand paging](#demand-paging)
-		1. [Page replacement & swapping](#page-replacement-swapping)
+		1. [Page replacement & swapping](#page-replacement--swapping)
+		1. [Second-chance algorithm](#second-chance-algorithm)
 	1. I/O Devices
 	1. Disk
 	1. I/O Mechanisms
@@ -22,7 +22,16 @@ FML.
 	1. Security & Virtual Machine
 	1. PROBLEMS:
 		1. Main memory
+			1. [Calculate page table size](#application-calculate-page-table-size)
+			1. [Virtual address translation 1](#application-virtual-address-translation)
+			1. [Virtual address translation 2](#application-virtual-address-translation-pt-2)
+			1. [Calculate bits for page offset](#application-how-to-calculate-bits-for-page-offset)
+			1. [Calculate entries in page table](#application-how-to-calculate-entries-in-page-table)
+			1. [Calculate page number given address and page size](#application-how-to-calculate-page-number-given-address-and-page-size)
+			1. [Calculate bits in second-level page table](#application-how-to-calculate-bits-in-second-level-page-table)
 		1. Virtual memory
+			1. []()
+			1. []()
 		
 1. [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
 
@@ -33,10 +42,6 @@ FML.
 # Final Exam review
 
 ## Main memory
-
-### Swapping
-
-### Segmentation
 
 ### Paging
 
@@ -92,7 +97,7 @@ The routine is only loaded as-needed, and not when it is not.
 * Else:
 	* ```PAddr = VAddr + BaseAddr```
 
-![MMU with hardware support](images/hardware_realocation.png) *I also hereby declare this diagram public domain as well.*
+![MMU with hardware support](images/hardware_realocation.png)
 
 This adds error detection, and we can trap an error.
 
