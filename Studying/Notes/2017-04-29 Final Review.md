@@ -491,6 +491,27 @@ Our address is 32 bits, so...
 
 p<sub>2</sub> = 32 - p<sub>1</sub> - d
 
+### Code: Calculate size of single page
+
+```python
+def get_size_of_single_page( offset_bits ):
+    return 2 ** offset_bits # 2^offset_bits
+```
+
+### Code: Calculate virtual address space
+
+```python
+def get_size_of_virtual_address_space_bytes( virtual_address_format_bits ):
+    return 2 ** virtual_address_format_bits # 2^virtual_address_format_bits
+```
+
+### Code: Calculate physical address space
+
+```python
+def get_size_of_physical_address_space_bytes( frame_bits, page_table_entry_bits ):
+    return ( 2 ** frame_bits ) * ( 2 ** page_table_entry_bits ) # 2^frame_bits + 2^page_table_entry_bits
+```
+
 
 ---
 
