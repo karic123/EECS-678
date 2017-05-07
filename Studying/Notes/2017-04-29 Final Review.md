@@ -111,6 +111,128 @@ to the exam.
 
 # Final Exam review
 
+		Topics: 	* Virtual Memory			* Paging			* MMU / TLB
+					* Address Translation		* Demand Paging		* Page Replacement & Swapping
+					* I/O Devices				* Disk				*  I/O Mechanisms
+					* Filesystem				* Name resolution	* Storage caches
+					* Network					* Security & Virtual Machine
+
+## Virtual Memory
+
+	How the operating system makes it appear that there's more memory
+	than there actually is, so that each process thinks it has more memory than
+	is available.
+
+## Paging
+
+	The OS creates the page table and the hardware reads the page table.
+
+	Advantages are that there is no external fragmentation; there is
+	efficient use of memory. Internal fragmentation, however, may still exist.
+
+	**Operating system support:**
+
+	* The OS manages the MMU, and sometimes the TLB.
+	* The OS determines the address mapping
+
+	> In computing, virtual memory is a memory management technique that is implemented using both hardware and software. It maps memory addresses used by a program, called virtual addresses, into physical addresses in computer memory. Main storage as seen by a process or task appears as a contiguous address space or collection of contiguous segments. The operating system manages virtual address spaces and the assignment of real memory to virtual memory.
+	[Wikipedia](https://en.wikipedia.org/wiki/Virtual_memory)
+
+	**Paging issues:**
+
+	* Too big: Waste space, small table size
+	* Too small: Large table size, wasted space minimization
+	* Typical size: 4 KB
+
+	**Alternatives:**
+
+	* Many real-time operating systems don't have virtual memory.
+
+## Types of MMUs
+
+	> A memory management unit (MMU), sometimes called paged memory management unit (PMMU), is a computer hardware unit having all memory references passed through itself, primarily performing the translation of virtual memory addresses to physical addresses. It is usually implemented as part of the central processing unit (CPU), but it also can be in the form of a separate integrated circuit.
+
+	> An MMU effectively performs virtual memory management, handling at the same time memory protection, cache control, bus arbitration and, in simpler computer architectures (especially 8-bit systems), bank switching.
+	[Wikipedia](https://en.wikipedia.org/wiki/Memory_management_unit)
+
+### Segmentation MMU (base+limit)
+
+	![Dynamic relocation](images/dynamic_relocation.png)
+
+	**Simple MMU**, with some *BaseAddr*, we get the *PAddr* with *PAddr = VAddr + BaseAddr*.
+
+	This would be fast, but has no protection and it is wasteful.
+
+	The routine is only loaded as-needed, and not when it is not.
+
+### Paging MMUs (page tables)
+
+* Page table
+	* Know: virtual address to physical address
+	* Benefit of large page table: Less TLB space for virtual address space
+	* Benefit of small page table: Faster
+* Other concepts to know
+	* Fragmentation
+
+## Translation lookaside buffer
+
+	> A Translation lookaside buffer (TLB) is a memory cache that is used to reduce 
+	the time taken to access a user memory location.
+	[Wikipedia](https://en.wikipedia.org/wiki/Translation_lookaside_buffer)
+
+	![MMU with paging and TLB](images/mmu_with_paging_and_tlb.png)
+
+
+
+## Application: Calculate page table size
+
+	**Calculation!**
+
+	*How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?*
+
+	4 GB / 4 KB = 1 Million Pages
+
+	*What is the required page table size?*
+
+	1 Page table entry is 4 bytes...
+
+	1 Million * 4 bytes = 4 MB
+
+
+
+## Application: Virtual Address Translation
+
+	Translating a virtual address to a physical address...
+
+	Given a virtual address ```0x12345678```, or:
+
+	<table>
+	<tr><th colspan="2">Virtual Address</th></tr>
+	<tr><th>p</th><th>d</th></tr>
+	<tr><td>0x12345</td><td>0x678</td></tr>
+	</table>
+
+	The *p* portion goes to the *page table* at location ```0x12345```:
+
+	<table>
+	<tr><th colspan="2">Page Table</th></tr>
+	<tr><th>0x00000</th><td>...</td></tr>
+	<tr><th>...</th><td>...</td></tr>
+	<tr><th>0x12345<th>Frame #: 0xabcde</td></tr>
+	<tr><th>...</th><td>...</td></tr>
+	</table>
+
+	We use the same *offset (d)* from the virtual address to the physical address,
+	and we use the *frame # (f)* given from the page table.
+
+	<table>
+	<tr><th colspan="2">Physical Address</th></tr>
+	<tr><th>f</th><th>d</th></tr>
+	<tr><td>0xabcde</td><td>0x678</td></tr>
+	</table>
+
+
+
 ---
 
 # Final Exam postmortem

@@ -165,9 +165,7 @@ and we use the *frame # (f)* given from the page table.
 ## Paging
 
 Advantages are that there is no external fragmentation; there is
-efficient use of memory.
-
-Internal fragmentation, however, may still exist.
+efficient use of memory. Internal fragmentation, however, may still exist.
 
 **Paging issues:**
 
