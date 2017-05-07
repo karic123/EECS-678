@@ -241,6 +241,33 @@ the time taken to access a user memory location.
 
 
 
+
+## Fragmentation
+
+> In computer storage, fragmentation is a phenomenon in which storage space is used inefficiently, reducing capacity or performance and often both
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing))
+
+
+### Internal fragmentation:
+
+> Due to the rules governing memory allocation, more computer memory is sometimes allocated than is needed. For example, memory can only be provided to programs in chunks divisible by 4, 8 or 16, and as a result if a program requests perhaps 23 bytes, it will actually get a chunk of 32 bytes. When this happens, the excess memory goes to waste. In this scenario, the unusable memory is contained within an allocated region. This arrangement, termed fixed partitions, suffers from inefficient memory use - any process, no matter how small, occupies an entire partition. This waste is called internal fragmentation.
+
+> Unlike other types of fragmentation, internal fragmentation is difficult to reclaim; usually the best way to remove it is with a design change. For example, in dynamic memory allocation, memory pools drastically cut internal fragmentation by spreading the space overhead over a larger number of objects.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#Internal_fragmentation)
+
+
+
+### External fragmentation:
+
+> External fragmentation arises when free memory is separated into small blocks and is interspersed by allocated memory. It is a weakness of certain storage allocation algorithms, when they fail to order memory used by programs efficiently. The result is that, although free storage is available, it is effectively unusable because it is divided into pieces that are too small individually to satisfy the demands of the application. The term "external" refers to the fact that the unusable storage is outside the allocated regions.
+
+> For example, consider a situation wherein a program allocates 3 continuous blocks of memory and then frees the middle block. The memory allocator can use this free block of memory for future allocations. However, it cannot use this block if the memory to be allocated is larger in size than this free block.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#External_fragmentation)
+
+
+
+
+
 ## Application: Calculate page table size
 
 **How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
@@ -252,6 +279,8 @@ the time taken to access a user memory location.
 1 Page table entry is 4 bytes...
 
 1 Million * 4 bytes = 4 MB
+
+
 
 
 
@@ -288,6 +317,8 @@ and we use the *frame # (f)* given from the page table.
 
 
 
+
+
 ## Application: Virtual Address Translation pt 2
 
 We have a virtual address...
@@ -309,6 +340,204 @@ table as well. *p<sub>2</sub>* is used to get a position,
 and this maps to the *frame # (f)*.
 
 The physical address' offset *d* is brought over from the logical address.
+
+
+
+
+## Application: How to calculate bits for page offset
+
+We have a logical address with a page size of *x* KB.
+In this logical address, how many bits are used to represent the page offset?
+
+**Given:**
+
+* *x*: Page size of logical address, in KB
+
+**Calculate:**
+
+The offset field must contain *y* bits...
+
+2<sup>y</sup> = x
+
+
+## Application: How to calculate entries in page table
+
+How many entries are in a page table if we are using *x* bits
+of a virtual address as the index bits?
+
+**Given:**
+
+* *x*: size of the index bits for a virtual address
+
+**Calculate:**
+
+The amount of entries *y* in the page table...
+
+y = 2<sup>x</sup>
+
+
+
+## Application: How to calculate page number given address and page size
+
+Given some logical address *a*<sub>(16)</sub> (hexadecimal #)
+and a page size of *p* bytes, what is the page number?
+
+**Given:**
+
+* *a*: hexadecimal address
+* *p*: page size
+
+
+The page size is *p* bytes. In bits *b*, it would be
+
+p = 2<sup>b</sup>
+
+or
+
+b = log<sub>2</sub>( p )
+
+Remember that the logical address layout is like:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+Each digit in a hexadecimal number corresponds to 4 bits
+
+<table>
+<tr>
+<th>Hex</th>
+<td>A</td>
+<td>F</td>
+</tr>
+<tr>
+<th>Binary</th>
+<td>1010</td>
+<td>1111</td>
+</tr>
+<tr>
+<th>Decimal</th>
+<td>10</td>
+<td>15</td>
+</tr>
+</table>
+
+So given the amount of bits *b*, you would take the first *b*
+bits from the address. If *b* were 8, then...
+
+<table>
+<tr>
+<th>
+Address (Hex)
+</th>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+<td>
+F
+</td>
+</tr>
+
+<tr>
+<th>
+Address (Binary)
+</th>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+<td>
+1111
+</td>
+</tr>
+<tr>
+<td></td>
+<td colspan="2">
+First 8
+</td>
+<td colspan="2">
+</td>
+</tr>
+</table>
+
+
+## Application: How to calculate bits in second-level page table
+
+For a two-level paging system with a *p* KB page size,
+we have a 32-bit address. The outer page (1st level) has
+*p<sub>1</sub>* entries. How many bits are used to represent the
+second-level page table?
+
+**Given:**
+
+* *p*: Page size, in KB
+* *p<sub>1</sub>*: Amount of entries in the 1st level page table
+* *32*-bit address
+
+Address layout again:
+
+<table>
+<tr>
+<td colspan="2">Page</td>
+<td>Offset</td>
+</tr>
+<tr>
+<td>p<sub>1</sub></td>
+<td>p<sub>2</sub></td>
+<td>d</td>
+</tr>
+</table>
+
+* How many bits are needed to represent p<sub>1</sub>?
+	* p<sub>1</sub> = 2<sup>x</sup>
+	* *x*: amount of bits needed to represent p<sub>1</sub>.
+
+* Page offset needs to be able to index *p* bytes
+	* p = 2<sup>y</sup>
+	* *y*: bits needed for page offset
+
+So we have bits for p<sub>1</sub> and offset *d*, but need to find p<sub>2</sub>.
+Our address is 32 bits, so...
+
+p<sub>2</sub> = 32 - p<sub>1</sub> - d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
