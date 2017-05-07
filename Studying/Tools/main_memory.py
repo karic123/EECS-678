@@ -22,7 +22,7 @@ def get_GB_to_KB( gbVal ):
     return gbVal * 1024 * 1024
 
 # ----------------------------------------------------
-# Address Translation
+# Information from the page and frame
 
 #   8 bits      8 bits      8 bits
 # ----------------------------------
@@ -172,6 +172,33 @@ print( "" )
 print( "Page size (bytes): " + str( page_size_bytes ) )
 print( "Address:           " + address )
 print( "Page number (HEX): " + page_number )
+
+
+
+# ----------------------------------------------------
+# Address Translation
+
+#   8 bits      8 bits      8 bits
+# ----------------------------------
+# | 1st level | 2nd level | offset |
+# ----------------------------------
+
+# Virtual address format: 24 bits
+
+#   4 bits    3 bits  1 bit
+# ------------------------
+# | frame # | unused | V |
+# ------------------------
+
+# Page table entry: 8 bit
+
+
+
+
+
+
+
+
 
 
 
