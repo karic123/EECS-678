@@ -2,31 +2,31 @@
 
 FML.
 
-* [FINAL EXAM REVIEW](#final-exam-review)
+1. [FINAL EXAM REVIEW](#final-exam-review)
 
-	* [Main memory](#main-memory)
-		* [Paging](#paging)
-		* [MMU](#memory-management-unit-mmu)
-		* [TLB]()
-		* [Address Translation]()
-	* [Virtual memory](#virtual-memory)
-		* [Demand paging](#demand-paging)
-		* [Page replacement & swapping](#page-replacement-swapping)
-	* I/O Devices
-	* Disk
-	*  I/O Mechanisms
-	* Filesystem
-	* Name resolution
-	* Storage caches
-	* Network
-	* Security & Virtual Machine
-	* PROBLEMS:
-		* Main memory
-		* Virtual memory
+	1. [Main memory](#main-memory)
+		1. [Paging](#paging)
+		1. [MMU](#memory-management-unit-mmu)
+		1. [TLB]()
+		1. [Address Translation]()
+	1. [Virtual memory](#virtual-memory)
+		1. [Demand paging](#demand-paging)
+		1. [Page replacement & swapping](#page-replacement-swapping)
+	1. I/O Devices
+	1. Disk
+	1. I/O Mechanisms
+	1. Filesystem
+	1. Name resolution
+	1. Storage caches
+	1. Network
+	1. Security & Virtual Machine
+	1. PROBLEMS:
+		1. Main memory
+		1. Virtual memory
 		
-* [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
+1. [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
 
-* [MIDTERM ANALYSIS](#midterm-analysis)
+1. [MIDTERM ANALYSIS](#midterm-analysis)
 
 ---
 
