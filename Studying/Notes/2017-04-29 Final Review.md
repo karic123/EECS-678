@@ -2,38 +2,35 @@
 
 FML.
 
-* [Go to my final review stuff](#final-exam-review)
-* [Go to my final exam postmortem](#final-exam-postmortem)
-* [Go to my midterm analysis](#midterm-analysis)
+* [FINAL EXAM REVIEW](#final-exam-review)
+
+	* [Main memory](#main-memory)
+		* [Paging](#paging)
+		* [MMU](#memory-management-unit-mmu)
+		* [TLB]()
+		* [Address Translation]()
+	* [Virtual memory](#virtual-memory)
+		* [Demand paging](#demand-paging)
+		* [Page replacement & swapping](#page-replacement-swapping)
+	* I/O Devices
+	* Disk
+	*  I/O Mechanisms
+	* Filesystem
+	* Name resolution
+	* Storage caches
+	* Network
+	* Security & Virtual Machine
+	* PROBLEMS:
+		* Main memory
+		* Virtual memory
+		
+* [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
+
+* [MIDTERM ANALYSIS](#midterm-analysis)
 
 ---
 
 # Final Exam review
-
-Topics:
-
-* [Main memory](#main-memory)
-	* [Paging](#paging)
-	* [MMU](#memory-management-unit-mmu)
-	* [TLB]()
-	* [Address Translation]()
-* [Virtual memory](#virtual-memory)
-	* [Demand paging](#demand-paging)
-	* [Page replacement & swapping](#page-replacement-swapping)
-* I/O Devices
-* Disk
-*  I/O Mechanisms
-* Filesystem
-* Name resolution
-* Storage caches
-* Network
-* Security & Virtual Machine
-
-Application problem examples:
-* Main memory
-* Virtual memory
-
----
 
 ## Main memory
 
