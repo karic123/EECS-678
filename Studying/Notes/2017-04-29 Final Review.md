@@ -23,7 +23,7 @@ FML.
 		1. [Demand paging](#demand-paging)
 			1. [Page faults](#page-faults)
 			1. [Copy-on-write](#copy-on-write)
-			1. [Page Table Entry (PTE) format](page-table-entry--pte--format)
+			1. [Page Table Entry (PTE) format](page-table-entry-pte-format)
 		1. [Page replacement & swapping](#page-replacement--swapping)
 		1. [Second-chance algorithm](#second-chance-algorithm)
 		1. PROBLEMS
@@ -237,12 +237,77 @@ the page to write to, and the parent/child have separate versions of this page.
 
 ### Page replacement & swapping
 
+> In a computer operating system that uses paging for virtual memory management, page replacement algorithms decide which memory pages to page out (swap out, write to disk) when a page of memory needs to be allocated.
+[Wikipedia](https://en.wikipedia.org/wiki/Page_replacement)
+
+Page replacement is about deciding a *victim page* that will be removed,
+to make space for the new page in memory.
+
+Algorithms:
+
+* **OPT: Theoretically optimal**
+	* Where you evict the page that will go unused the longest. 
+	* Need to read the future.
+* NRU: Not recently used
+* **LRU: Least recently used**
+	* Look at history, and decide who hasn't been used for the longest period.
+	* Good performance, but it is complex and requires hardware support.
+* **FIFO: First-in, first-out**
+	* Evict the oldest page first; 
+	* fair, but can throw out frequently-used pages.
+* **Second-chance**
+	* Use the refrence bit to keep track of if an item was recently accessed.
+	* See algorithm below.
+* Clock
+* Random 
+	* Simple but unpredictable.
+* Not frequently used
+* Aging
+
+#### Least Recently Used (LRU)
+
+> LRU works on the idea that pages that have been most heavily used in the past few instructions are most likely to be used heavily in the next few instructions too.
+> One important advantage of the LRU algorithm is that it is amenable to full statistical analysis. It has been proven, for example, that LRU can never result in more than N-times more page faults than OPT algorithm, where N is proportional to the number of pages in the managed pool.
+> On the other hand, LRU's weakness is that its performance tends to degenerate under many quite common reference patterns. For example, if there are N pages in the LRU pool, an application executing a loop over array of N + 1 pages will cause a page fault on each and every access.
+[Wikipedia](https://en.wikipedia.org/wiki/Page_replacement#Least_recently_used)
+
+Look at history, and decide who hasn't been used for the longest period.
+
+Good performance, but it is complex and requires hardware support.
+
+Implementations:
+
+* Record a **timestamp** when a page is accessed. Select the oldest page to remove.
+* Keep a **list** of pages, in order of access time. More recently used towards head, least recenlty used towards back. The tail is the least-recently-used page.
 
 
-### Second-chance algorithm
 
+#### Second-chance algorithm
 
+<table>
+<tr> <td> 1 bit </td> <td> 1 bit </td> <td> 1 bit </td> <td> 2 bits </td> <td> 20 bits </td> </tr>
+<tr> <td> Valid bit (V) </td> <td> Modify bit (M) </td> <td> Reference bit (R) </td> <td> Protection bits (P) </td> <td> Page frame # </td> </tr>
+</table>
 
+* Replace one of the *old pages*, but not necessarily the *oldest page*.
+* Reference bit is used by the MMU.
+* List page frames in a circularly linked list (?)
+
+Page fault:
+
+1. Advance the "next victim" pointer by one space
+1. Check the reference bit of the item the "next victim" pointer is pointing to
+1. If R is 1:
+	1. Set R to 0.
+	1. Move "next victim" pointer by one space.
+1. Else:
+	1. This victim is selected.
+	1. End it.
+
+#### Thrashing
+
+> In computer science, thrashing occurs when a computer's virtual memory subsystem is in a constant state of paging, rapidly exchanging data in memory for data on disk, to the exclusion of most application-level processing.[1] This causes the performance of the computer to degrade or collapse. The situation may continue indefinitely until the underlying cause is addressed.
+[Wikipedia](https://en.wikipedia.org/wiki/Thrashing_(computer_science))
 
 ---
 
