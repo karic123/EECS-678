@@ -21,7 +21,18 @@ waste time on topics that the teacher will not cover on the exam.*
 <th> I/O Devices </th>
 <th> File-system </th>
 <th> Network </th>
-<th> Security &amp; Virtual Machines </th>
+<th> Security </th>
+<th> Misc </th>
+</tr>
+
+<tr>
+
+<td><ol>
+<li> <a href="#"> Paging </a> </li>
+<li> <a href="#"> MMU </a> </li>
+<li> <a href="#"> TLB </a> </li>
+</ol></td>
+
 </tr>
 </table>
 
