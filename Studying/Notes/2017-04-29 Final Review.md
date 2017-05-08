@@ -20,9 +20,6 @@ waste time on topics that the teacher will not cover on the exam.*
 <th> Virtual Memory </th>
 <th> I/O Devices </th>
 <th> File-system </th>
-<th> Network </th>
-<th> Security </th>
-<th> Misc </th>
 </tr>
 
 <tr>
@@ -33,6 +30,27 @@ waste time on topics that the teacher will not cover on the exam.*
 <li> <a href="#"> TLB </a> </li>
 </ol></td>
 
+<td><ol>
+<li> <a href="#"> Demand paging </a> </li>
+<li> <a href="#"> Page replacement </a> </li>
+<li> <a href="#"> Second-chance algorithm </a> </li>
+</ol></td>
+
+<td><ol>
+<li> <a href="#"> Blorp </a> </li>
+<li> <a href="#"> MMU </a> </li>
+<li> <a href="#"> TLB </a> </li>
+</ol></td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Network </th>
+<th> Security </th>
+<th> Misc </th>
 </tr>
 </table>
 
