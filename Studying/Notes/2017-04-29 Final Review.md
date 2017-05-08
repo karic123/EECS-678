@@ -17,6 +17,7 @@ FML.
 			1. [Calculate required page table size](#application-calculate-required-page-table-size)
 			1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
 			1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
+			1. [Calculate entries in a page table](#application-entries-in-a-page-table)
 		
 	1. [Virtual memory](#virtual-memory)
 		1. [Demand paging](#demand-paging)
