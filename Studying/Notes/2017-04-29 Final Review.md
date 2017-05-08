@@ -566,11 +566,151 @@ a **Directory Cache** helps with speeding up name resolution , and a
 
 ## Network
 
+### OSI 7 Layers
+
+> The Open Systems Interconnection model (OSI model) is a conceptual model that characterizes and standardizes the communication functions of a telecommunication or computing system without regard to their underlying internal structure and technology.
+[Wikipedia](https://en.wikipedia.org/wiki/OSI_layers)
+
+<table class="wikitable" style="margin: 1em auto 1em auto;">
+<tr>
+<th colspan="5">OSI Model</th>
+</tr>
+<tr>
+<th colspan="2">Layer</th>
+<th><a href="/wiki/Protocol_data_unit" title="Protocol data unit">Protocol data unit</a> (PDU)</th>
+<th style="width:30em;">Function<sup id="cite_ref-3" class="reference"><a href="#cite_note-3">[3]</a></sup></th>
+</tr>
+<tr>
+<th rowspan="4">Host<br />
+layers</th>
+<td style="background:#d8ec9b;">7.&#160;<a href="/wiki/Application_layer" title="Application layer">Application</a></td>
+<td style="background:#d8ec9c;" rowspan="3"><a href="/wiki/Data_(computing)" title="Data (computing)">Data</a></td>
+<td style="background:#d8ec9c;"><small>High-level <a href="/wiki/API" class="mw-redirect" title="API">APIs</a>, including resource sharing, remote file access</small></td>
+</tr>
+<tr>
+<td style="background:#d8ec9b;">6.&#160;<a href="/wiki/Presentation_layer" title="Presentation layer">Presentation</a></td>
+<td style="background:#d8ec9b;"><small>Translation of data between a networking service and an application; including <a href="/wiki/Character_encoding" title="Character encoding">character encoding</a>, <a href="/wiki/Data_compression" title="Data compression">data compression</a> and <a href="/wiki/Encryption" title="Encryption">encryption/decryption</a></small></td>
+</tr>
+<tr>
+<td style="background:#d8ec9b;">5. <a href="/wiki/Session_layer" title="Session layer">Session</a></td>
+<td style="background:#d8ec9b;"><small>Managing communication <a href="/wiki/Session_(computer_science)" title="Session (computer science)">sessions</a>, i.e. continuous exchange of information in the form of multiple back-and-forth transmissions between two nodes</small></td>
+</tr>
+<tr>
+<td style="background:#e7ed9c;">4. <a href="/wiki/Transport_layer" title="Transport layer">Transport</a></td>
+<td style="background:#e7ed9c;"><a href="/wiki/Packet_segmentation" title="Packet segmentation">Segment</a> (TCP) / <a href="/wiki/Datagram" title="Datagram">Datagram</a> (UDP)</td>
+<td style="background:#e7ed9c;"><small>Reliable transmission of data segments between points on a network, including <a href="/wiki/Packet_segmentation" title="Packet segmentation">segmentation</a>, <a href="/wiki/Acknowledgement_(data_networks)" title="Acknowledgement (data networks)">acknowledgement</a> and <a href="/wiki/Multiplexing" title="Multiplexing">multiplexing</a></small></td>
+</tr>
+<tr>
+<th rowspan="3">Media<br />
+layers</th>
+<td style="background:#eddc9c;">3. <a href="/wiki/Network_layer" title="Network layer">Network</a></td>
+<td style="background:#eddc9c;"><a href="/wiki/Network_packet" title="Network packet">Packet</a></td>
+<td style="background:#eddc9c;"><small>Structuring and managing a multi-node network, including <a href="/wiki/Address_space" title="Address space">addressing</a>, <a href="/wiki/Routing" title="Routing">routing</a> and <a href="/wiki/Network_traffic_control" title="Network traffic control">traffic control</a></small></td>
+</tr>
+<tr>
+<td style="background:#e9c189;">2. <a href="/wiki/Data_link_layer" title="Data link layer">Data link</a></td>
+<td style="background:#e9c189;"><a href="/wiki/Frame_(networking)" title="Frame (networking)">Frame</a></td>
+<td style="background:#e9c189;"><small>Reliable transmission of data frames between two nodes connected by a physical layer</small></td>
+</tr>
+<tr>
+<td style="background:#e9988a;">1. <a href="/wiki/Physical_layer" title="Physical layer">Physical</a></td>
+<td style="background:#e9988a;"><a href="/wiki/Bit" title="Bit">Bit</a></td>
+<td style="background:#e9988a;"><small>Transmission and reception of raw bit streams over a physical medium</small></td>
+</tr>
+</table>
+
+[Table from Wikipedia](https://en.wikipedia.org/wiki/OSI_layers#Description_of_OSI_layers)
+
+### TCP/IP Layers
+
+> The Internet protocol suite is the conceptual model and set of communications protocols used on the Internet and similar computer networks. It is commonly known as TCP/IP because the original protocols in the suite are the Transmission Control Protocol (TCP) and the Internet Protocol (IP).
+[Wikipedia](https://en.wikipedia.org/wiki/TCPIP)
+
+**Link layer**
+
+> The link layer has the networking scope of the local network connection to which a host is attached.
+[Wikipedia](https://en.wikipedia.org/wiki/TCPIP#Link_layer)
+
+**Internet layer**
+
+> The internet layer has the responsibility of sending packets across potentially multiple networks. Internetworking requires sending data from the source network to the destination network. This process is called routing.
+[Wikipedia](https://en.wikipedia.org/wiki/TCPIP#Internet_layer)
+
+**Transport layer**
+
+> The transport layer establishes basic data channels that applications use for task-specific data exchange. The layer establishes process-to-process connectivity, meaning it provides end-to-end services that are independent of the structure of user data and the logistics of exchanging information for any particular specific purpose.
+[Wikipedia](https://en.wikipedia.org/wiki/TCPIP#Transport_layer)
+
+**Application layer**
+
+> The application layer includes the protocols used by most applications for providing user services or exchanging application data over the network connections established by the lower level protocols, but this may include some basic network support services, such as many routing protocols, and host configuration protocols. Examples of application layer protocols include the Hypertext Transfer Protocol (HTTP), the File Transfer Protocol (FTP), the Simple Mail Transfer Protocol (SMTP), and the Dynamic Host Configuration Protocol (DHCP).
+[Wikipedia](https://en.wikipedia.org/wiki/TCPIP#Application_layer)
+
+### Layering pros and cons
+
+[Comparison of TCP/IP and OSI layering @ Wikipedia](https://en.wikipedia.org/wiki/TCPIP#Comparison_of_TCP.2FIP_and_OSI_layering)
+
+For OSI layers, a pro is that there is a separation of concerns, but the
+cons are that there is overhead and duplication.
+
+### Steps to send/receive packet
+
+**Sending a packet**
+
+1. Application layer:
+    1. Application writes to the socket
+    1. INet checks socket
+    1. Socket writes to protocol
+1. Transport layer:
+    1. TCP creates packet buffer
+    1. TCP flils in header
+1. Internet layer:
+    1. IP gets socket data
+    1. IP fills in header
+1. Link layer:
+    1. Packet goes on queue
+    1. Scheduler runs device driver
+    1. Device prepares, sends packet
+    1. Packet goes out on medium.
+
+[From G. Herrin, Linux IP Networking: A Guide to the Implementation and Modification of the Linux Protocol Stack, 2000](http://oai.dtic.mil/oai/oai?verb=getRecord&metadataPrefix=html&identifier=ADA377980)
+
+**Receiving a packet**
+
+1. Link layer:
+    1. Packet arrives on medium
+    1. Device checks, stores packet
+    1. Packet goes on backlog queue
+    1. (Wait for scheduler)
+    1. Scheduler runs "bottom half"
+    1. net_bh pops packet queue
+    1. net_bh matches protocol (IP)
+1. Internet layer:
+    1. IP checks for errors
+1. Transport layer:
+    1. TCP checks for errors
+    1. Packet goes in socket queue
+1. Application layer:
+    1. Application reads from socket
+    1. Socket reads from queue
+    
+[From G. Herrin, Linux IP Networking: A Guide to the Implementation and Modification of the Linux Protocol Stack, 2000](http://oai.dtic.mil/oai/oai?verb=getRecord&metadataPrefix=html&identifier=ADA377980)
+
 ---
 
 ## Security & virtual machine
 
+### Buffer overflow bugs
 
+### Virtual machine monitor VMM
+
+#### Native VMM
+
+#### Hosted VMM
+
+#### Full virtualization
+
+#### Para virtualization
 
 
 
