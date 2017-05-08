@@ -2,43 +2,41 @@
 
 FML.
 
-**SECTIONS:** [Final exam review](#final-exam-review), [Final exam postmortem](#final-exam-postmortem), [Midterm exam analysis](#midterm-analysis)
+1. [FINAL EXAM REVIEW](#final-exam-review)
 
-**TABLE OF CONTENTS: Final Exam review topics**
+	1. [Main memory](#main-memory)
+		1. [Paging](#paging)
+		1. [MMU](#memory-management-unit-mmu)
+		1. [TLB](#translation-lookaside-buffer-tlb)
+		1. PROBLEMS
+			1. [Calculate size of a single page](#application-calculate-size-of-single-page)
+			1. [Calculate virtual address space](#application-calculate-virtual-address-space)
+			1. [Calculate physical address space](#application-calculate-physical-address-space)
+			1. [Address translation](#application-address-translation)
+			1. [Calculate page table size](#application-calculate-page-table-size)
+			1. [Calculate required page table size](#application-calculate-required-page-table-size)
+			1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
+			1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
+		
+	1. [Virtual memory](#virtual-memory)
+		1. [Demand paging](#demand-paging)
+		1. [Page replacement & swapping](#page-replacement--swapping)
+		1. [Second-chance algorithm](#second-chance-algorithm)
+		1. PROBLEMS
+			1. []()
+			1. []()
+	1. I/O Devices
+	1. Disk
+	1. I/O Mechanisms
+	1. Filesystem
+	1. Name resolution
+	1. Storage caches
+	1. Network
+	1. Security & Virtual Machine
+		
+1. [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
 
-*These topics are all items that were specifically mentioned in the
-final exam review slides, or from the weekly Blackboard quizzes.
-No extra information from the textbook.*
-
-1. [Main memory](#main-memory)
-    1. [Paging](#paging)
-    1. [MMU](#memory-management-unit-mmu)
-    1. [TLB](#translation-lookaside-buffer-tlb)
-    1. PROBLEMS
-        1. [Calculate size of a single page](#application-calculate-size-of-single-page)
-        1. [Calculate virtual address space](#application-calculate-virtual-address-space)
-        1. [Calculate physical address space](#application-calculate-physical-address-space)
-        1. [Address translation](#application-address-translation)
-        1. [Calculate page table size](#application-calculate-page-table-size)
-        1. [Calculate required page table size](#application-calculate-required-page-table-size)
-        1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
-        1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
-        1. [Calculate entries in a page table](#application-entries-in-a-page-table)
-    
-1. [Virtual memory](#virtual-memory)
-    1. [Demand paging](#demand-paging)
-        1. [Page faults](#page-faults)
-        1. [Copy-on-write](#copy-on-write)
-        1. [Page Table Entry (PTE) format](page-table-entry-pte-format)
-    1. [Page replacement & swapping](#page-replacement--swapping)
-    1. [Second-chance algorithm](#second-chance-algorithm)
-    1. PROBLEMS
-        1. [LRU Replacement](#application-lru-replacement)
-        1. []()
-1. I/O Devices
-1. Filesystem
-1. Network
-1. Security & Virtual Machine
+1. [MIDTERM ANALYSIS](#midterm-analysis)
 
 ---
 
@@ -187,13 +185,15 @@ is available.
 
 ### Demand paging
 
-> In computer operating systems, demand paging (as opposed to anticipatory paging) is a method of virtual memory management. In a system that uses demand paging, the operating system copies a disk page into physical memory only if an attempt is made to access it and that page is not already in memory (i.e., if a page fault occurs). It follows that a process begins execution with none of its pages in physical memory, and many page faults will occur until most of a process's working set of pages is located in physical memory. This is an example of a lazy loading technique.
-[Wikipedia](https://en.wikipedia.org/wiki/Demand_paging)
+> In computer operating systems, demand paging (as opposed to anticipatory paging) is a method of virtual memory management. In a system that uses demand paging, the operating system copies a disk page into physical memory only if an attempt is made to access it and that page is not already in memory (i.e., if a page fault occurs).
 
+> It follows that a process begins execution with none of its pages in physical memory, and many page faults will occur until most of a process's working set of pages is located in physical memory. This is an example of a lazy loading technique.
+[Wikipedia](https://en.wikipedia.org/wiki/Demand_paging)
 
 #### Page faults
 
 > A page fault (sometimes called #PF, PF or hard fault[a]) is a type of exception raised by computer hardware when a running program accesses a memory page that is not currently mapped by the memory management unit (MMU) into the virtual address space of a process.
+
 > When handling a page fault, the operating system generally tries to make the required page accessible at the location in physical memory, or terminates the program in case of an illegal memory access.
 [Wikipedia](https://en.wikipedia.org/wiki/Page_fault)
 
@@ -201,262 +201,41 @@ is available.
 #### Copy-on-write
 
 > Copy-on-write (COW), sometimes referred to as implicit sharing[1] or shadowing,[2] is a resource-management technique used in computer programming to efficiently implement a "duplicate" or "copy" operation on modifiable resources.
-> If a resource is duplicated but not modified, it is not necessary to create a new resource; the resource can be shared between the copy and the original. Modifications must still create a copy, hence the technique: the copy operation is deferred to the first write. By sharing resources in this way, it is possible to significantly reduce the resource consumption of unmodified copies, while adding a small overhead to resource-modifying operations.
-[Wikipedia](https://en.wikipedia.org/wiki/Copy_on_write)
+If a resource is duplicated but not modified, it is not necessary to create a new resource; the resource can be shared between the copy and the original. Modifications must still create a copy, hence the technique: the copy operation is deferred to the first write.
+By sharing resources in this way, it is possible to significantly reduce the resource consumption of unmodified copies, while adding a small overhead to resource-modifying operations.
+[Wikipedia](https://en.wikipedia.org/wiki/Copy-on-write)
 
-**Without copy-on-write:**
-
-When we call ```fork()```, do we want to copy the entire parents' page onto new page frames?
-
-* If the parent is using a lot of memory, then the ```fork()``` would take a long time.
-* If ```exec()``` is immediately called after ```fork()```, then it was a waste!
-
-**Copy-on-write:**
-
-* Copy the *page table* of the parent instead. This is faster; the page table is smaller.
-* Now both the parent and child are pointing to the same page table.
-* Once the child or the parent wants to do a write, *then* we create a copy of
-the page to write to, and the parent/child have separate versions of this page.
-* Until written to, all pages are listed as *READ ONLY*. 
-* Once a copy of the page is created during a write, both the page copies are set to *READ/WRITE*.
-
-#### Page Table Entry (PTE) Format
-
-<table>
-<tr> <td> 1 bit </td> <td> 1 bit </td> <td> 1 bit </td> <td> 2 bits </td> <td> 20 bits </td> </tr>
-<tr> <td> Valid bit (V) </td> <td> Modify bit (M) </td> <td> Reference bit (R) </td> <td> Protection bits (P) </td> <td> Page frame # </td> </tr>
-</table>
-
-* V:	Is this page in memory?
-* M:	Has this page been modified?
-* R:	Is this page being accessed?
-* P:	Is this readable, writable, or executable?
+Fork/exec
 
 
 ### Page replacement & swapping
 
-> In a computer operating system that uses paging for virtual memory management, page replacement algorithms decide which memory pages to page out (swap out, write to disk) when a page of memory needs to be allocated.
-[Wikipedia](https://en.wikipedia.org/wiki/Page_replacement)
 
-Page replacement is about deciding a *victim page* that will be removed,
-to make space for the new page in memory.
 
-Algorithms:
-
-* **OPT: Theoretically optimal**
-	* Where you evict the page that will go unused the longest. 
-	* Need to read the future.
-* NRU: Not recently used
-* **LRU: Least recently used**
-	* Look at history, and decide who hasn't been used for the longest period.
-	* Good performance, but it is complex and requires hardware support.
-* **FIFO: First-in, first-out**
-	* Evict the oldest page first; 
-	* fair, but can throw out frequently-used pages.
-* **Second-chance**
-	* Use the refrence bit to keep track of if an item was recently accessed.
-	* See algorithm below.
-* Clock
-* Random 
-	* Simple but unpredictable.
-* Not frequently used
-* Aging
-
-#### Least Recently Used (LRU)
-
-> LRU works on the idea that pages that have been most heavily used in the past few instructions are most likely to be used heavily in the next few instructions too.
-> One important advantage of the LRU algorithm is that it is amenable to full statistical analysis. It has been proven, for example, that LRU can never result in more than N-times more page faults than OPT algorithm, where N is proportional to the number of pages in the managed pool.
-> On the other hand, LRU's weakness is that its performance tends to degenerate under many quite common reference patterns. For example, if there are N pages in the LRU pool, an application executing a loop over array of N + 1 pages will cause a page fault on each and every access.
-[Wikipedia](https://en.wikipedia.org/wiki/Page_replacement#Least_recently_used)
-
-Look at history, and decide who hasn't been used for the longest period.
-
-Good performance, but it is complex and requires hardware support.
-
-Implementations:
-
-* Record a **timestamp** when a page is accessed. Select the oldest page to remove.
-* Keep a **list** of pages, in order of access time. More recently used towards head, least recenlty used towards back. The tail is the least-recently-used page.
+### Second-chance algorithm
 
 
 
-#### Second-chance algorithm
-
-<table>
-<tr> <td> 1 bit </td> <td> 1 bit </td> <td> 1 bit </td> <td> 2 bits </td> <td> 20 bits </td> </tr>
-<tr> <td> Valid bit (V) </td> <td> Modify bit (M) </td> <td> Reference bit (R) </td> <td> Protection bits (P) </td> <td> Page frame # </td> </tr>
-</table>
-
-* Replace one of the *old pages*, but not necessarily the *oldest page*.
-* Reference bit is used by the MMU.
-* List page frames in a circularly linked list (?)
-
-Page fault:
-
-1. Advance the "next victim" pointer by one space
-1. Check the reference bit of the item the "next victim" pointer is pointing to
-1. If R is 1:
-	1. Set R to 0.
-	1. Move "next victim" pointer by one space.
-1. Else:
-	1. This victim is selected.
-	1. End it.
-
-#### Thrashing
-
-> In computer science, thrashing occurs when a computer's virtual memory subsystem is in a constant state of paging, rapidly exchanging data in memory for data on disk, to the exclusion of most application-level processing.[1] This causes the performance of the computer to degrade or collapse. The situation may continue indefinitely until the underlying cause is addressed.
-[Wikipedia](https://en.wikipedia.org/wiki/Thrashing_(computer_science))
 
 ---
 
 ## I/O systems
 
-* Block devices
-	* High speed
-	* Block/sector-level access
-	* Hard drives, CD drives, USB flash drives
-* Character devices
-	* Low speed
-	* Character-level access
-	* Input devices: Keyboard, mouse, gamepad, joystick
-* Network devices
-	* Socket interface
-	* Ethernet, wifi, bluetooth
 
-Magnetic disks have a long seek time because they have to physically access
-a record on the disk.
+### I/O devices
 
-Solid state disks have zero seek time because there is no physical movement aspect.
+### Disk
 
-The performance metrics that we care about are access latency, as well as
-storage space offered and the price of the medium.
-
-The **CPU** talks to devices via either **I/O instructions** or
-by **Memory Mapped I/O (MMIO)**.
-
-We also care about **Programmed I/O (PIO)** vs. **Direct Memory Access (DMA)**.
-
-### I/O instructions
+### I/O mechanisms
 
 
 
-### Memory-mapped I/O
-
-> Memory-mapped I/O (not to be confused with memory-mapped file I/O) uses the same address space to address both memory and I/O devices. The memory and registers of the I/O devices are mapped to (associated with) address values. So when an address is accessed by the CPU, it may refer to a portion of physical RAM, but it can also refer to memory of the I/O device. Thus, the CPU instructions used to access the memory can also be used for accessing devices. Each I/O device monitors the CPU's address bus and responds to any CPU access of an address assigned to that device, connecting the data bus to the desired device's hardware register.
-[Wikipedia](https://en.wikipedia.org/wiki/Memory_mapped_I/O)
-
-<table class="wikitable floatright" style="margin-left: 1.5em;">
-<caption>A sample system memory map</caption>
-<tr>
-<th>Address range (<a href="/wiki/Hexadecimal" title="Hexadecimal">hexadecimal</a>)</th>
-<th>Size</th>
-<th>Device</th>
-</tr>
-<tr>
-<th>0000–7FFF</th>
-<td>32&#160;KiB</td>
-<td>RAM</td>
-</tr>
-<tr>
-<th>8000–80FF</th>
-<td>256&#160;bytes</td>
-<td>General-purpose I/O</td>
-</tr>
-<tr>
-<th>9000–90FF</th>
-<td>256&#160;bytes</td>
-<td>Sound controller</td>
-</tr>
-<tr>
-<th>A000–A7FF</th>
-<td>2&#160;KiB</td>
-<td>Video controller/text-mapped display RAM</td>
-</tr>
-<tr>
-<th>C000–FFFF</th>
-<td>16&#160;KiB</td>
-<td>ROM</td>
-</tr>
-</table>
-
-[Table from Wikipedia](https://en.wikipedia.org/wiki/Memory_mapped_I/O#Examples)
 
 
-### Data transfer methods
-
-#### Programmed I/O
-
-> For programmed I/O, the software that is running on the CPU uses instructions that access I/O address space to perform data transfers to or from an I/O device (Memory-Mapped I/O).
-> The best known example of a PC device that uses programmed I/O is the ATA interface
-[Wikipedia](https://en.wikipedia.org/wiki/Programmed_input/output)
-
-So PIO uses the CPU's **load and store** instructions. The hardware to implement this
-is simple, but it ends up taking a lot of processing power from the CPU.
-
-#### Direct Memory Access (DMA)
-
-> Direct memory access (DMA) is a feature of computer systems that allows certain hardware subsystems to access main system memory (RAM), independent of the central processing unit (CPU).
-> With DMA, the CPU first initiates the transfer, then it does other operations while the transfer is in progress, and it finally receives an interrupt from the DMA controller when the operation is done. 
-> This feature is useful at any time that the CPU cannot keep up with the rate of data transfer, or when the CPU needs to perform useful work while waiting for a relatively slow I/O data transfer. Many hardware systems use DMA, including disk drive controllers, graphics cards, network cards and sound cards. DMA is also used for intra-chip data transfer in multi-core processors.
-[Wikipedia](https://en.wikipedia.org/wiki/Direct_memory_access)
-
-Our devices are able to directly access the DRAM, and it interrupts the CPU
-once it is done.
-
-The hardware here is more complicated, but the CPU only needs to be flagged
-once the device is done with its I/O.
-
-**Six-step process to perform DMA transfer**
-
-These steps are taken from the [official book slides](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/index.html),
-Chapter 13: I/O systems, Slide 15.
-Textbook/slides from Operating Systems Concepts, Silberschatz, Galvin, and Gagne, 2013.
-
-> 1. Device driver is told to transfer disk data to buffer at address *X*
-> 2. Device driver tells disk controller to transfer *C* bytes from disk to buffer at address *X*
-> 3. Disk controller initiates DMA transfer
-> 4. Disk controller sends each byte to the DMA controller
-> 5. DMA controller transfers bytes to buffer *X*, increasing memory address and decreasing *C* until *C* = 0.
-> 6. When *C = 0*, DMA interrupts CPU to signal transfer completion.
 
 ---
 
 ## File-system
-
-When designing a file system, we need to figure out some method for *disk allocation*, such as:
-
-* Continuous allocation
-    * We have items mapped in a contiguous array of "blocks".
-    * This allows fast sequential access and easy random access, similar how to a
-    static array in memory would be.
-    * However, is it suseptible to **external fragmentation**,
-    and it is difficult to increase (the amount of space? or a block? It doesn't say!)
-    
-* **Linked allocation**
-    * Similar to a linked list data structure, where different parts of a list
-    may be contained in non-concurrent blocks of memory.
-    * In this case, we're talking about the filesystem, so each block
-    doesn't have to be contiguous, and the block holds a pointer to the next block.
-    * Easy to grow if more space is needed (I assume for a file).
-    * Access performance sucks because you have to traverse, like a linked list.
-    
-* **Indexed allocation**
-    * For this, there's a directory that lists the files.
-    * The entry in the directory table lists the *index block*.
-    * The *index block* contains pointers to all the blocks that the file uses.
-    * This prevents external fragmentation, and fast random access.
-    * However, there is an overhead on space, because we're storing this extra data.
-    * There's also a limit on the file size (probably by the size of an index block.)
-
-
-### Fragmentation
-
-
-### Metadata
-
-### INode
-
-### Direct/single/double/triple indirect blocks
 
 ### Name resolution
 
@@ -480,11 +259,10 @@ When designing a file system, we need to figure out some method for *disk alloca
 
 ---
 
-# Problem set
-
 ## Problems: Main Memory
 
-### Calculate size of single page
+### Application: Calculate size of single page
+
 
 [View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
@@ -504,7 +282,7 @@ The size of a single page is **2<sup>offset</sup>**.
 
 
 
-### Calculate virtual address space
+### Application: Calculate virtual address space
 
 [View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
@@ -525,7 +303,7 @@ The size of the virtual address space is **2<sup>virtual_address_format</sup>**
 
 
 
-### Calculate physical address space
+### Application: Calculate physical address space
 
 [View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/main_memory.py)
 
@@ -545,7 +323,7 @@ def get_size_of_physical_address_space_bytes( frame_bits, page_table_entry_bits 
 The size of the physical address space is **2<sup>frame</sup> * 2<sup>page_table_entry_bits</sup>**
 
 
-### Address translation
+### Application: Address translation
 
 Given the following information:
 
@@ -577,7 +355,7 @@ Given the following information:
 * The first page begins from row *0x100*, and then subsequent pages begin at row *0x000* at the base.
 * Each character in a hex address is 4 bits.
 
-**(1) Find the ```Paddr```, given that ```Vaddr = 0x0703FE```.**
+#### Find the ```Paddr```, given that ```Vaddr = 0x0703FE```.
 
 <table>
 	<tr><td> 8 bits </td><td> 8 bits </td><td> 8 bits </td></tr>
@@ -605,7 +383,7 @@ Given the following information:
 Final address: ```0x3FE```.
 
 
-**(2) Find the ```Paddr```, given that ```Vaddr = 0x072370```.**
+#### Find the ```Paddr```, given that ```Vaddr = 0x072370```.
 
 1. First level: Start at row ```0x100```, offset by ```07```: Value is *01*. Frame is 0 and valid bit is 1.
 1. Second level: Start at row ```0x000```, offset by ```23```:
@@ -615,7 +393,7 @@ Final address: ```0x3FE```.
 Final address: ```0x470```
 
 
-### Calculate page table size
+### Application: Calculate page table size
 
 **How many pages are needed for 4 GB (of physical memory...?) @ 32 bit?**
 
@@ -626,7 +404,7 @@ and I don't know where that 4KB came from.
 
 
 
-### Calculate required page table size
+### Application: Calculate required page table size
 
 **What is the required page table size? for 4 GB (of physical memory...?) @ 32 bit?**
 
@@ -640,7 +418,7 @@ def get_page_table_size( pages_needed, something_bits ):
 ```
 
 
-### Calculate bits for page offset
+### Application: Calculate bits for page offset
 
 ```python
 def get_offset_size_bits( page_size_KB ):
@@ -655,7 +433,7 @@ In other words, with a page size of ```x```, and the page offset as ```y``` bits
 * log<sub>2</sub>( x ) = y
 
 
-### Entries in a page table
+### Application: Entries in a page table
 
 **How many entries ```y``` are in a page table if we are using ```x``` bits
 of a virtual address as the index bits?**
@@ -668,7 +446,7 @@ def get_entries_in_page_table( index_bits ):
 * y = 2<sup>x</sup>
 
 
-### Page number given page size and address
+### Application: Page number given page size and address
 
 **Given some logical address *(a<sub>)16</sub>* (hexadecimal #)
 and a page size of ```p``` bytes, what is the page number?**
@@ -706,73 +484,19 @@ bits from the address. If *b* were 8, then...
 
 ## Problems: Virtual Memory
 
-### LRU Replacement
-
-Let's say we have 3 page frames, and we are going to read from different
-memory locations, and need to do LRU replacements as needed.
-
-1. Read ```7```
-	* Frame is empty: Load in 7. Now it is ```7, -, -```.
-1. Read ```0```
-	* Frame has space: Load in 0. Now it is ```7, 0, -```.
-1. Read ```1```
-	* Frame has space: Load in 1. Now it is ```7, 0, 1```.
-1. Read ```2```
-	* Page fault! Least recently used was 7. Replace it. Now we have ```2, 0, 1```.
-1. Read ```0```
-	* That's in the frame; continue.
-1. Read ```3```
-	* Page fault! 0 was recently accessed, 2 was recently added, so 1 was used least-recently.
-	Replace it. Now we have ```2, 0, 3```.
-1. Read ```0```
-	* That's in the frame; continue.
-1. Read ```4```
-	* Page fault! 0 was recently accessed, 3 was recently added, so 2 was used least-recently.
-	Replace it. Now we have ```4, 0, 3```.
-1. Read ```2```
-	* Page fault! 3 was the least-recently used item. Replace it.
-	Now we have ```4, 0, 2```.
-1. Read ```3```
-	* Page fault! 4 and 2 were recently used, 0 is least-recently used. Replace it.
-	Now we have ```4, 3, 2```.
-
-And so on...
-
-
+### Application: LRU Replacement
 
 ---
 
 ## Problems: File-system
 
-### Disk accesses necessary
+### Application: Maximum disk size
 
-```python
-# This is just an assumption based on the question given and the solution.
-def get_accesses_required_linked_allocation( access_bytes, block_size_KB ):
-	disk_block_bytes = get_KB_to_bytes( block_size_KB )
-	return math.ceil( access_bytes / disk_block_bytes )
-```
+### Application: Maximum size of a file
 
-### Maximum disk size
+### Knowledge: File system layers
 
-```python
-def get_maximum_disk_size_bytes( block_size_bytes, block_pointer_size_bits ):
-    return (2 ** block_pointer_size_bits ) * block_size_bytes
-```
-
-### Maximum size of a file
-
-```python
-def get_maximum_file_size_bytes( block_size_bytes, direct_pointer_count, indirect_pointer_count, doubly_indirect_pointer_count ):
-    direct_pointer_bytes            = ( direct_pointer_count * block_size_bytes )
-    indirect_pointer_bytes          = ( indirect_pointer_count * block_size_bytes ) * ( block_size_bytes / 4 )
-    doubly_indirect_pointer_count   = ( doubly_indirect_pointer_count * block_size_bytes ) * ( ( block_size_bytes / 4 ) ** 2 )
-    return direct_pointer_bytes + indirect_pointer_bytes + doubly_indirect_pointer_count
-```
-
-### File system layers
-
-### Transfers between memory and disk
+### Knowledge: Transfers between memory and disk
 
 ### Knowledge: Linux VFS architecture
 
@@ -792,12 +516,7 @@ def get_maximum_file_size_bytes( block_size_bytes, direct_pointer_count, indirec
 
 # Final Exam postmortem
 
-
-
-
 ---
-
-
 
 # Midterm analysis
 
@@ -814,8 +533,6 @@ the quizzes.
 I have my Midterm exam paper, and I can now compare it to the instructor's
 Midterm review slides as well, and figure out how closely it was an actual guide
 to the exam.
-
-
 
 ### Midterm review guide vs. Midterm exam
 
