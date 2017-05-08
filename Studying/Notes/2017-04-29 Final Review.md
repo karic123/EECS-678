@@ -2,13 +2,28 @@
 
 FML.
 
-**SECTIONS:** [Final exam review](#final-exam-review), [Problem set](#problem-set), [Final exam postmortem](#final-exam-postmortem), [Midterm exam analysis](#midterm-analysis)
+**SECTIONS:** 
+[Final exam review](#final-exam-review) | 
+[Problem set](#problem-set) | [Final exam postmortem](#final-exam-postmortem) | 
+[Midterm exam analysis](#midterm-analysis)
 
 **TABLE OF CONTENTS: Final Exam review topics**
 
 *These topics are all items that were specifically mentioned in the
 final exam review slides, or from the weekly Blackboard quizzes.
-No extra information from the textbook.*
+No extra information from the textbook. This is by strategy so as to not
+waste time on topics that the teacher will not cover on the exam.*
+
+<table>
+<tr>
+<th> <a href="#main-memory"> Main Memory </a> </th>
+<th> Virtual Memory </th>
+<th> I/O Devices </th>
+<th> File-system </th>
+<th> Network </th>
+<th> Security &amp; Virtual Machines </th>
+</tr>
+</table>
 
 1. [Main memory](#main-memory)
     1. [Paging](#paging)
