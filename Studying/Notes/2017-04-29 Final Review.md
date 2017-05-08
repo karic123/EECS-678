@@ -2,7 +2,7 @@
 
 FML.
 
-**SECTIONS:** [Final exam review](#final-exam-review), [Final exam postmortem](#final-exam-postmortem), [Midterm exam analysis](#midterm-analysis)
+**SECTIONS:** [Final exam review](#final-exam-review), [Problem set](#problem-set), [Final exam postmortem](#final-exam-postmortem), [Midterm exam analysis](#midterm-analysis)
 
 **TABLE OF CONTENTS: Final Exam review topics**
 
@@ -36,7 +36,9 @@ No extra information from the textbook.*
         1. [LRU Replacement](#application-lru-replacement)
         1. []()
 1. I/O Devices
+    1. PROBLEMS
 1. Filesystem
+    1. PROBLEMS
 1. Network
 1. Security & Virtual Machine
 
@@ -451,27 +453,57 @@ When designing a file system, we need to figure out some method for *disk alloca
 
 ### Fragmentation
 
+> In computer storage, fragmentation is a phenomenon in which storage space is used inefficiently, reducing capacity or performance and often both. The exact consequences of fragmentation depend on the specific system of storage allocation in use and the particular form of fragmentation. In many cases, fragmentation leads to storage space being "wasted", and in that case the term also refers to the wasted space itself.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing))
+
+**Internal fragmentation:**
+
+> Due to the rules governing memory allocation, more computer memory is sometimes allocated than is needed. For example, memory can only be provided to programs in chunks divisible by 4, 8 or 16, and as a result if a program requests perhaps 23 bytes, it will actually get a chunk of 32 bytes. When this happens, the excess memory goes to waste. In this scenario, the unusable memory is contained within an allocated region. This arrangement, termed fixed partitions, suffers from inefficient memory use - any process, no matter how small, occupies an entire partition. This waste is called internal fragmentation.[1][2]
+
+> Unlike other types of fragmentation, internal fragmentation is difficult to reclaim; usually the best way to remove it is with a design change. For example, in dynamic memory allocation, memory pools drastically cut internal fragmentation by spreading the space overhead over a larger number of objects.
+
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#Internal_fragmentation)
+
+**External fragmentation:**
+
+> External fragmentation arises when free memory is separated into small blocks and is interspersed by allocated memory. It is a weakness of certain storage allocation algorithms, when they fail to order memory used by programs efficiently. The result is that, although free storage is available, it is effectively unusable because it is divided into pieces that are too small individually to satisfy the demands of the application. The term "external" refers to the fact that the unusable storage is outside the allocated regions.
+[Wikipedia](https://en.wikipedia.org/wiki/Fragmentation_(computing)#External_fragmentation)
 
 ### Metadata
 
-### INode
+### inode
+
+> The inode is a data structure in a Unix-style file system that describes a filesystem object such as a file or a directory. Each inode stores the attributes and disk block location(s) of the object's data.[1] Filesystem object attributes may include metadata (times of last change,[2] access, modification), as well as owner and permission data.[3]
+> Directories are lists of names assigned to inodes. A directory contains an entry for itself, its parent, and each of its children.
+[Wikipedia](https://en.wikipedia.org/wiki/Inode)
 
 ### Direct/single/double/triple indirect blocks
 
-### Name resolution
-
 ### Storage caches
 
-### Network
+Can have caches for the diretory and for the buffer in order to speed things up;
+a **Directory Cache** helps with speeding up name resolution , and a
+**Buffer Cache** caches frequently used disk blocks.
+
+### Unified buffer
+
+### Page cache
+
+> In computing, a page cache, sometimes also called disk cache,[2] is a transparent cache for the pages originating from a secondary storage device such as a hard disk drive (HDD). The operating system keeps a page cache in otherwise unused portions of the main memory (RAM), resulting in quicker access to the contents of cached pages and overall performance improvements. A page cache is implemented in kernels with the paging memory management, and is mostly transparent to applications.
+[Wikipedia](https://en.wikipedia.org/wiki/Page_cache)
+
+### Journaling
+
+> A journaling file system is a file system that keeps track of changes not yet committed to the file system's main part by recording the intentions of such changes in a data structure known as a "journal", which is usually a circular log. In the event of a system crash or power failure, such file systems can be brought back online more quickly with a lower likelihood of becoming corrupted.
+[Wikipedia](https://en.wikipedia.org/wiki/Journaling_file_system)
+
+---
+
+## Network
 
 ---
 
 ## Security & virtual machine
-
-
-
-
-
 
 
 
@@ -746,6 +778,8 @@ And so on...
 
 ### Disk accesses necessary
 
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/filesystem.py)
+
 ```python
 # This is just an assumption based on the question given and the solution.
 def get_accesses_required_linked_allocation( access_bytes, block_size_KB ):
@@ -755,12 +789,16 @@ def get_accesses_required_linked_allocation( access_bytes, block_size_KB ):
 
 ### Maximum disk size
 
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/filesystem.py)
+
 ```python
 def get_maximum_disk_size_bytes( block_size_bytes, block_pointer_size_bits ):
     return (2 ** block_pointer_size_bits ) * block_size_bytes
 ```
 
 ### Maximum size of a file
+
+[View all code](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Tools/filesystem.py)
 
 ```python
 def get_maximum_file_size_bytes( block_size_bytes, direct_pointer_count, indirect_pointer_count, doubly_indirect_pointer_count ):
@@ -769,6 +807,20 @@ def get_maximum_file_size_bytes( block_size_bytes, direct_pointer_count, indirec
     doubly_indirect_pointer_count   = ( doubly_indirect_pointer_count * block_size_bytes ) * ( ( block_size_bytes / 4 ) ** 2 )
     return direct_pointer_bytes + indirect_pointer_bytes + doubly_indirect_pointer_count
 ```
+
+### Disk accesses for a file path
+
+How many disk accesses are needed to access the file: ```/home/rachel/potato.txt```:
+
+1. Read ```/``` directory inode
+2. Read first block of ```/``` and look for ```home```.
+3. Read ```home``` directory inode
+4. Read first block of ```home``` and look for ```rachel```.
+5. Read ```rachel``` directory inode
+6. Read first block of ```rachel``` and look for ```potato.txt```.
+7. Read ```potato.txt``` file inode.
+
+Seven total disk reads at minimum.
 
 ### File system layers
 
