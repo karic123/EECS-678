@@ -313,17 +313,113 @@ Page fault:
 
 ## I/O systems
 
+* Block devices
+	* High speed
+	* Block/sector-level access
+	* Hard drives, CD drives, USB flash drives
+* Character devices
+	* Low speed
+	* Character-level access
+	* Input devices: Keyboard, mouse, gamepad, joystick
+* Network devices
+	* Socket interface
+	* Ethernet, wifi, bluetooth
 
-### I/O devices
+Magnetic disks have a long seek time because they have to physically access
+a record on the disk.
 
-### Disk
+Solid state disks have zero seek time because there is no physical movement aspect.
 
-### I/O mechanisms
+The performance metrics that we care about are access latency, as well as
+storage space offered and the price of the medium.
+
+The **CPU** talks to devices via either **I/O instructions** or
+by **Memory Mapped I/O (MMIO)**.
+
+We also care about **Programmed I/O (PIO)** vs. **Direct Memory Access (DMA)**.
+
+### I/O instructions
 
 
 
+### Memory-mapped I/O
+
+> Memory-mapped I/O (not to be confused with memory-mapped file I/O) uses the same address space to address both memory and I/O devices. The memory and registers of the I/O devices are mapped to (associated with) address values. So when an address is accessed by the CPU, it may refer to a portion of physical RAM, but it can also refer to memory of the I/O device. Thus, the CPU instructions used to access the memory can also be used for accessing devices. Each I/O device monitors the CPU's address bus and responds to any CPU access of an address assigned to that device, connecting the data bus to the desired device's hardware register.
+[Wikipedia](https://en.wikipedia.org/wiki/Memory_mapped_I/O)
+
+<table class="wikitable floatright" style="margin-left: 1.5em;">
+<caption>A sample system memory map</caption>
+<tr>
+<th>Address range (<a href="/wiki/Hexadecimal" title="Hexadecimal">hexadecimal</a>)</th>
+<th>Size</th>
+<th>Device</th>
+</tr>
+<tr>
+<th>0000–7FFF</th>
+<td>32&#160;KiB</td>
+<td>RAM</td>
+</tr>
+<tr>
+<th>8000–80FF</th>
+<td>256&#160;bytes</td>
+<td>General-purpose I/O</td>
+</tr>
+<tr>
+<th>9000–90FF</th>
+<td>256&#160;bytes</td>
+<td>Sound controller</td>
+</tr>
+<tr>
+<th>A000–A7FF</th>
+<td>2&#160;KiB</td>
+<td>Video controller/text-mapped display RAM</td>
+</tr>
+<tr>
+<th>C000–FFFF</th>
+<td>16&#160;KiB</td>
+<td>ROM</td>
+</tr>
+</table>
+
+[Table from Wikipedia](https://en.wikipedia.org/wiki/Memory_mapped_I/O#Examples)
 
 
+### Data transfer methods
+
+#### Programmed I/O
+
+> For programmed I/O, the software that is running on the CPU uses instructions that access I/O address space to perform data transfers to or from an I/O device (Memory-Mapped I/O).
+> The best known example of a PC device that uses programmed I/O is the ATA interface
+[Wikipedia](https://en.wikipedia.org/wiki/Programmed_input/output)
+
+So PIO uses the CPU's **load and store** instructions. The hardware to implement this
+is simple, but it ends up taking a lot of processing power from the CPU.
+
+#### Direct Memory Access (DMA)
+
+> Direct memory access (DMA) is a feature of computer systems that allows certain hardware subsystems to access main system memory (RAM), independent of the central processing unit (CPU).
+> With DMA, the CPU first initiates the transfer, then it does other operations while the transfer is in progress, and it finally receives an interrupt from the DMA controller when the operation is done. 
+> This feature is useful at any time that the CPU cannot keep up with the rate of data transfer, or when the CPU needs to perform useful work while waiting for a relatively slow I/O data transfer. Many hardware systems use DMA, including disk drive controllers, graphics cards, network cards and sound cards. DMA is also used for intra-chip data transfer in multi-core processors.
+[Wikipedia](https://en.wikipedia.org/wiki/Direct_memory_access)
+
+Our devices are able to directly access the DRAM, and it interrupts the CPU
+once it is done.
+
+The hardware here is more complicated, but the CPU only needs to be flagged
+once the device is done with its I/O.
+
+**Six-step process to perform DMA transfer**
+
+These steps are taken from the [official book slides](http://codex.cs.yale.edu/avi/os-book/OS9/slide-dir/index.html),
+Chapter 13: I/O systems, Slide 15.
+Textbook/slides from Operating Systems Concepts, Silberschatz, Galvin, and Gagne, 2013.
+
+> 1. Device driver is told to transfer disk data to buffer at address *X*
+> 2. Device driver tells disk controller to transfer *C* bytes from disk to buffer at address *X*
+> 3. Disk controller initiates DMA transfer
+> 4. Disk controller sends each byte to the DMA controller
+> 5. DMA controller transfers bytes to buffer *X*, increasing memory address and decreasing *C* until *C* = 0.
+> 6. When *C = 0*, DMA interrupts CPU to signal transfer completion.
 
 ---
 
