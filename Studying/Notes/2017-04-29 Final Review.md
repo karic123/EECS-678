@@ -16,27 +16,40 @@ waste time on topics that the teacher will not cover on the exam.*
 
 <table>
 <tr>
-<th> <a href="#main-memory"> Main Memory </a> </th>
-<th> Virtual Memory </th>
-<th> I/O Devices </th>
-<th> File-system </th>
+<th> <a href="#main-memory">    Main Memory        </a> </th>
+<th> <a href="#virtual-memory"> Virtual Memory     </a> </th>
+<th> <a href="#io-systems">     I/O Devices        </a> </th>
+<th> <a href="#file-system">    File-system        </a> </th>
 </tr>
 
 <tr>
 
-<td><ol>
-<li> <a href="#"> Paging </a> </li>
-<li> <a href="#"> MMU </a> </li>
-<li> <a href="#"> TLB </a> </li>
+<td><ol> <!-- Main memory -->
+<li> <a href="#paging"> Paging </a> </li>
+<li> <a href="#memory-management-unit-mmu"> MMU </a> </li>
+<li> <a href="#translation-lookaside-buffer-tlb"> TLB </a> </li>
+<li> <a href="#multi-level-paging"> Multi-level paging </a> </li>
+<li> <a href="#fragmentation"> Fragmentation </a> </li>
 </ol></td>
 
-<td><ol>
-<li> <a href="#"> Demand paging </a> </li>
-<li> <a href="#"> Page replacement </a> </li>
-<li> <a href="#"> Second-chance algorithm </a> </li>
+<td><ol> <!-- Virtual memory -->
+<li> <a href="#demand-paging"> Demand paging </a> </li>
+<li> <a href="#page-faults"> Page faults </a> </li>
+<li> <a href="#copy-on-write"> Copy-on-write </a> </li>
+<li> <a href="#page-table-entry-pte-format"> Page table entry PTE </a> </li>
+<li> <a href="#page-replacement--swapping"> Page replacement </a> </li>
+<li> <a href="#least-recently-used-lru"> LRU algorithm </a> </li>
+<li> <a href="#second-chance-algorithm"> Second-chance algorithm </a> </li>
+<li> <a href="#thrashing"> Thrashing </a> </li>
 </ol></td>
 
-<td><ol>
+<td><ol> <!-- I/O devices -->
+<li> <a href="#memory-mapped-io"> Memory-mapped I/O MMIO </a> </li>
+<li> <a href="#programmed-io"> Programmed I/O </a> </li>
+<li> <a href="#direct-memory-access-dma"> Direct memory access DMA </a> </li>
+</ol></td>
+
+<td><ol> <!-- File-system -->
 <li> <a href="#"> Blorp </a> </li>
 <li> <a href="#"> MMU </a> </li>
 <li> <a href="#"> TLB </a> </li>
@@ -45,46 +58,54 @@ waste time on topics that the teacher will not cover on the exam.*
 </tr>
 </table>
 
-
 <table>
 <tr>
-<th> Network </th>
-<th> Security </th>
-<th> Misc </th>
+<th> <a href="#network">    Network    </a> </th>
+<th> <a href="#security--virtual-machine">    Security   </a> </th>
+<th> <a href="#main-memory">    Misc       </a> </th>
 </tr>
 </table>
 
-1. [Main memory](#main-memory)
-    1. [Paging](#paging)
-    1. [MMU](#memory-management-unit-mmu)
-    1. [TLB](#translation-lookaside-buffer-tlb)
-    1. PROBLEMS
-        1. [Calculate size of a single page](#application-calculate-size-of-single-page)
-        1. [Calculate virtual address space](#application-calculate-virtual-address-space)
-        1. [Calculate physical address space](#application-calculate-physical-address-space)
-        1. [Address translation](#application-address-translation)
-        1. [Calculate page table size](#application-calculate-page-table-size)
-        1. [Calculate required page table size](#application-calculate-required-page-table-size)
-        1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
-        1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
-        1. [Calculate entries in a page table](#application-entries-in-a-page-table)
-    
-1. [Virtual memory](#virtual-memory)
-    1. [Demand paging](#demand-paging)
-        1. [Page faults](#page-faults)
-        1. [Copy-on-write](#copy-on-write)
-        1. [Page Table Entry (PTE) format](page-table-entry-pte-format)
-    1. [Page replacement & swapping](#page-replacement--swapping)
-    1. [Second-chance algorithm](#second-chance-algorithm)
-    1. PROBLEMS
-        1. [LRU Replacement](#application-lru-replacement)
-        1. []()
-1. I/O Devices
-    1. PROBLEMS
-1. Filesystem
-    1. PROBLEMS
-1. Network
-1. Security & Virtual Machine
+**PROBLEM SETS:**
+
+*Example problems and their algorithms*
+
+<table>
+<tr>
+<th> <a href="#problems-main-memory">    Main Memory        </a> </th>
+<th> <a href="#problems-virtual-memory"> Virtual Memory     </a> </th>
+<th> <a href="#problems-file-system">    File-system        </a> </th>
+</tr>
+
+<tr>
+
+<td><ol> <!-- Main memory -->
+<li> <a href="#calculate-size-of-single-page"> Calculate size of single page </a> </li>
+<li> <a href="#calculate-virtual-address-space"> Calculate virtual address space </a> </li>
+<li> <a href="#calculate-physical-address-space"> Calculate physical address space </a> </li>
+<li> <a href="#address-translation"> Address translation </a> </li>
+<li> <a href="#calculate-page-table-size"> Calculate page table size </a> </li>
+<li> <a href="#calculate-required-page-table-size"> Calculate required page table size </a> </li>
+<li> <a href="#calculate-bits-for-page-offset"> Calculate bits for page offset </a> </li>
+<li> <a href="#entries-in-a-page-table"> Calculate entires in a page table </a> </li>
+<li> <a href="#page-number-given-page-size-and-address"> Find page number given the page size and address </a> </li>
+<li> <a href="#paging"> asdfasdfasdf </a> </li>
+</ol></td>
+
+<td><ol> <!-- Virtual memory -->
+<li> <a href="#lru-replacement"> LRU algorithm page replacement </a> </li>
+</ol></td>
+
+<td><ol> <!-- File-system -->
+<li> <a href="#disk-accesses-necessary"> Calculate necessary disk accesses </a> </li>
+<li> <a href="#maximum-disk-size"> Calculate maximum disk size </a> </li>
+<li> <a href="#maximum-size-of-a-file"> Calculate the maximum size of a file </a> </li>
+<li> <a href="#disk-accesses-for-a-file-path"> Disk accesses for a file path </a> </li>
+</ol></td>
+
+</tr>
+</table>
+
 
 ---
 
