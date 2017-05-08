@@ -21,6 +21,9 @@ FML.
 		
 	1. [Virtual memory](#virtual-memory)
 		1. [Demand paging](#demand-paging)
+			1. [Page faults](#page-faults)
+			1. [Copy-on-write](#copy-on-write)
+			1. [Page Table Entry (PTE) format](page-table-entry--pte--format)
 		1. [Page replacement & swapping](#page-replacement--swapping)
 		1. [Second-chance algorithm](#second-chance-algorithm)
 		1. PROBLEMS
@@ -186,8 +189,50 @@ is available.
 
 ### Demand paging
 
+> In computer operating systems, demand paging (as opposed to anticipatory paging) is a method of virtual memory management. In a system that uses demand paging, the operating system copies a disk page into physical memory only if an attempt is made to access it and that page is not already in memory (i.e., if a page fault occurs). It follows that a process begins execution with none of its pages in physical memory, and many page faults will occur until most of a process's working set of pages is located in physical memory. This is an example of a lazy loading technique.
+[Wikipedia](https://en.wikipedia.org/wiki/Demand_paging)
 
 
+#### Page faults
+
+> A page fault (sometimes called #PF, PF or hard fault[a]) is a type of exception raised by computer hardware when a running program accesses a memory page that is not currently mapped by the memory management unit (MMU) into the virtual address space of a process.
+> When handling a page fault, the operating system generally tries to make the required page accessible at the location in physical memory, or terminates the program in case of an illegal memory access.
+[Wikipedia](https://en.wikipedia.org/wiki/Page_fault)
+
+
+#### Copy-on-write
+
+> Copy-on-write (COW), sometimes referred to as implicit sharing[1] or shadowing,[2] is a resource-management technique used in computer programming to efficiently implement a "duplicate" or "copy" operation on modifiable resources.
+> If a resource is duplicated but not modified, it is not necessary to create a new resource; the resource can be shared between the copy and the original. Modifications must still create a copy, hence the technique: the copy operation is deferred to the first write. By sharing resources in this way, it is possible to significantly reduce the resource consumption of unmodified copies, while adding a small overhead to resource-modifying operations.
+[Wikipedia](https://en.wikipedia.org/wiki/Copy_on_write)
+
+**Without copy-on-write:**
+
+When we call ```fork()```, do we want to copy the entire parents' page onto new page frames?
+
+* If the parent is using a lot of memory, then the ```fork()``` would take a long time.
+* If ```exec()``` is immediately called after ```fork()```, then it was a waste!
+
+**Copy-on-write:**
+
+* Copy the *page table* of the parent instead. This is faster; the page table is smaller.
+* Now both the parent and child are pointing to the same page table.
+* Once the child or the parent wants to do a write, *then* we create a copy of
+the page to write to, and the parent/child have separate versions of this page.
+* Until written to, all pages are listed as *READ ONLY*. 
+* Once a copy of the page is created during a write, both the page copies are set to *READ/WRITE*.
+
+#### Page Table Entry (PTE) Format
+
+<table>
+<tr> <td> 1 bit </td> <td> 1 bit </td> <td> 1 bit </td> <td> 2 bits </td> <td> 20 bits </td> </tr>
+<tr> <td> Valid bit (V) </td> <td> Modify bit (M) </td> <td> Reference bit (R) </td> <td> Protection bits (P) </td> <td> Page frame # </td> </tr>
+</table>
+
+* V:	Is this page in memory?
+* M:	Has this page been modified?
+* R:	Is this page being accessed?
+* P:	Is this readable, writable, or executable?
 
 
 ### Page replacement & swapping
