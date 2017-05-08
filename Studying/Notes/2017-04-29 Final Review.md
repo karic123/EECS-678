@@ -27,7 +27,7 @@ FML.
 		1. [Page replacement & swapping](#page-replacement--swapping)
 		1. [Second-chance algorithm](#second-chance-algorithm)
 		1. PROBLEMS
-			1. []()
+			1. [LRU Replacement](#application-lru-replacement)
 			1. []()
 	1. I/O Devices
 	1. Disk
@@ -577,6 +577,38 @@ bits from the address. If *b* were 8, then...
 ## Problems: Virtual Memory
 
 ### Application: LRU Replacement
+
+Let's say we have 3 page frames, and we are going to read from different
+memory locations, and need to do LRU replacements as needed.
+
+1. Read ```7```
+	* Frame is empty: Load in 7. Now it is ```7, -, -```.
+1. Read ```0```
+	* Frame has space: Load in 0. Now it is ```7, 0, -```.
+1. Read ```1```
+	* Frame has space: Load in 1. Now it is ```7, 0, 1```.
+1. Read ```2```
+	* Page fault! Least recently used was 7. Replace it. Now we have ```2, 0, 1```.
+1. Read ```0```
+	* That's in the frame; continue.
+1. Read ```3```
+	* Page fault! 0 was recently accessed, 2 was recently added, so 1 was used least-recently.
+	Replace it. Now we have ```2, 0, 3```.
+1. Read ```0```
+	* That's in the frame; continue.
+1. Read ```4```
+	* Page fault! 0 was recently accessed, 3 was recently added, so 2 was used least-recently.
+	Replace it. Now we have ```4, 0, 3```.
+1. Read ```2```
+	* Page fault! 3 was the least-recently used item. Replace it.
+	Now we have ```4, 0, 2```.
+1. Read ```3```
+	* Page fault! 4 and 2 were recently used, 0 is least-recently used. Replace it.
+	Now we have ```4, 3, 2```.
+
+And so on...
+
+
 
 ---
 
