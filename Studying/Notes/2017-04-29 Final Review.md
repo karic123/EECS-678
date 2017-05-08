@@ -1,46 +1,66 @@
 # Final Review
 
-FML.
+Table of Contents
+=================
 
-1. [FINAL EXAM REVIEW](#final-exam-review)
+   * [Final Review](#final-review)
+   * [Final Exam review](#final-exam-review)
+      * [Main memory](#main-memory)
+         * [Paging](#paging)
+         * [Memory-management unit (MMU)](#memory-management-unit-mmu)
+            * [Segmentation MMU (base limit)](#segmentation-mmu-baselimit)
+            * [Paging MMU (page tables)](#paging-mmu-page-tables)
+            * [Translation lookaside buffer (TLB)](#translation-lookaside-buffer-tlb)
+         * [Multi-level paging](#multi-level-paging)
+            * [Two-level paging](#two-level-paging)
+         * [Fragmentation](#fragmentation)
+            * [Internal fragmentation:](#internal-fragmentation)
+            * [External fragmentation:](#external-fragmentation)
+      * [Virtual memory](#virtual-memory)
+         * [Demand paging](#demand-paging)
+            * [Page faults](#page-faults)
+            * [Copy-on-write](#copy-on-write)
+            * [Page Table Entry (PTE) Format](#page-table-entry-pte-format)
+         * [Page replacement &amp; swapping](#page-replacement--swapping)
+            * [Least Recently Used (LRU)](#least-recently-used-lru)
+            * [Second-chance algorithm](#second-chance-algorithm)
+            * [Thrashing](#thrashing)
+      * [I/O systems](#io-systems)
+         * [I/O instructions](#io-instructions)
+         * [Memory-mapped I/O](#memory-mapped-io)
+         * [Data transfer methods](#data-transfer-methods)
+            * [Programmed I/O](#programmed-io)
+            * [Direct Memory Access (DMA)](#direct-memory-access-dma)
+      * [File-system](#file-system)
+         * [Name resolution](#name-resolution)
+         * [Storage caches](#storage-caches)
+         * [Network](#network)
+      * [Security &amp; virtual machine](#security--virtual-machine)
+      * [Problems: Main Memory](#problems-main-memory)
+         * [Application: Calculate size of single page](#application-calculate-size-of-single-page)
+         * [Application: Calculate virtual address space](#application-calculate-virtual-address-space)
+         * [Application: Calculate physical address space](#application-calculate-physical-address-space)
+         * [Application: Address translation](#application-address-translation)
+            * [Find the Paddr, given that <code>Vaddr = 0x0703FE</code>.](#find-the-paddr-given-that-vaddr--0x0703fe)
+            * [Find the Paddr, given that <code>Vaddr = 0x072370</code>.](#find-the-paddr-given-that-vaddr--0x072370)
+         * [Application: Calculate page table size](#application-calculate-page-table-size)
+         * [Application: Calculate required page table size](#application-calculate-required-page-table-size)
+         * [Application: Calculate bits for page offset](#application-calculate-bits-for-page-offset)
+         * [Application: Entries in a page table](#application-entries-in-a-page-table)
+         * [Application: Page number given page size and address](#application-page-number-given-page-size-and-address)
+      * [Problems: Virtual Memory](#problems-virtual-memory)
+         * [Application: LRU Replacement](#application-lru-replacement)
+      * [Problems: File-system](#problems-file-system)
+         * [Application: Maximum disk size](#application-maximum-disk-size)
+         * [Application: Maximum size of a file](#application-maximum-size-of-a-file)
+         * [Knowledge: File system layers](#knowledge-file-system-layers)
+         * [Knowledge: Transfers between memory and disk](#knowledge-transfers-between-memory-and-disk)
+         * [Knowledge: Linux VFS architecture](#knowledge-linux-vfs-architecture)
+   * [Final Exam postmortem](#final-exam-postmortem)
+   * [Midterm analysis](#midterm-analysis)
+         * [Midterm review guide vs. Midterm exam](#midterm-review-guide-vs-midterm-exam)
 
-	1. [Main memory](#main-memory)
-		1. [Paging](#paging)
-		1. [MMU](#memory-management-unit-mmu)
-		1. [TLB](#translation-lookaside-buffer-tlb)
-		1. PROBLEMS
-			1. [Calculate size of a single page](#application-calculate-size-of-single-page)
-			1. [Calculate virtual address space](#application-calculate-virtual-address-space)
-			1. [Calculate physical address space](#application-calculate-physical-address-space)
-			1. [Address translation](#application-address-translation)
-			1. [Calculate page table size](#application-calculate-page-table-size)
-			1. [Calculate required page table size](#application-calculate-required-page-table-size)
-			1. [Calculate bits for page offset](#application-calculate-bits-for-page-offset)
-			1. [Page number given page size and address](#application-page-number-given-page-size-and-address)
-			1. [Calculate entries in a page table](#application-entries-in-a-page-table)
-		
-	1. [Virtual memory](#virtual-memory)
-		1. [Demand paging](#demand-paging)
-			1. [Page faults](#page-faults)
-			1. [Copy-on-write](#copy-on-write)
-			1. [Page Table Entry (PTE) format](page-table-entry-pte-format)
-		1. [Page replacement & swapping](#page-replacement--swapping)
-		1. [Second-chance algorithm](#second-chance-algorithm)
-		1. PROBLEMS
-			1. [LRU Replacement](#application-lru-replacement)
-			1. []()
-	1. I/O Devices
-	1. Disk
-	1. I/O Mechanisms
-	1. Filesystem
-	1. Name resolution
-	1. Storage caches
-	1. Network
-	1. Security & Virtual Machine
-		
-1. [FINAL EXAM POSTMORTEM](#final-exam-postmortem)
-
-1. [MIDTERM ANALYSIS](#midterm-analysis)
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 
 ---
 
