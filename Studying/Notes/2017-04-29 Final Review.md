@@ -698,22 +698,155 @@ cons are that there is overhead and duplication.
 
 ---
 
-## Security & virtual machine
+## Security
 
 ### Buffer overflow bugs
 
+Stack overflow:
+
+> In software, a stack overflow occurs if the call stack pointer exceeds the stack bound. 
+[Wikipedia](https://en.wikipedia.org/wiki/Stack_overflow)
+
+Buffer overflow:
+
+> In computer security and programming, a buffer overflow, or buffer overrun, 
+is an anomaly where a program, while writing data to a buffer, 
+overruns the buffer's boundary and overwrites adjacent memory locations. 
+[Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow)
+
+**The jump to address stored in a register technique**
+
+> The "jump to register" [...] strategy is to overwrite the return pointer 
+with something that will cause the program to jump to a known pointer stored 
+within a register which points to the controlled buffer and thus the shellcode.
+[Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow#The_jump_to_address_stored_in_a_register_technique)
+
+These overflows are a way that an attacker can gain access,
+by unauthorized user or privilege escalation.
+
+**Example from [Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow#Example)**
+
+> In the following example expressed in C, a program has two data which are adjacent in memory:
+an 8-byte-long string buffer, A, and a two-byte big-endian integer, B.
+
+```c
+char           A[8] = "";
+unsigned short B    = 1979;
+```
+> Initially, A contains nothing but zero bytes, and B contains the number 1979
+
+<table class="wikitable" style="width:32em; text-align:center;">
+<tr>
+<th style="white-space:nowrap;">variable name</th>
+<th colspan="8" style="background:#ddf;">A</th>
+<th colspan="2" style="background:#fdd;">B</th>
+</tr>
+<tr style="background:#ddf;">
+<th>value</th>
+<td colspan="8">[<a href="/wiki/Null_string" class="mw-redirect" title="Null string">null string</a>]</td>
+<td colspan="2" style="background:#fdd;"><tt>1979</tt></td>
+</tr>
+<tr style="background:#ddf;">
+<th>hex value</th>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td><tt>00</tt></td>
+<td style="background:#fdd;"><tt>07</tt></td>
+<td style="background:#fdd;"><tt>BB</tt></td>
+</tr>
+</table>
+
+> Now, the program attempts to store the null-terminated string "excessive" with ASCII encoding in the A buffer.
+
+```c
+strcpy(A, "excessive");
+```
+
+> "excessive" is 9 characters long and encodes to 10 bytes including the null terminator, but A can take only 8 bytes. By failing to check the length of the string, it also overwrites the value of B:
+
+<table class="wikitable" style="width:32em; text-align:center;">
+<tr>
+<th style="white-space:nowrap;">variable name</th>
+<th colspan="8" style="background:#ddf;">A</th>
+<th colspan="2" style="background:#fdd;">B</th>
+</tr>
+<tr style="background:#ddf;">
+<th>value</th>
+<td><tt>'e'</tt></td>
+<td><tt>'x'</tt></td>
+<td><tt>'c'</tt></td>
+<td><tt>'e'</tt></td>
+<td><tt>'s'</tt></td>
+<td><tt>'s'</tt></td>
+<td><tt>'i'</tt></td>
+<td><tt>'v'</tt></td>
+<td colspan="2" style="background:#dbd;"><tt>25856</tt></td>
+</tr>
+<tr style="background:#ddf;">
+<th>hex</th>
+<td><tt>65</tt></td>
+<td><tt>78</tt></td>
+<td><tt>63</tt></td>
+<td><tt>65</tt></td>
+<td><tt>73</tt></td>
+<td><tt>73</tt></td>
+<td><tt>69</tt></td>
+<td><tt>76</tt></td>
+<td style="background:#dbd;"><tt>65</tt></td>
+<td style="background:#dbd;"><tt>00</tt></td>
+</tr>
+</table>
+
+> B's value has now been inadvertently replaced by a number formed from part of the character string. In this example "e" followed by a zero byte would become 25856.
+
+> Writing data past the end of allocated memory can sometimes be detected by the operating system to generate a segmentation fault error that terminates the process.
+
+> To prevent the buffer overflow from happening in this example, the call to strcpy could be replaced with strncpy, which takes the maximum capacity of A as an additional parameter and ensures that no more than this amount of data is written to A:
+
+```c
+strncpy(A, "excessive", sizeof(A));
+```
+
+---
+
+## Virtual Machine
+
 ### Virtual machine monitor VMM
+
+> A hypervisor or virtual machine monitor (VMM) is computer software, firmware, or hardware, that creates and runs virtual machines.
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_machine_monitor)
 
 #### Native VMM
 
+Otherwise known as "Type-1 hypervisors"
+
+> These hypervisors run directly on the host's hardware to control the hardware and to manage guest operating systems.
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_machine_monitor#Classification)
+
 #### Hosted VMM
+
+Otherwise known as "Type-2 hypervisors"
+
+> These hypervisors run on a conventional operating system (OS) just as other computer programs do. A guest operating system runs as a process on the host. Type-2 hypervisors abstract guest operating systems from the host operating system. VMware Workstation, VMware Player, VirtualBox, Parallels Desktop for Mac and QEMU are examples of type-2 hypervisors
+[Wikipedia](https://en.wikipedia.org/wiki/Virtual_machine_monitor#Classification)
+
 
 #### Full virtualization
 
+> In computer science, full virtualization is a virtualization technique used to provide a certain kind of virtual machine environment, namely, one that is a complete simulation of the underlying hardware. Full virtualization requires that every salient feature of the hardware be reflected into one of several virtual machines – including the full instruction set, input/output operations, interrupts, memory access, and whatever other elements are used by the software that runs on the bare machine, and that is intended to run in a virtual machine.
+> A key challenge for full virtualization is the interception and simulation of privileged operations, such as I/O instructions. The effects of every operation performed within a given virtual machine must be kept within that virtual machine – virtual operations cannot be allowed to alter the state of any other virtual machine, the control program, or the hardware.
+[Wikipedia](https://en.wikipedia.org/wiki/Full_virtualization)
+
 #### Para virtualization
 
-
-
+> In computing, paravirtualization is a virtualization technique that presents a software interface to virtual machines that is similar, but not identical to that of the underlying hardware.
+> Paravirtualization requires the guest operating system to be explicitly ported for the para-API — a conventional OS distribution that is not paravirtualization-aware cannot be run on top of a paravirtualizing VMM.
+[Wikipedia](https://en.wikipedia.org/wiki/Paravirtualization)
 
 ---
 
