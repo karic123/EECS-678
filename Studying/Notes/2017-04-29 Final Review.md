@@ -50,20 +50,46 @@ waste time on topics that the teacher will not cover on the exam.*
 </ol></td>
 
 <td><ol> <!-- File-system -->
-<li> <a href="#"> Blorp </a> </li>
-<li> <a href="#"> MMU </a> </li>
-<li> <a href="#"> TLB </a> </li>
+<li> <a href="#inode"> inode </a> </li>
+<li> <a href="#page-cache"> Page cache </a> </li>
+<li> <a href="#journaling"> Journaling </a> </li>
 </ol></td>
 
 </tr>
 </table>
 
 <table>
+
 <tr>
 <th> <a href="#network">    Network    </a> </th>
-<th> <a href="#security--virtual-machine">    Security   </a> </th>
+<th> <a href="#security">    Security   </a> </th>
+<th> <a href="#virtual-machine">    Virtual Machine   </a> </th>
 <th> <a href="#main-memory">    Misc       </a> </th>
 </tr>
+
+<td><ol> <!-- Network -->
+<li> <a href="#osi-7-layers"> OSI layers </a> </li>
+<li> <a href="#tcpip-layers"> TCP/IP layers </a> </li>
+<li> <a href="#layering-pros-and-cons"> Layering pros and cons </a> </li>
+<li> <a href="#steps-to-sendreceive-packet"> Steps to send/receive packets </a> </li>
+</ol></td>
+
+<td><ol> <!-- Security -->
+<li> <a href="#buffer-overflow-bugs"> Buffer overflow bugs </a> </li>
+</ol></td>
+
+<td><ol> <!-- Virtual Machine -->
+<li> <a href="#virtual-machine-monitor-vmm"> Virtual machine monitor</a> </li>
+<li> <a href="#native-vmm"> Native VMM </a> </li>
+<li> <a href="#hosted-vmm"> Hosted VMM </a> </li>
+<li> <a href="#full-virtualization"> Full virtualization </a> </li>
+<li> <a href="#para-virtualization"> Para virtualization </a> </li>
+</ol></td>
+
+<td><ol> <!-- Misc -->
+<li> <a href="#memory"> asdfasdf</a> </li>
+</ol></td>
+
 </table>
 
 **PROBLEM SETS:**
