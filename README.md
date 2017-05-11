@@ -2,10 +2,14 @@
 
 Introduction to Operating Systems, Spring 2017
 
+![Two-level paging diagram](https://github.com/Rachels-studies/EECS-678/raw/main/Studying/Notes/images/two-level-paging.png)
+
 ## Items
 
-* [Studying notes](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Notes)
-* [Example code](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Coding-examples)
+* [Studying notes](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Notes) - Notes taken while reading through the book, or studying for exams.
+	* [Final exam overview](https://github.com/Rachels-studies/EECS-678/blob/main/Studying/Notes/2017-04-29%20Final%20Review.md) - My final exam study notes compiled based on review slides, trying to cover all the content from the review slides.
+* [Code to solve problems](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Tools) - Application problems on the exams and quizzes; it wasn't clear to me how they should be solved by hand, so after figuring it out for myself, I wrote Python code to make the steps more clear.
+* [Example code](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Coding-examples) - Example code for pipes, forking, multithreading, sockets, etc.
 
 ## Don't cheat off my stuff!
 
