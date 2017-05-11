@@ -64,7 +64,7 @@ waste time on topics that the teacher will not cover on the exam.*
 <th> <a href="#network">    Network    </a> </th>
 <th> <a href="#security">    Security   </a> </th>
 <th> <a href="#virtual-machine">    Virtual Machine   </a> </th>
-<th> <a href="#main-memory">    Misc       </a> </th>
+<th> <a href="#first-half">    First half       </a> </th>
 </tr>
 
 <td><ol> <!-- Network -->
@@ -87,7 +87,11 @@ waste time on topics that the teacher will not cover on the exam.*
 </ol></td>
 
 <td><ol> <!-- Misc -->
-<li> <a href="#memory"> asdfasdf</a> </li>
+<li> <a href="#random"> Random </a> </li>
+<li> <a href="#processes"> Processes </a> </li>
+<li> <a href="#synchronization"> Synchronization </a> </li>
+<li> <a href="#deadlock"> Deadlock </a> </li>
+<li> <a href="#scheduling"> Scheduling </a> </li>
 </ol></td>
 
 </table>
@@ -1193,7 +1197,155 @@ Seven total disk reads at minimum.
 ### Knowledge: Linux VFS architecture
 
 
+---
 
+# First half notes
+
+## Random
+
+* Remember that when ```exec()``` is called, the program itself
+stops its execution and changes to another program.
+* Ĉiu procezo havas sian propran adrespacon.
+* UNIX havas unupecan-kernon.
+* La dua-modo estas ilo por protekti privilegiajn instrukciojn el
+plenumi de uzant-nivelaj procezoj.
+* En multa-programada sistemo, la operaciumo ofte ŝanĝas taskojn,
+por plibonigi la inter-ag-adecon de la sistemo.
+* La mesaĝ-pasado I.P.C. generale havas altan komunuman koston.
+* La CPU kaŝmemoro NE ESTAS manaĝita de la operaciumo.
+* Aparataro (hardware) subtenado estas necesita por uzi tempmezurilojn kaj interrompojn
+por uzi akapara plurtaskado. (preemptive)
+* La reĝistroj de la CPU estas en la memoro-parto de la PCB de ĉiu procezo
+* Plurprocesorado estas pli forta ol disfadenigo. (multithreading)
+
+## Processes
+
+### Process state diagram:
+
+![Process state diagram](images/process_states.png)
+
+### Process layout
+
+single/multi-threaded
+
+![Process layout](images/process_threads.png)
+
+## Synchronization
+
+### Test-and-Set Locks**
+
+```c++
+// I guess *target will always be true, and the idea is that
+// it will return either true or false for what the *target
+// value originally was, and it will "lock" the *target value
+// as true (if going from false -> true), otherwise no change
+// (if going from true -> true)
+bool test_and_set( bool * target )
+{
+	bool rv = *target;
+	*target = true;
+	return *rv;
+}
+
+// Check if it is the expected value. If so, replace with new value.
+in compare_and_swap( int * value, int expected, int new_value )
+{
+	int temp = *value;
+	
+	if ( *value == expected )
+	{
+		*value = new_value;
+	}
+	
+	return temp;
+}
+
+void spinlock_lock( int * lock )
+{
+    while ( TestAndSet( lock ) ) { ; }
+}
+
+void spinlock_unlock( int * lock )
+{
+    *lock = 0;
+}
+```
+
+### Producer/Consumer - Monitor lock
+
+```c++
+monitor ProducerConsumer {
+    int itemCount;
+    condition full;
+    condition empty;
+
+    procedure add(item) {
+        while (itemCount == BUFFER_SIZE) {	// while it (queue?) is full...
+            wait(full);
+        }
+
+        putItemIntoBuffer(item);		// enqueue
+        itemCount = itemCount + 1;
+
+        if (itemCount == 1) {
+            notify(empty);			// teacher's code has full.signal() here.
+        }
+    }
+    procedure remove() {
+        while (itemCount == 0) {		// while (queue?) it is empty...
+            wait(empty);
+        }
+
+        item = removeItemFromBuffer();		// dequeue
+        itemCount = itemCount - 1;
+
+        if (itemCount == BUFFER_SIZE - 1) {
+            notify(full);			// teacher's code has empty.signal() here.
+        }
+
+
+        return item;
+    }
+}
+```
+
+[From Wikipedia](https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem#Using_monitors)
+
+### Producer/Consumer - Semaphore lock
+
+```c++
+semaphore fillCount = 0; // items produced
+semaphore emptyCount = BUFFER_SIZE; // remaining space
+
+procedure producer() {
+    while (true) {
+        item = produceItem();
+        down(emptyCount);		// P()
+        putItemIntoBuffer(item);
+        up(fillCount);			// V()
+    }
+}
+
+procedure consumer() {
+    while (true) {
+        down(fillCount);		// P()
+        item = removeItemFromBuffer();
+        up(emptyCount);			// V()
+        consumeItem(item);
+    }
+}
+```
+
+For these, the P/V functions (when to call and where) are the important parts.
+
+[From Wikipedia](https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem#Using_semaphores)
+
+
+## Deadlock
+
+
+
+## Scheduling
 
 
 
