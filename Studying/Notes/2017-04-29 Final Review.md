@@ -2,9 +2,9 @@
 
 FML.
 
-**SECTIONS:** 
-[Final exam review](#final-exam-review) | 
-[Problem set](#problem-set) | [Final exam postmortem](#final-exam-postmortem) | 
+**SECTIONS:**
+[Final exam review](#final-exam-review) |
+[Problem set](#problem-set) | [Final exam postmortem](#final-exam-postmortem) |
 [Midterm exam analysis](#midterm-analysis)
 
 **TABLE OF CONTENTS: Final Exam review topics**
@@ -314,7 +314,7 @@ When we call ```fork()```, do we want to copy the entire parents' page onto new 
 * Now both the parent and child are pointing to the same page table.
 * Once the child or the parent wants to do a write, *then* we create a copy of
 the page to write to, and the parent/child have separate versions of this page.
-* Until written to, all pages are listed as *READ ONLY*. 
+* Until written to, all pages are listed as *READ ONLY*.
 * Once a copy of the page is created during a write, both the page copies are set to *READ/WRITE*.
 
 #### Page Table Entry (PTE) Format
@@ -341,20 +341,20 @@ to make space for the new page in memory.
 Algorithms:
 
 * **OPT: Theoretically optimal**
-	* Where you evict the page that will go unused the longest. 
+	* Where you evict the page that will go unused the longest.
 	* Need to read the future.
 * NRU: Not recently used
 * **LRU: Least recently used**
 	* Look at history, and decide who hasn't been used for the longest period.
 	* Good performance, but it is complex and requires hardware support.
 * **FIFO: First-in, first-out**
-	* Evict the oldest page first; 
+	* Evict the oldest page first;
 	* fair, but can throw out frequently-used pages.
 * **Second-chance**
 	* Use the refrence bit to keep track of if an item was recently accessed.
 	* See algorithm below.
 * Clock
-* Random 
+* Random
 	* Simple but unpredictable.
 * Not frequently used
 * Aging
@@ -493,7 +493,7 @@ is simple, but it ends up taking a lot of processing power from the CPU.
 #### Direct Memory Access (DMA)
 
 > Direct memory access (DMA) is a feature of computer systems that allows certain hardware subsystems to access main system memory (RAM), independent of the central processing unit (CPU).
-> With DMA, the CPU first initiates the transfer, then it does other operations while the transfer is in progress, and it finally receives an interrupt from the DMA controller when the operation is done. 
+> With DMA, the CPU first initiates the transfer, then it does other operations while the transfer is in progress, and it finally receives an interrupt from the DMA controller when the operation is done.
 > This feature is useful at any time that the CPU cannot keep up with the rate of data transfer, or when the CPU needs to perform useful work while waiting for a relatively slow I/O data transfer. Many hardware systems use DMA, including disk drive controllers, graphics cards, network cards and sound cards. DMA is also used for intra-chip data transfer in multi-core processors.
 [Wikipedia](https://en.wikipedia.org/wiki/Direct_memory_access)
 
@@ -528,7 +528,7 @@ When designing a file system, we need to figure out some method for *disk alloca
     static array in memory would be.
     * However, is it suseptible to **external fragmentation**,
     and it is difficult to increase (the amount of space? or a block? It doesn't say!)
-    
+
 * **Linked allocation**
     * Similar to a linked list data structure, where different parts of a list
     may be contained in non-concurrent blocks of memory.
@@ -536,7 +536,7 @@ When designing a file system, we need to figure out some method for *disk alloca
     doesn't have to be contiguous, and the block holds a pointer to the next block.
     * Easy to grow if more space is needed (I assume for a file).
     * Access performance sucks because you have to traverse, like a linked list.
-    
+
 * **Indexed allocation**
     * For this, there's a directory that lists the files.
     * The entry in the directory table lists the *index block*.
@@ -723,7 +723,7 @@ cons are that there is overhead and duplication.
 1. Application layer:
     1. Application reads from socket
     1. Socket reads from queue
-    
+
 [From G. Herrin, Linux IP Networking: A Guide to the Implementation and Modification of the Linux Protocol Stack, 2000](http://oai.dtic.mil/oai/oai?verb=getRecord&metadataPrefix=html&identifier=ADA377980)
 
 ---
@@ -734,20 +734,20 @@ cons are that there is overhead and duplication.
 
 Stack overflow:
 
-> In software, a stack overflow occurs if the call stack pointer exceeds the stack bound. 
+> In software, a stack overflow occurs if the call stack pointer exceeds the stack bound.
 [Wikipedia](https://en.wikipedia.org/wiki/Stack_overflow)
 
 Buffer overflow:
 
-> In computer security and programming, a buffer overflow, or buffer overrun, 
-is an anomaly where a program, while writing data to a buffer, 
-overruns the buffer's boundary and overwrites adjacent memory locations. 
+> In computer security and programming, a buffer overflow, or buffer overrun,
+is an anomaly where a program, while writing data to a buffer,
+overruns the buffer's boundary and overwrites adjacent memory locations.
 [Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow)
 
 **The jump to address stored in a register technique**
 
-> The "jump to register" [...] strategy is to overwrite the return pointer 
-with something that will cause the program to jump to a known pointer stored 
+> The "jump to register" [...] strategy is to overwrite the return pointer
+with something that will cause the program to jump to a known pointer stored
 within a register which points to the controlled buffer and thus the shellcode.
 [Wikipedia](https://en.wikipedia.org/wiki/Buffer_overflow#The_jump_to_address_stored_in_a_register_technique)
 
@@ -933,7 +933,7 @@ The size of the virtual address space is **2<sup>virtual_address_format</sup>**
 #   a bits    b bits  c bits
 # ------------------------
 # | frame # | unused | V |
-# ------------------------ 
+# ------------------------
 
 # Page table entry: a + b + c bits
 # Frame: a bits
@@ -1095,9 +1095,9 @@ Each digit in a hexadecimal number corresponds to 4 bits
 So given the amount of bits *b*, you would take the first *b*
 bits from the address. If *b* were 8, then...
 
-<table> 
+<table>
 <tr> <th> Address (Hex) </th> <td> F </td> <td> F </td> <td> F </td> <td> F </td> </tr>
-<tr> <th> Address (Binary) </th> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> </tr> 
+<tr> <th> Address (Binary) </th> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> <td> 1111 </td> </tr>
 <tr> <td> </td> <td colspan="2"> First 8 </td> <td colspan="2"> </td> </tr>
 </table>
 
@@ -1251,12 +1251,12 @@ bool test_and_set( bool * target )
 in compare_and_swap( int * value, int expected, int new_value )
 {
 	int temp = *value;
-	
+
 	if ( *value == expected )
 	{
 		*value = new_value;
 	}
-	
+
 	return temp;
 }
 
@@ -1343,6 +1343,7 @@ For these, the P/V functions (when to call and where) are the important parts.
 
 ## Deadlock
 
+Good video on Banker's Algorithm: [TutorialPoint](https://www.tutorialspoint.com/operating_system/deadlock_avoidance_bankers_algorithm_with_example.asp)
 
 
 ## Scheduling
@@ -1359,6 +1360,53 @@ For these, the P/V functions (when to call and where) are the important parts.
 ---
 
 # Final Exam postmortem
+
+Ugh ugh ugh. At first, I thought I was doing well; I knew a lot
+of what was on the exam. However, there were a few problems
+that I didn't know or wasn't sure how to solve. As a result, there
+were maybe 26 points out of 100 that I was "unsure" on, or just
+didn't know how to do.
+
+Let's see... I understood address translation... for 8 bits,
+but the exam had 16 bits and I wasn't sure how that changed
+the bits I was reading.
+
+There was also taking a file path and writing down the amount of
+disk accesses? Or something... given a file size and disk block sizes?
+
+And for Fat 16 file system, and a table with memory addresses and bits,
+how to tell which blocks held a file or something.
+No idea what to do.
+
+Also how to calculate EAT. Average access time and page fault time,
+and the efficiency of something or other.
+
+I had previously estimated that, if I had gotten an 85% on the final,
+I could get an A in the class. However, with my estimation of how I did,
+I could score as low as a 70%, which would mean I get a B in the class.
+
+I really hate the class format; I get A's and 100%s on programming
+assignments and quizzes, but there are only two exams which cover a lot
+of content each, and only 10 - 15 questions per exam - so if you
+miss one thing, you're boned. If you miss two things, you're boned.
+And so on.
+
+There's so much information to memorize, and I did memorize a lot with
+my flash cards, but not EVERYTHING, so I missed out. It is a guess,
+figuring out exactly what kind of information to learn.
+
+I tried to base all my study notes off that final exam review,
+but some things were glossed over.
+
+In the real world, I would have so much reference material I could use
+to solve something; developers don't get locked in a room without
+any resources. Yes, it is good to have a general idea of what you're doing,
+but do I really need to memorize SO MANY computations?
+
+At least the semester is over. Now I remember why I was so fucking
+burnt out by the time I completed my undergrad degree.
+
+
 
 
 
