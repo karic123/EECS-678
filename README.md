@@ -11,6 +11,17 @@ Introduction to Operating Systems, Spring 2017
 * [Code to solve problems](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Tools) - Application problems on the exams and quizzes; it wasn't clear to me how they should be solved by hand, so after figuring it out for myself, I wrote Python code to make the steps more clear.
 * [Example code](https://github.com/Rachels-studies/EECS-678/tree/main/Studying/Coding-examples) - Example code for pipes, forking, multithreading, sockets, etc.
 
+## Class tips
+
+Here's what I learned during this class:
+
+* Can't predict what will be on the midterm/final exams; can't only study the book or only study the slides - doing either/or got me a C on both the midterm and the final.
+* Teacher likes to ask computational questions.
+* Source code from the book is mostly useless, unless he puts it in the slides. e.g., I spent time learning code from the book for the Banker's Algorithm, but that wasn't referenced - it was calculations by hand.
+* Work on projects solo; it is just simpler that way.
+* Project documentation sucks, so make sure you ask questions to your TA.
+* The teacher doesn't post the lecture slides before or during the class; usually they're up a week *after* the lecture, so have fun with that.
+
 ## Don't cheat off my stuff!
 
 If you're having trouble with specific content, check out the **Studying/Coding-examples**
