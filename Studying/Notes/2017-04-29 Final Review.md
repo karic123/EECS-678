@@ -1406,7 +1406,11 @@ but do I really need to memorize SO MANY computations?
 At least the semester is over. Now I remember why I was so fucking
 burnt out by the time I completed my undergrad degree.
 
+## Final exam graded
 
+I got a 71%. Even though I felt like I was doing well up until I hit the questions that I didn't recognize from the review slides, I got a low C. I spent so much time studying, but again not all the right things... When "Filesystem" was highlighted on the slides, I went over the basics but nothing relating to calculations, since he didn't go in-depth into that; it was just a bullet-point, essentially.
+
+So, y'know, fuck me.
 
 
 
